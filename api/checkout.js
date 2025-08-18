@@ -1,35 +1,53 @@
-import Stripe from "stripe";
+// /api/checkout.js — Vercel Serverless Function
+const Stripe = require('stripe');
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+module.exports = async (req, res) => {
+  // CORS (utile anche se provi da GitHub Pages)
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return res.status(200).end();
+  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
-export default async function handler(req, res) {
-  if (req.method === "POST") {
-    try {
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Use POST on /api/checkout' });
+  }
+
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    const body = req.body || {};
+    const items = Array.isArray(body.items) ? body.items : [];
+
+    const line_items = items.length
+      ? items
+      : [
           {
             price_data: {
-              currency: "eur",
-              product_data: {
-                name: "Miele Artigianale",
-              },
-              unit_amount: 500, // prezzo in centesimi (5,00 €)
+              currency: 'eur',
+              product_data: { name: 'Miele Millefiori 250g' },
+              unit_amount: 500, // €5,00
             },
             quantity: 1,
           },
-        ],
-        mode: "payment",
-        success_url: "https://miele-backend.vercel.app/success",
-        cancel_url: "https://miele-backend.vercel.app/cancel",
-      });
+        ];
 
-      res.status(200).json({ id: session.id });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  } else {
-    res.setHeader("Allow", "POST");
-    res.status(405).end("Method Not Allowed");
+    const success_url = 'https://cleo6920.github.io/miele-backend/success.html';
+    const cancel_url  = 'https://cleo6920.github.io/miele-backend/cancel.html';
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items,
+      success_url,
+      cancel_url,
+    });
+
+    return res.status(200).json({ id: session.id, url: session.url });
+  } catch (err) {
+    console.error('Stripe error:', err);
+    return res.status(500).json({ error: 'Stripe error', details: err.message });
   }
-}
+};
