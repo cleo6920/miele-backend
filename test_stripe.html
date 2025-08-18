@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Test Pagamento Stripe</title>
+  <style>
+    body{font-family:system-ui,Arial,sans-serif;background:#faf7f2;margin:0;padding:40px;color:#222}
+    .card{max-width:520px;margin:40px auto;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:24px}
+    h1{font-size:22px;margin:0 0 12px}
+    p{margin:8px 0 16px;line-height:1.5}
+    button{background:#2f7d31;color:#fff;border:0;padding:12px 18px;border-radius:10px;cursor:pointer;font-size:16px}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:12px;border-radius:10px;display:none}
+    .ok{background:#e6f7ed;color:#0e5a2a}
+    .err{background:#fdecec;color:#8a1f21}
+    .muted{color:#666;font-size:14px}
+    .foot{margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Test Pagamento Stripe</h1>
+    <p>Questo test prova il collegamento tra il sito <strong>GitHub Pages</strong> e il tuo <strong>backend Vercel</strong>.</p>
+    <p class="muted">Importo di prova: <strong>€ 5,00</strong></p>
+    <button id="test-btn">Paga 5,00 € di prova</button>
+    <div id="ok" class="msg ok"></div>
+    <div id="err" class="msg err"></div>
+    <div class="foot muted">Se tutto è ok verrai portato alla pagina di pagamento Stripe.</div>
+  </div>
+
+  <script>
+  document.getElementById('test-btn').addEventListener('click', async function(){
+    const btn = this;
+    btn.disabled = true;
+    document.getElementById('ok').style.display='none';
+    document.getElementById('err').style.display='none';
+    try{
+      const res = await fetch('https://miele-backend.vercel.app/api/checkout', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ totaleCents: 500, description: 'Test €5' })
+      });
+      const data = await res.json();
+      if(!res.ok || !data.url){
+        document.getElementById('err').textContent = (data && (data.error||data.message)) || 'Errore di collegamento. Riprovare.';
+        document.getElementById('err').style.display='block';
+        return;
+      }
+      document.getElementById('ok').textContent = 'Connessione OK. Reindirizzamento al pagamento…';
+      document.getElementById('ok').style.display='block';
+      // Vai a Stripe Checkout
+      window.location.href = data.url;
+    }catch(e){
+      document.getElementById('err').textContent = 'Errore di rete. Verifica la connessione e riprova.';
+      document.getElementById('err').style.display='block';
+    }finally{
+      btn.disabled = false;
+    }
+  });
+  </script>
+</body>
+</html>
