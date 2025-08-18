@@ -2,6 +2,11 @@
   "name": "miele-backend",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "stripe": "^12.17.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
+}
