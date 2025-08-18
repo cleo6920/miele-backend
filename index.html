@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Oasi del Busatello – Negozio Miele</title>
-    <!-- Tailwind CSS v3.4.3 per uno stile moderno e responsivo -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Oasi del Busatello – Negozio Miele</title>
+<!-- Tailwind CSS v3.4.3 per uno stile moderno e responsivo -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
         /* Animazione personalizzata per la rotazione 3D del testo "L'Italiano" */
         @keyframes rotate3DLinear { /* Rinominato per chiarezza */
             from {
@@ -47,7 +48,7 @@
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); /* Sottile ombra interna per effetto "premuto" */
         }
     </style>
-    <script>
+<script>
         // Configurazione di Tailwind per includere il tema "Inter" e colori personalizzati
         tailwind.config = {
             theme: {
@@ -125,7 +126,7 @@
             },
         };
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
 /* ===== Subtle background & motion utilities (non-breaking) ===== */
 html { scroll-behavior: smooth; }
@@ -158,18 +159,16 @@ body::after{
 }
 </style>
 </head>
-<body className="bg-gradient-to-br from-amber-50 via-orange-100 to-amber-200 min-h-screen font-sans text-stone-900 antialiased flex flex-col">
-    <div id="root"></div>
-
-    <!-- React 18 + ReactDOM -->
-    <!-- L'ordine è cruciale: React deve essere caricato prima di ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossOrigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossOrigin></script>
-    <!-- Babel (compila JSX nel browser per lo sviluppo locale) -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- Firebase SDKs - Caricati come moduli separati e le loro funzioni essenziali esposte globalmente -->
-    <script type="module">
+<body classname="bg-gradient-to-br from-amber-50 via-orange-100 to-amber-200 min-h-screen font-sans text-stone-900 antialiased flex flex-col">
+<div id="root"></div>
+<!-- React 18 + ReactDOM -->
+<!-- L'ordine è cruciale: React deve essere caricato prima di ReactDOM -->
+<script crossorigin="" src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin="" src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<!-- Babel (compila JSX nel browser per lo sviluppo locale) -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- Firebase SDKs - Caricati come moduli separati e le loro funzioni essenziali esposte globalmente -->
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, addDoc, setDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -196,8 +195,7 @@ body::after{
         };
         console.log("DEBUG: Firebase functions exposed globally."); // DEBUG LOG
     </script>
-
-    <script type="text/babel">
+<script type="text/babel">
         // NON più importazioni ES Modules per Firebase qui, si useranno le funzioni globali da window.firebase
         // const { initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword } = window.firebase;
         // const { getFirestore, doc, getDoc, addDoc, setDoc, collection, serverTimestamp } = window.firebase;
@@ -1962,7 +1960,6 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<HoneyShop />);
     </script>
-
 <script>
 // ===== Reveal on scroll (IntersectionObserver) =====
 (function(){
@@ -2024,8 +2021,6 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
   window.addEventListener('mousemove', onMove, { passive:true });
 })();
 </script>
-
-
 <!-- Stripe Checkout integration (iniettato) -->
 <script src="https://js.stripe.com/v3"></script>
 <script>
@@ -2127,5 +2122,97 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
     hookPayButtons();
   }
 </script>
-</body>
+<input id="totale-cents" type="hidden" value="0"/><script id="checkout-bridge-final">
+// ====== Checkout Bridge (non-invasivo, mantiene l'ecommerce intatto) ======
+(function(){
+  function parseEuroToCents(text){
+    if(!text) return 0;
+    try{
+      var t = (text+'').replace(/[^\d,.\-]/g,'').replace(/\./g,'').replace(',', '.');
+      var v = Math.round(parseFloat(t) * 100);
+      return isFinite(v) ? v : 0;
+    }catch(e){ return 0; }
+  }
+  function findTotalFromDOM(){
+    var selectors = [
+      '#cart-total','#order-total','#totale','#totale-ordine','#totaleOrdine',
+      '[data-totale]','[data-cart-total]','[data-order-total]',
+      '.order-total','.cart-total','.totale','.totale-ordine'
+    ];
+    for (var i=0;i<selectors.length;i++){
+      var el = document.querySelector(selectors[i]);
+      if (el){
+        var cents = parseEuroToCents(el.textContent);
+        if (cents>0) return cents;
+      }
+    }
+    // Cerca pattern 'TOTALE' con importo
+    var nodes = Array.from(document.querySelectorAll('section,div,li,p,span,td,tr,h3,h4,h5,h6'));
+    for (var el of nodes){
+      var txt = (el.textContent||'').toUpperCase();
+      if (txt.includes('TOTALE')){
+        var m = el.textContent.match(/€\s*([0-9\.\,]+)/);
+        if (m){
+          var cents = parseEuroToCents(m[1]);
+          if (cents>0) return cents;
+        }
+      }
+    }
+    return 0;
+  }
+  function syncTotal(){
+    var cents = 0;
+    if (window.totaleCarrelloCents && Number(window.totaleCarrelloCents)>0){
+      cents = Math.round(Number(window.totaleCarrelloCents));
+    } else {
+      cents = findTotalFromDOM();
+    }
+    var hidden = document.getElementById('totale-cents');
+    if (hidden) hidden.value = cents;
+    var enable = cents > 0;
+    // Abilita bottoni comuni
+    var selectors = ['#pay-btn','[data-pay]','.btn-pay','#btn-whatsapp','#btn-email','#whatsapp','#email','#wp'];
+    selectors.forEach(function(sel){
+      var el = document.querySelector(sel);
+      if (el) el.disabled = !enable;
+    });
+  }
+  // Observe DOM changes
+  var mo = new MutationObserver(function(){ syncTotal(); });
+  mo.observe(document.body, { childList:true, subtree:true, characterData:true });
+  setTimeout(syncTotal, 800);
+
+  async function getTotaleCents(){
+    var hidden = document.getElementById('totale-cents');
+    if (!hidden) throw new Error('Manca #totale-cents');
+    var v = Math.round(Number(hidden.value));
+    if (!Number.isInteger(v) || v<=0) throw new Error('Totale non valido');
+    return v;
+  }
+
+  // Click handler per vari bottoni di pagamento
+  document.addEventListener('click', async function(e){
+    var btn = e.target.closest('#pay-btn, [data-pay], .btn-pay');
+    if(!btn) return;
+    btn.disabled = true;
+    try{
+      var totaleCents = await getTotaleCents();
+      var res = await fetch('https://miele-backend.vercel.app/api/checkout', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ totaleCents: totaleCents })
+      });
+      var data = await res.json();
+      if(!res.ok){ alert(data.error || 'Errore pagamento'); return; }
+      if(!data.url){ alert('URL pagamento mancante'); return; }
+      window.location.href = data.url;
+    }catch(err){
+      alert('Errore: ' + err.message);
+    }finally{
+      btn.disabled = false;
+    }
+  });
+})();
+// ====== Fine Checkout Bridge ======
+</script></body>
 </html>
