@@ -1902,7 +1902,7 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
                                                         <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.914H15V4a1 1 0 0 0-1-1H2zm13 8.862V4.929H1v6.933A1 1 0 0 0 2 13h12a1 1 0 0 0 1-1.138zM11 5.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1z"/>
                                                     </svg>
                                                 </span>
-                                                Paga con Carta (Demo)
+                                                💳 Paga con carta
                                             </>
                                         )}
                                     </button>
@@ -2025,5 +2025,107 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
 })();
 </script>
 
+
+<!-- Stripe Checkout integration (iniettato) -->
+<script src="https://js.stripe.com/v3"></script>
+<script>
+  // Chiave pubblicabile (pubblica) di Stripe
+  const STRIPE_PUBLISHABLE_KEY = "pk_live_51RwlzP16mJsbUDZ51vZhqt8l4YwXiBbLNTVhYwEiErHYKtvoilWUlG0dCUTKifvYFtPidyctsw0ukxwwZcls1nl9003F7LocJ2";
+  const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+
+  // Endpoint backend su Vercel
+  const CHECKOUT_ENDPOINT = "https://miele-backend.vercel.app/api/checkout";
+
+  // Prova ad estrarre i dati dal carrello del sito (se esistono le strutture note)
+  function buildPayloadFromCart() {
+    try {
+      if (window.calculateCartTotals && window.calculateCartTotals.detailedCartItems) {
+        const items = window.calculateCartTotals.detailedCartItems.map(i => ({
+          price_data: {
+            currency: "eur",
+            product_data: { name: (i.productName || "Prodotto") + (i.packLabel ? " - " + i.packLabel : "") },
+            unit_amount: Math.round((i.pricePerPack || i.unitPrice || 0) * 100)
+          },
+          quantity: i.quantity || 1
+        }));
+
+        // Spedizione, se presente
+        if (typeof window.calculateCartTotals.shippingTotal === "number" && window.calculateCartTotals.shippingTotal > 0) {
+          items.push({
+            price_data: {
+              currency: "eur",
+              product_data: { name: "Spedizione" },
+              unit_amount: Math.round(window.calculateCartTotals.shippingTotal * 100)
+            },
+            quantity: 1
+          });
+        }
+
+        return { items };
+      }
+    } catch(e) {
+      console.warn("Cart parse fallita:", e);
+    }
+    // Fallback minimale: 1 prodotto da 5€
+    return {
+      items: [{
+        price_data: {
+          currency: "eur",
+          product_data: { name: "Miele Millefiori 250g" },
+          unit_amount: 500
+        },
+        quantity: 1
+      }]
+    };
+  }
+
+  async function startStripeCheckout() {
+    const payload = buildPayloadFromCart();
+    try {
+      const res = await fetch(CHECKOUT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Errore inatteso");
+
+      // Se il backend restituisce l'URL:
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      // Altrimenti se restituisce id sessione:
+      if (data.id) {
+        const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+        if (error) alert(error.message);
+        return;
+      }
+      alert("Risposta del server non valida.");
+    } catch (err) {
+      console.error(err);
+      alert("Pagamento non avviato: " + err.message);
+    }
+  }
+
+  // Aggancia tutti i bottoni che contengono "Paga con carta" (anche se cambiano classe/struttura)
+  function hookPayButtons(){
+    const candidates = Array.from(document.querySelectorAll("button, a"))
+      .filter(el => /paga\s*con\s*carta/i.test((el.textContent || "").trim()));
+    candidates.forEach(el => {
+      el.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        startStripeCheckout();
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", hookPayButtons);
+  } else {
+    hookPayButtons();
+  }
+</script>
 </body>
 </html>
