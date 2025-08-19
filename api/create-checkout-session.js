@@ -1,75 +1,52 @@
 // api/create-checkout-session.js
-import Stripe from 'stripe';
+const Stripe = require('stripe');
 
-export default async function handler(req, res) {
-  // CORS preflight
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).end();
-  }
+// Inizializza Stripe con la tua chiave segreta di test.
+// Questa chiave deve essere impostata come variabile d'ambiente su Vercel (STRIPE_SECRET_KEY)
+// NON mettere la chiave segreta direttamente qui nel codice!
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+module.exports = async (req, res) => {
+  // Solo le richieste POST sono permesse per questa API
+  if (req.method === 'POST') {
+    try {
+      // Estrai gli articoli del carrello e l'email del cliente dal corpo della richiesta
+      const { line_items, customerEmail } = req.body;
 
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      // Validazione base: assicurati che ci siano articoli
+      if (!Array.isArray(line_items) || line_items.length === 0) {
+        return res.status(400).json({ error: 'Nessun articolo fornito per il checkout.' });
+      }
 
-  try {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      return res.status(500).json({ error: 'Stripe secret key mancante sul server' });
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
-
-    const { items, customer, success_url, cancel_url, shipping_amount } = req.body || {};
-    if (!Array.isArray(items) || !items.length) {
-      return res.status(400).json({ error: 'Nessun articolo nel carrello' });
-    }
-
-    const line_items = items.map(it => ({
-      quantity: it.quantity,
-      price_data: {
-        currency: 'eur',
-        unit_amount: it.unit_amount, // in centesimi
-        product_data: { name: it.name },
-      },
-    }));
-
-    if (shipping_amount && shipping_amount > 0) {
-      line_items.push({
-        quantity: 1,
-        price_data: {
-          currency: 'eur',
-          unit_amount: shipping_amount,
-          product_data: { name: 'Spedizione' },
-        },
+      // Crea una sessione di Stripe Checkout
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'], // Permetti pagamenti con carta
+        line_items: line_items, // Gli articoli del carrello
+        mode: 'payment', // Modalità di pagamento singolo
+        // URL a cui reindirizzare l'utente dopo il successo/cancellazione del pagamento
+        // req.headers.origin sarà l'URL del tuo sito (es. https://tuosito.vercel.app)
+        success_url: `${req.headers.origin}/success.html?session_id={CHECKOUT_SESSION_ID}`, // Pagina di successo
+        cancel_url: `${req.headers.origin}/cancel.html`, // Pagina di cancellazione
+        customer_email: customerEmail, // Pre-compila l'email del cliente su Stripe Checkout
+        metadata: {
+            // Qui puoi aggiungere dati che ti serviranno dopo il pagamento,
+            // come l'ID utente o un riferimento all'ordine nel tuo database.
+            // Questi dati saranno accessibili tramite webhook.
+            customer_email: customerEmail,
+        }
       });
+
+      // Restituisci l'URL della sessione di checkout al frontend
+      res.status(200).json({ sessionId: session.id, url: session.url });
+
+    } catch (err) {
+      console.error('Errore nella creazione della sessione Stripe Checkout:', err.message);
+      // In caso di errore, restituisci un messaggio al frontend
+      res.status(500).json({ error: err.message });
     }
-
-    const origin = process.env.ALLOWED_ORIGIN || 'https://althea-l-italiano.surge.sh';
-
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      line_items,
-      success_url: success_url || `${origin}/success.html`,
-      cancel_url: cancel_url || origin,
-      customer_email: customer?.email || undefined,
-      billing_address_collection: 'required',
-      shipping_address_collection: { allowed_countries: ['IT'] },
-      metadata: {
-        name: customer?.name || '',
-        phone: customer?.phone || '',
-      },
-    });
-
-    return res.status(200).json({ sessionId: session.id });
-  } catch (err) {
-    console.error('ERR create-checkout-session:', err);
-    return res.status(500).json({ error: 'Errore creazione sessione' });
+  } else {
+    // Se il metodo HTTP non è POST, restituisci un errore 405
+    res.setHeader('Allow', 'POST');
+    res.status(405).end('Metodo non permesso');
   }
-}
+};
