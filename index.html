@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-
 <html lang="it">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Oasi del Busatello – Negozio Miele</title>
-<!-- Tailwind CSS v3.4.3 per uno stile moderno e responsivo -->
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oasi del Busatello – Negozio Miele</title>
+    <!-- Tailwind CSS v3.4.3 per uno stile moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Stripe.js v3 per l'integrazione dei pagamenti -->
+    <script src="https://js.stripe.com/v3"></script>
+    <style>
         /* Animazione personalizzata per la rotazione 3D del testo "L'Italiano" */
         @keyframes rotate3DLinear { /* Rinominato per chiarezza */
             from {
@@ -48,7 +49,7 @@
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); /* Sottile ombra interna per effetto "premuto" */
         }
     </style>
-<script>
+    <script>
         // Configurazione di Tailwind per includere il tema "Inter" e colori personalizzati
         tailwind.config = {
             theme: {
@@ -126,7 +127,7 @@
             },
         };
     </script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ===== Subtle background & motion utilities (non-breaking) ===== */
 html { scroll-behavior: smooth; }
@@ -159,16 +160,18 @@ body::after{
 }
 </style>
 </head>
-<body classname="bg-gradient-to-br from-amber-50 via-orange-100 to-amber-200 min-h-screen font-sans text-stone-900 antialiased flex flex-col">
-<div id="root"></div>
-<!-- React 18 + ReactDOM -->
-<!-- L'ordine è cruciale: React deve essere caricato prima di ReactDOM -->
-<script crossorigin="" src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script crossorigin="" src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<!-- Babel (compila JSX nel browser per lo sviluppo locale) -->
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<!-- Firebase SDKs - Caricati come moduli separati e le loro funzioni essenziali esposte globalmente -->
-<script type="module">
+<body className="bg-gradient-to-br from-amber-50 via-orange-100 to-amber-200 min-h-screen font-sans text-stone-900 antialiased flex flex-col">
+    <div id="root"></div>
+
+    <!-- React 18 + ReactDOM -->
+    <!-- L'ordine è cruciale: React deve essere caricato prima di ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossOrigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossOrigin></script>
+    <!-- Babel (compila JSX nel browser per lo sviluppo locale) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Firebase SDKs - Caricati come moduli separati e le loro funzioni essenziali esposte globalmente -->
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, addDoc, setDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -195,11 +198,8 @@ body::after{
         };
         console.log("DEBUG: Firebase functions exposed globally."); // DEBUG LOG
     </script>
-<script type="text/babel">
-        // NON più importazioni ES Modules per Firebase qui, si useranno le funzioni globali da window.firebase
-        // const { initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword } = window.firebase;
-        // const { getFirestore, doc, getDoc, addDoc, setDoc, collection, serverTimestamp } = window.firebase;
 
+    <script type="text/babel">
         // Importazioni di React e i suoi hook
         const { useState, useMemo, useRef, useEffect, useCallback } = React;
 
@@ -487,102 +487,6 @@ body::after{
             );
         }
 
-        // Modale per la simulazione di pagamento con carta
-        function PaymentDemoModal({
-            onClose,
-            onSubmit,
-            cardName, setCardName,
-            cardNumber, setCardNumber,
-            cardExpiry, setCardExpiry,
-            cardCvc, setCardCvc,
-            isSavingOrder,
-            totalAmount,
-            fmt
-        }) {
-            return (
-                <div className="fixed inset-0 bg-stone-900 bg-opacity-75 flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md space-y-6 animate-scale-in">
-                        <h3 className="text-2xl font-bold text-amber-700 text-center">Simulazione Pagamento Carta</h3>
-                        <p className="text-stone-600 text-center">
-                            Totale da pagare: <span className="font-bold text-amber-800">€ {fmt(totalAmount)}</span>
-                        </p>
-                        <form onSubmit={onSubmit} className="space-y-4">
-                            <div>
-                                <label htmlFor="cardName" className="block text-sm font-medium text-stone-700 mb-1">Nome sulla carta</label>
-                                <input
-                                    type="text"
-                                    id="cardName"
-                                    value={cardName}
-                                    onChange={(e) => setCardName(e.target.value)}
-                                    className="w-full rounded-xl border border-stone-300 px-4 py-2 focus:ring-amber-500 focus:border-amber-500"
-                                    placeholder="Nome Cognome"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="cardNumber" className="block text-sm font-medium text-stone-700 mb-1">Numero carta (solo Mastercard demo)</label>
-                                <input
-                                    type="text"
-                                    id="cardNumber"
-                                    value={cardNumber}
-                                    onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, '').match(/.{1,4}/g)?.join(' ') || '')}
-                                    className="w-full rounded-xl border border-stone-300 px-4 py-2 focus:ring-amber-500 focus:border-amber-500"
-                                    placeholder="5555 5555 5555 5555"
-                                    maxLength="19" // 16 cifre + 3 spazi
-                                    required
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label htmlFor="cardExpiry" className="block text-sm font-medium text-stone-700 mb-1">Scadenza (MM/YY)</label>
-                                    <input
-                                        type="text"
-                                        id="cardExpiry"
-                                        value={cardExpiry}
-                                        onChange={(e) => setCardExpiry(e.target.value.replace(/\D/g, '').slice(0, 4).replace(/(\d{2})(\d{0,2})/, '$1/$2'))}
-                                        className="w-full rounded-xl border border-stone-300 px-4 py-2 focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="MM/YY"
-                                        maxLength="5"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="cardCvc" className="block text-sm font-medium text-stone-700 mb-1">CVC</label>
-                                    <input
-                                        type="text"
-                                        id="cardCvc"
-                                        value={cardCvc}
-                                        onChange={(e) => setCardCvc(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                                        className="w-full rounded-xl border border-stone-300 px-4 py-2 focus:ring-amber-500 focus:border-amber-500"
-                                        placeholder="123"
-                                        maxLength="4"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            {/* cardMsg rimosso perché si usa showNotification */}
-                            <div className="flex justify-end gap-3 pt-2">
-                                <button
-                                    type="button"
-                                    onClick={onClose}
-                                    className="rounded-xl px-6 py-2 border border-stone-300 text-stone-700 hover:bg-stone-100 transition button-press-effect"
-                                >
-                                    Annulla
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isSavingOrder}
-                                    className={`rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-2 shadow-md transition-all duration-200 button-press-effect ${isSavingOrder ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                >
-                                    {isSavingOrder ? 'Pagamento...' : 'Paga Ora'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            );
-        }
-
         // COMPONENTE LOGIN (MODALE)
         function LoginScreen({ firebaseAuth, showNotification, onClose }) { // Aggiunto onClose
             const [email, setEmail] = useState('');
@@ -848,7 +752,7 @@ body::after{
                     id: "eucamiel",
                     name: "Eucamiel (all'eucalipto)",
                     description: "Miele rinfrescante con un sentore balsamico, ideale per le vie respiratorie.",
-                    image: "https://placehold.co/400x400/90EE90/006400?text=Eucamiel", // Image for Eucamiel
+                    image: "https://i.imgur.com/ejpdNte.png", // Immagine aggiornata per Eucamiel
                     packs: [
                         { id: "eu1", label: "1 vasetto (250g)", jars: 1, price: 10.00 },
                         { id: "eu12", label: "12 vasetti (250g cad.)", jars: 12, price: 110.00, originalPrice: 12 * 10.00 },
@@ -1111,18 +1015,24 @@ body::after{
             const [cap, setCap] = useState("");
             const [notes, setNotes] = useState("");
 
-            {/* Stati per la simulazione di pagamento con carta */}
-            const [showCardDemo, setShowCardDemo] = useState(false);
-            const [cardName, setCardName] = useState("");
-            const [cardNumber, setCardNumber] = useState("");
-            const [cardExpiry, setCardExpiry] = useState("");
-            const [cardCvc, setCardCvc] = useState("");
-            const [cardMsg, setCardMsg] = useState("");
-
             {/* Stato per i messaggi di conferma/notifica (es. dopo aggiunta al carrello o invio ordine) */}
             const [notificationMsg, setNotificationMsg] = useState("");
             const [notificationType, setNotificationType] = useState("success"); // 'success' o 'error'
             const [isSavingOrder, setIsSavingOrder] = useState(false); // Stato per il caricamento del salvataggio
+
+            // Chiave pubblicabile di Stripe e endpoint Vercel per il checkout
+            // Assicurati che 'pk_test_YOUR_STRIPE_PUBLISHABLE_KEY' sia la tua chiave reale di test!
+            const stripePublishableKey = typeof __stripe_publishable_key !== 'undefined' ? __stripe_publishable_key : "pk_test_51RwlzP16mJsbUDZ51vZhqt8l4YwXiBbLNTVhYwEiErHYKtvoilWUlG0dCUTKifvYFtPidyctsw0ukxwwZcls1nl9003F7LocJ2"; // Usa la chiave fornita in ambiente Canvas o la tua di test
+            const checkoutApiEndpoint = typeof __checkout_api_endpoint !== 'undefined' ? __checkout_api_endpoint : "https://miele-backend.vercel.app/api/checkout"; // Usa endpoint da ambiente Canvas o il tuo su Vercel
+
+            const stripe = useMemo(() => {
+                // Inizializza Stripe solo una volta e solo se Stripe è caricato
+                if (typeof window.Stripe !== 'undefined' && stripePublishableKey) {
+                    return window.Stripe(stripePublishableKey);
+                }
+                return null;
+            }, [stripePublishableKey]);
+
 
             {/* ===================== FUNZIONI DI UTILITÀ PER IL CARRELLO ===================== */}
 
@@ -1522,48 +1432,86 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
                 }
             }, [firestoreDb, isAuthReady, calculateCartTotals, name, email, phone, address, city, cap, notes, currentUserId, appId, products, isAdmin, showNotification, whatsappHref, mailtoHref]);
 
-            {/* ===================== LOGICA DEMO CARTA (solo UI) ===================== */}
-            // Validazione minima per la demo della carta (non per transazioni reali)
-            const isDemoCardValid = useCallback(() => {
-                const num = cardNumber.replace(/\s+/g, "");
-                const mmYY = cardExpiry.trim();
-                const cvc = cardCvc.trim();
-                // Controlli MINIMI solo estetici (NON reali)
-                const looksLikeMastercard =
-                    /^5[1-5][0-9]{14}$/.test(num) ||
-                    /^2(2[2-9]|[3-6][0-9]|7[01])[0-9]{12}$/.test(num); // Mastercard range 2221–2720
-                const expiryOk = /^(0[1-9]|1[0-2])\/(2[5-9]|[3-9][0-9])$/.test(mmYY); // MM/YY grossolano, es. 12/29
-                const cvcOk = /^\d{3,4}$/.test(cvc);
-                const nameOk = (cardName || "").trim().length >= 2;
-                return looksLikeMastercard && expiryOk && cvcOk && nameOk;
-            }, [cardName, cardNumber, cardExpiry, cardCvc]);
-
-            // Gestisce l'invio simulato del pagamento con carta
-            const submitDemoPayment = useCallback(async (e) => {
-                e?.preventDefault?.(); // Previene il ricaricamento della pagina per i form
-                if (calculateCartTotals.detailedCartItems.length === 0) {
-                     showNotification("Il carrello è vuoto. Aggiungi prodotti prima di procedere al pagamento.", "error");
-                     return;
-                }
-                if (!isDemoCardValid()) {
-                    showNotification("Dati carta non validi. Controlla nome, numero (es. Mastercard 5555...), scadenza MM/YY e CVC.", "error");
-                    return;
-                }
-                if (!areCustomerDetailsValid()) {
-                    showNotification("Per favorire, compila tutti i campi obbligatori nei dati di spedizione prima di procedere al pagamento.", "error");
+            // Gestisce il processo di pagamento reale con Stripe
+            const handleStripePayment = useCallback(async () => {
+                if (!stripe || !calculateCartTotals.detailedCartItems.length || !areCustomerDetailsValid()) {
+                    showNotification("Per favore, compila tutti i dati del cliente e assicurati il carrello non sia vuoto.", "error");
                     return;
                 }
 
-                // Salva l'ordine su Firestore
-                await saveOrderToFirestore("Demo Carta");
+                setIsSavingOrder(true); // Imposta lo stato di caricamento
 
-                // Resetta i campi della carta dopo il "pagamento" simulato
-                setCardName("");
-                setCardNumber("");
-                setCardExpiry("");
-                setCardCvc("");
-                setShowCardDemo(false); // Chiudi il modale
-            }, [calculateCartTotals.detailedCartItems.length, showNotification, isDemoCardValid, saveOrderToFirestore]);
+                try {
+                    // Prepara i dati per l'API di Stripe
+                    const lineItems = calculateCartTotals.detailedCartItems.map(item => ({
+                        price_data: {
+                            currency: 'eur',
+                            product_data: {
+                                name: `${item.productName} (${item.packLabel})`,
+                            },
+                            unit_amount: Math.round(item.pricePerPack * 100), // Prezzo in centesimi
+                        },
+                        quantity: item.quantity,
+                    }));
+
+                    // Aggiungi il costo di spedizione come un elemento separato se non è gratuito
+                    if (calculateCartTotals.shippingTotal > 0) {
+                        lineItems.push({
+                            price_data: {
+                                currency: 'eur',
+                                product_data: {
+                                    name: 'Spedizione',
+                                },
+                                unit_amount: Math.round(calculateCartTotals.shippingTotal * 100), // Prezzo in centesimi
+                            },
+                            quantity: 1,
+                        });
+                    }
+
+                    // Prepara il payload per la funzione serverless
+                    const payload = {
+                        line_items: lineItems,
+                        customerEmail: email, // Passa l'email del cliente per Stripe
+                        // Puoi aggiungere qui altri metadati come l'ID utente Firebase o un ID ordine temporaneo
+                    };
+
+                    console.log("DEBUG: Payload inviato a Stripe API:", payload);
+
+                    // Chiamata alla funzione serverless su Vercel
+                    const response = await fetch(checkoutApiEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        const errorMessage = data.error || 'Errore nella creazione della sessione di checkout.';
+                        console.error("ERRORE Vercel Function:", errorMessage, data);
+                        showNotification(`❌ Errore di pagamento: ${errorMessage}`, "error");
+                        setIsSavingOrder(false);
+                        return;
+                    }
+
+                    // Reindirizza l'utente alla pagina di checkout di Stripe
+                    const { error } = await stripe.redirectToCheckout({
+                        sessionId: data.sessionId, // Stripe ti invia un ID di sessione
+                    });
+
+                    if (error) {
+                        console.error("ERRORE redirectToCheckout:", error.message);
+                        showNotification(`❌ Errore: ${error.message}`, "error");
+                    }
+                } catch (error) {
+                    console.error("ERRORE Stripe Payment:", error);
+                    showNotification(`❌ Errore di connessione al servizio di pagamento: ${error.message}`, "error");
+                } finally {
+                    setIsSavingOrder(false); // Reimposta lo stato di caricamento
+                }
+            }, [stripe, calculateCartTotals, areCustomerDetailsValid, showNotification, email, checkoutApiEndpoint]);
 
 
             {/* ===================== MAIN COMPONENT RENDER ===================== */}
@@ -1583,108 +1531,108 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
                                 <a href={`tel:${sellerPhone}`} className="flex items-center gap-1 hover:text-amber-200 transition-colors">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.1-.518 1.745l.082.384c.07.303.075.645-.008.973-.061.23-.118.405-.183.567l-2.02 5.042a.5.5 0 0 0 .393.755l4.135 1.15c.67.18 1.432.18 2.1 0l4.135-1.15a.5.5 0 0 0 .393-.755l-2.02-5.042c-.065-.162-.122-.337-.183-.567a1.006 1.006 0 0 1-.008-.973l.082-.384c.143-.645-.035-1.261-.518-1.745L9.346 1.265a.678.678 0 0 0-1.015.063c-.318.334-.51.65-.678.969-.168.319-.286.606-.39.755-.104.148-.222.267-.346.333a.855.855 0 0 1-.16.03l-.007-.003c-.004 0-.007-.002-.01-.002a.855.855 0 0 1-.16-.03c-.124-.066-.242-.185-.346-.333-.104-.149-.222-.436-.39-.755-.168-.319-.36-.635-.678-.969zM8 4c.276 0 .5.224.5.5v1a.5.5 0 0 1-1 0v-1c0-.276.224-.5.5-.5z"/>
-                                    </svg>
-                                    {sellerPhone}
-                                </a>
-                                <a href={`https://wa.me/${sellerWhatsApp}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-amber-200 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.334.068 7.468c0 1.76.711 3.328 1.95 4.572l-.766 2.455 2.51-.775A7.818 7.818 0 0 0 7.994 16h.005c4.366 0 7.923-3.334 7.923-7.468 0-1.76-.711-3.328-1.95-4.572zm-1.892 6.643c-.15.073-.173.176-.432.417-.23.23-.509.554-.693.666-.183.111-.367.167-.55.056-.184-.111-.61-.222-.843-.333-.234-.112-.39-.168-.55-.111-.15.056-.473.222-.61.389-.136.167-.27.367-.38.523-.11.156-.22.28-.36.333-.14.056-.273.04-.41-.018-.135-.056-.326-.111-.472-.194-.145-.083-.3-.21-.44-.36-.14-.15-.27-.33-.36-.48-.09-.15-.018-.14-.14-.24-.12-.09-.27-.21-.41-.33-.14-.11-.27-.22-.38-.28-.11-.056-.22-.04-.3-.02-.08.018-.2.083-.3.14-.1.056-.22.167-.3.222-.08.056-.16.083-.22.111-.056.02-.11.02-.17.02-.056 0-.11-.005-.16-.005-.056 0-.083.01-.11.056-.03.04-.1.14-.3.31-.2.2-.4.36-.55.44-.15.083-.3.111-.47.167-.17.056-.34.083-.5.083-.17 0-.3-.005-.4-.056-.1-.056-.24-.22-.61-.75-.37-.53-.61-.666-.69-.711-.08-.056-.17-.04-.25-.04-.08 0-.17-.005-.25.04s-.17.111-.25.222c-.08.111-.22.28-.3.36-.08.083-.17.14-.2.167-.03.02-.06.03-.11.03-.056 0-.109-.005-.167-.056-.055-.056-.11-.111-.166-.194-.05-.08-.11-.14-.16-.22-.05-.08-.11-.14-.16-.2-.05-.056-.01-.11-.04-.17-.03-.055-.07-.12-.1-.17-.04-.055-.06-.1-.09-.17-.03-.056-.01-.1-.056-.14-.04-.04-.07-.07-.11-.111-.04-.04-.05-.07-.08-.1-.02-.03-.06-.05-.09-.08-.03-.02-.05-.05-.08-.06-.03-.012-.05-.02-.08-.02zm.12-5.41c.14.056.28.111.41.167.14.056.28.111.41.167.14.056.28.111.41.167s.26.111.41.167s.28.111.41.167s.26.111.41.167h.005zm-.12 1.48c.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11h.005zm-.12 1.48c.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11h.005zm-.12 1.48c.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11h.005z"/>
-                                    </svg>
-                                    WhatsApp
-                                </a>
-                            </div>
+                                </svg>
+                                {sellerPhone}
+                            </a>
+                            <a href={`https://wa.me/${sellerWhatsApp}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-amber-200 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.334.068 7.468c0 1.76.711 3.328 1.95 4.572l-.766 2.455 2.51-.775A7.818 7.818 0 0 0 7.994 16h.005c4.366 0 7.923-3.334 7.923-7.468 0-1.76-.711-3.328-1.95-4.572zm-1.892 6.643c-.15.073-.173.176-.432.417-.23.23-.509.554-.693.666-.183.111-.367.167-.55.056-.184-.111-.61-.222-.843-.333-.234-.112-.39-.168-.55-.111-.15.056-.473.222-.61.389-.136.167-.27.367-.38.523-.11.156-.22.28-.36.333-.14.056-.273.04-.41-.018-.135-.056-.326-.111-.472-.194-.145-.083-.3-.21-.44-.36-.14-.15-.27-.33-.36-.48-.09-.15-.018-.14-.14-.24-.12-.09-.27-.21-.41-.33-.14-.11-.27-.22-.38-.28-.11-.056-.22-.04-.3-.02-.08.018-.2.083-.3.14-.1.056-.22.167-.3.222-.08.056-.16.083-.22.111-.056.02-.11.02-.17.02-.056 0-.11-.005-.16-.005-.056 0-.083.01-.11.056-.03.04-.1.14-.3.31-.2.2-.4.36-.55.44-.15.083-.3.111-.47.167-.17.056-.34.083-.5.083-.17 0-.3-.005-.4-.056-.1-.056-.24-.22-.61-.75-.37-.53-.61-.666-.69-.711-.08-.056-.17-.04-.25-.04-.08 0-.17-.005-.25.04s-.17.111-.25.222c-.08.111-.22.28-.3.36-.08.083-.17.14-.2.167-.03.02-.06.03-.11.03-.056 0-.109-.005-.167-.056-.055-.056-.11-.111-.166-.194-.05-.08-.11-.14-.16-.22-.05-.08-.11-.14-.16-.2-.05-.056-.01-.11-.04-.17-.03-.055-.07-.12-.1-.17-.04-.055-.06-.1-.09-.17-.03-.056-.01-.1-.056-.14-.04-.04-.07-.07-.11-.111-.04-.04-.05-.07-.08-.1-.02-.03-.06-.05-.09-.08-.03-.02-.05-.05-.08-.06-.03-.012-.05-.02-.08-.02zm.12-5.41c.14.056.28.111.41.167.14.056.28.111.41.167.14.056.28.111.41.167s.26.111.41.167s.28.111.41.167s.26.111.41.167h.005zm-.12 1.48c.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11h.005zm-.12 1.48c.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11h.005zm-.12 1.48c.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11.03.04.06.07.09.11.03.04.05.07.08.11h.005z"/>
+                                </svg>
+                                WhatsApp
+                            </a>
                         </div>
-
-                        {/* Centro: Slogan Spedizione Gratuita */}
-                        <p className="text-sm sm:text-lg font-semibold animate-pulse text-center flex-grow text-stone-950">
-                            🎉 SPEDIZIONE GRATUITA PER ORDINI SUPERIORI A €120! 🎉
-                        </p>
-
-                        {/* Sezione Destra: Pulsante Carrello */}
-                        <button
-                            onClick={() => {
-                                if (cartRef.current) {
-                                    cartRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                            }}
-                            className="relative flex items-center gap-2 text-lg text-stone-950 hover:text-amber-200 transition-colors button-press-effect"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.132 4.072 4.88 11H13l1-5H4.372L3.132 4.072zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                            </svg>
-                            Carrello
-                            {calculateCartTotals.detailedCartItems.length > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
-                                    {calculateCartTotals.detailedCartItems.length}
-                                </span>
-                            )}
-                        </button>
                     </div>
 
-                    {/* Header Principale (Hero Section) */}
-                    <header className="relative w-full py-8 sm:py-12 bg-gradient-to-br from-amber-200 to-amber-50 shadow-lg mb-8">
-                        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between z-10 relative">
-                            {/* Sezione Sinistra: Info Negozio e Login Admin */}
-                            <div className="flex-grow flex flex-col items-start text-center sm:text-left">
-                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-amber-800 leading-tight">💛 Oasi del Busatello</h1>
-                                <p className="text-lg sm:text-xl text-stone-700 mt-2 max-w-lg">
-                                    Il miele artigianale che porta la natura e l'eccellenza a casa tua.
-                                </p>
-                                {isAuthReady && currentUserId && (
-                                    <p className="text-xs text-stone-500 mt-1">
-                                        ID Sessione: <span className="font-mono">{currentUserId}</span>
-                                    </p>
-                                )}
-                                {/* Pulsante Login/Logout Admin */}
-                                {isAuthReady && (
-                                    <div className="mt-4">
-                                        {isAdmin ? (
-                                            <button
-                                                onClick={() => {
-                                                    // Usa window.firebase.signOut
-                                                    if (firebaseAuth && window.firebase) {
-                                                        window.firebase.signOut(firebaseAuth); 
-                                                        showNotification("Disconnessione Admin effettuata.", "success");
-                                                    }
-                                                }}
-                                                className="text-sm text-amber-700 hover:text-amber-900 font-semibold transition-colors button-press-effect"
-                                            >
-                                                Esci (Admin)
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => setShowAdminLoginModal(true)}
-                                                className="text-sm text-amber-700 hover:text-amber-900 font-semibold transition-colors button-press-effect"
-                                            >
-                                                Accedi come Admin
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
+                    {/* Centro: Slogan Spedizione Gratuita */}
+                    <p className="text-sm sm:text-lg font-semibold animate-pulse text-center flex-grow text-stone-950">
+                        🎉 SPEDIZIONE GRATUITA PER ORDINI SUPERIORI A €120! 🎉
+                    </p>
 
-                            {/* Sezione Destra: "L'Italiano" */}
-                            <div className="flex-shrink-0 flex flex-col items-end mt-8 sm:mt-0 ml-auto text-right">
-                                <h2 
-                                    className="text-6xl sm:text-7xl lg:text-8xl font-black text-amber-900 flex flex-col items-end gap-2 text-3d-effect" /* Classe per l'animazione e effetto 3D */
-                                >
-                                    L'Italiano
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="40" viewBox="0 0 30 20">
-                                        <rect x="0" y="0" width="10" height="20" fill="green" />
-                                        <rect x="10" y="0" width="10" height="20" fill="white" />
-                                        <rect x="20" y="0" width="10" height="20" fill="red" />
-                                    </svg>
-                                </h2>
-                                <p className="text-2xl sm:text-3xl text-stone-800 italic mt-2">
-                                    I Mieli Artigianali
+                    {/* Sezione Destra: Pulsante Carrello */}
+                    <button
+                        onClick={() => {
+                            if (cartRef.current) {
+                                cartRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }}
+                        className="relative flex items-center gap-2 text-lg text-stone-950 hover:text-amber-200 transition-colors button-press-effect"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.132 4.072 4.88 11H13l1-5H4.372L3.132 4.072zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        Carrello
+                        {calculateCartTotals.detailedCartItems.length > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                                {calculateCartTotals.detailedCartItems.length}
+                            </span>
+                        )}
+                    </button>
+                </div>
+
+                {/* Header Principale (Hero Section) */}
+                <header className="relative w-full py-8 sm:py-12 bg-gradient-to-br from-amber-200 to-amber-50 shadow-lg mb-8">
+                    <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between z-10 relative">
+                        {/* Sezione Sinistra: Info Negozio e Login Admin */}
+                        <div className="flex-grow flex flex-col items-start text-center sm:text-left">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-amber-800 leading-tight">💛 Oasi del Busatello</h1>
+                            <p className="text-lg sm:text-xl text-stone-700 mt-2 max-w-lg">
+                                Il miele artigianale che porta la natura e l'eccellenza a casa tua.
+                            </p>
+                            {isAuthReady && currentUserId && (
+                                <p className="text-xs text-stone-500 mt-1">
+                                    ID Sessione: <span className="font-mono">{currentUserId}</span>
                                 </p>
-                            </div>
+                            )}
+                            {/* Pulsante Login/Logout Admin */}
+                            {isAuthReady && (
+                                <div className="mt-4">
+                                    {isAdmin ? (
+                                        <button
+                                            onClick={() => {
+                                                // Usa window.firebase.signOut
+                                                if (firebaseAuth && window.firebase) {
+                                                    window.firebase.signOut(firebaseAuth); 
+                                                    showNotification("Disconnessione Admin effettuata.", "success");
+                                                }
+                                            }}
+                                            className="text-sm text-amber-700 hover:text-amber-900 font-semibold transition-colors button-press-effect"
+                                        >
+                                            Esci (Admin)
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => setShowAdminLoginModal(true)}
+                                            className="text-sm text-amber-700 hover:text-amber-900 font-semibold transition-colors button-press-effect"
+                                        >
+                                            Accedi come Admin
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
-                    </header>
+
+                        {/* Sezione Destra: "L'Italiano" */}
+                        <div className="flex-shrink-0 flex flex-col items-end mt-8 sm:mt-0 ml-auto text-right">
+                            <h2 
+                                className="text-6xl sm:text-7xl lg:text-8xl font-black text-amber-900 flex flex-col items-end gap-2 text-3d-effect" /* Classe per l'animazione e effetto 3D */
+                            >
+                                L'Italiano
+                                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="40" viewBox="0 0 30 20">
+                                    <rect x="0" y="0" width="10" height="20" fill="green" />
+                                    <rect x="10" y="0" width="10" height="20" fill="white" />
+                                    <rect x="20" y="0" width="10" height="20" fill="red" />
+                                </svg>
+                            </h2>
+                            <p className="text-2xl sm:text-3xl text-stone-800 italic mt-2">
+                                I Mieli Artigianali
+                            </p>
+                        </div>
+                    </div>
+                </header>
 
 
-                    {/* Contenuto principale: lista prodotti o dettaglio prodotto, e carrello */}
-                    <main className="max-w-7xl mx-auto px-4 pb-16 w-full flex-grow flex flex-col lg:flex-row gap-8">
+                {/* Contenuto principale: lista prodotti o dettaglio prodotto, e carrello */}
+                <main className="max-w-7xl mx-auto px-4 pb-16 w-full flex-grow flex flex-col lg:flex-row gap-8">
                         {/* Sezione sinistra: logica di rendering condizionale */}
                         <section className="flex-1 space-y-8">
                             {/* Se nessuna categoria o prodotto è selezionato, mostra la selezione categoria PRIMA */}
@@ -1887,12 +1835,12 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
                                         )}
                                     </button>
                                     <button
-                                        onClick={() => setShowCardDemo(true)}
+                                        onClick={handleStripePayment} // Chiamerà la nuova funzione Stripe
                                         disabled={isSavingOrder || !isAuthReady || calculateCartTotals.detailedCartItems.length === 0 || !areCustomerDetailsValid()}
                                         className={`w-full text-center rounded-xl bg-stone-700 hover:bg-stone-800 text-white font-semibold px-6 py-3 shadow-md hover:shadow-lg transition-all duration-200 transform button-press-effect ${isSavingOrder || !isAuthReady || calculateCartTotals.detailedCartItems.length === 0 || !areCustomerDetailsValid() ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
                                     >
                                         {isSavingOrder ? (
-                                            'Pagamento in corso...'
+                                            'Vai al pagamento...'
                                         ) : (
                                             <>
                                                 <span className="inline-block mr-2 text-xl align-middle">
@@ -1900,7 +1848,7 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
                                                         <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.914H15V4a1 1 0 0 0-1-1H2zm13 8.862V4.929H1v6.933A1 1 0 0 0 2 13h12a1 1 0 0 0 1-1.138zM11 5.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1z"/>
                                                     </svg>
                                                 </span>
-                                                💳 Paga con carta
+                                                Paga con carta
                                             </>
                                         )}
                                     </button>
@@ -1922,25 +1870,7 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
                     {showAdminLoginModal && (
                         <LoginScreen firebaseAuth={firebaseAuth} showNotification={showNotification} onClose={() => setShowAdminLoginModal(false)} />
                     )}
-
-                    {/* Modale simulazione pagamento carta */}
-                    {showCardDemo && (
-                        <PaymentDemoModal
-                            onClose={() => setShowCardDemo(false)}
-                            onSubmit={submitDemoPayment}
-                            cardName={cardName}
-                            setCardName={setCardName}
-                            cardNumber={cardNumber}
-                            setCardNumber={setCardNumber}
-                            cardExpiry={cardExpiry}
-                            setCardExpiry={setCardExpiry}
-                            cardCvc={cardCvc}
-                            setCardCvc={setCardCvc}
-                            isSavingOrder={isSavingOrder}
-                            totalAmount={calculateCartTotals.orderTotal}
-                            fmt={fmt}
-                        />
-                    )}
+                    {/* Il PaymentDemoModal è stato rimosso */}
 
                     {/* Footer */}
                     <footer className="w-full bg-stone-800 text-stone-300 py-6 mt-auto">
@@ -1960,6 +1890,7 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<HoneyShop />);
     </script>
+
 <script>
 // ===== Reveal on scroll (IntersectionObserver) =====
 (function(){
@@ -2021,198 +1952,5 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
   window.addEventListener('mousemove', onMove, { passive:true });
 })();
 </script>
-<!-- Stripe Checkout integration (iniettato) -->
-<script src="https://js.stripe.com/v3"></script>
-<script>
-  // Chiave pubblicabile (pubblica) di Stripe
-  const STRIPE_PUBLISHABLE_KEY = "pk_live_51RwlzP16mJsbUDZ51vZhqt8l4YwXiBbLNTVhYwEiErHYKtvoilWUlG0dCUTKifvYFtPidyctsw0ukxwwZcls1nl9003F7LocJ2";
-  const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-
-  // Endpoint backend su Vercel
-  const CHECKOUT_ENDPOINT = "https://miele-backend.vercel.app/api/checkout";
-
-  // Prova ad estrarre i dati dal carrello del sito (se esistono le strutture note)
-  function buildPayloadFromCart() {
-    try {
-      if (window.calculateCartTotals && window.calculateCartTotals.detailedCartItems) {
-        const items = window.calculateCartTotals.detailedCartItems.map(i => ({
-          price_data: {
-            currency: "eur",
-            product_data: { name: (i.productName || "Prodotto") + (i.packLabel ? " - " + i.packLabel : "") },
-            unit_amount: Math.round((i.pricePerPack || i.unitPrice || 0) * 100)
-          },
-          quantity: i.quantity || 1
-        }));
-
-        // Spedizione, se presente
-        if (typeof window.calculateCartTotals.shippingTotal === "number" && window.calculateCartTotals.shippingTotal > 0) {
-          items.push({
-            price_data: {
-              currency: "eur",
-              product_data: { name: "Spedizione" },
-              unit_amount: Math.round(window.calculateCartTotals.shippingTotal * 100)
-            },
-            quantity: 1
-          });
-        }
-
-        return { items };
-      }
-    } catch(e) {
-      console.warn("Cart parse fallita:", e);
-    }
-    // Fallback minimale: 1 prodotto da 5€
-    return {
-      items: [{
-        price_data: {
-          currency: "eur",
-          product_data: { name: "Miele Millefiori 250g" },
-          unit_amount: 500
-        },
-        quantity: 1
-      }]
-    };
-  }
-
-  async function startStripeCheckout() {
-    const payload = buildPayloadFromCart();
-    try {
-      const res = await fetch(CHECKOUT_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Errore inatteso");
-
-      // Se il backend restituisce l'URL:
-      if (data.url) {
-        window.location.href = data.url;
-        return;
-      }
-      // Altrimenti se restituisce id sessione:
-      if (data.id) {
-        const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
-        if (error) alert(error.message);
-        return;
-      }
-      alert("Risposta del server non valida.");
-    } catch (err) {
-      console.error(err);
-      alert("Pagamento non avviato: " + err.message);
-    }
-  }
-
-  // Aggancia tutti i bottoni che contengono "Paga con carta" (anche se cambiano classe/struttura)
-  function hookPayButtons(){
-    const candidates = Array.from(document.querySelectorAll("button, a"))
-      .filter(el => /paga\s*con\s*carta/i.test((el.textContent || "").trim()));
-    candidates.forEach(el => {
-      el.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        ev.stopPropagation();
-        startStripeCheckout();
-      });
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", hookPayButtons);
-  } else {
-    hookPayButtons();
-  }
-</script>
-<input id="totale-cents" type="hidden" value="0"/><script id="checkout-bridge-final">
-// ====== Checkout Bridge (non-invasivo, mantiene l'ecommerce intatto) ======
-(function(){
-  function parseEuroToCents(text){
-    if(!text) return 0;
-    try{
-      var t = (text+'').replace(/[^\d,.\-]/g,'').replace(/\./g,'').replace(',', '.');
-      var v = Math.round(parseFloat(t) * 100);
-      return isFinite(v) ? v : 0;
-    }catch(e){ return 0; }
-  }
-  function findTotalFromDOM(){
-    var selectors = [
-      '#cart-total','#order-total','#totale','#totale-ordine','#totaleOrdine',
-      '[data-totale]','[data-cart-total]','[data-order-total]',
-      '.order-total','.cart-total','.totale','.totale-ordine'
-    ];
-    for (var i=0;i<selectors.length;i++){
-      var el = document.querySelector(selectors[i]);
-      if (el){
-        var cents = parseEuroToCents(el.textContent);
-        if (cents>0) return cents;
-      }
-    }
-    // Cerca pattern 'TOTALE' con importo
-    var nodes = Array.from(document.querySelectorAll('section,div,li,p,span,td,tr,h3,h4,h5,h6'));
-    for (var el of nodes){
-      var txt = (el.textContent||'').toUpperCase();
-      if (txt.includes('TOTALE')){
-        var m = el.textContent.match(/€\s*([0-9\.\,]+)/);
-        if (m){
-          var cents = parseEuroToCents(m[1]);
-          if (cents>0) return cents;
-        }
-      }
-    }
-    return 0;
-  }
-  function syncTotal(){
-    var cents = 0;
-    if (window.totaleCarrelloCents && Number(window.totaleCarrelloCents)>0){
-      cents = Math.round(Number(window.totaleCarrelloCents));
-    } else {
-      cents = findTotalFromDOM();
-    }
-    var hidden = document.getElementById('totale-cents');
-    if (hidden) hidden.value = cents;
-    var enable = cents > 0;
-    // Abilita bottoni comuni
-    var selectors = ['#pay-btn','[data-pay]','.btn-pay','#btn-whatsapp','#btn-email','#whatsapp','#email','#wp'];
-    selectors.forEach(function(sel){
-      var el = document.querySelector(sel);
-      if (el) el.disabled = !enable;
-    });
-  }
-  // Observe DOM changes
-  var mo = new MutationObserver(function(){ syncTotal(); });
-  mo.observe(document.body, { childList:true, subtree:true, characterData:true });
-  setTimeout(syncTotal, 800);
-
-  async function getTotaleCents(){
-    var hidden = document.getElementById('totale-cents');
-    if (!hidden) throw new Error('Manca #totale-cents');
-    var v = Math.round(Number(hidden.value));
-    if (!Number.isInteger(v) || v<=0) throw new Error('Totale non valido');
-    return v;
-  }
-
-  // Click handler per vari bottoni di pagamento
-  document.addEventListener('click', async function(e){
-    var btn = e.target.closest('#pay-btn, [data-pay], .btn-pay');
-    if(!btn) return;
-    btn.disabled = true;
-    try{
-      var totaleCents = await getTotaleCents();
-      var res = await fetch('https://miele-backend.vercel.app/api/checkout', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ totaleCents: totaleCents })
-      });
-      var data = await res.json();
-      if(!res.ok){ alert(data.error || 'Errore pagamento'); return; }
-      if(!data.url){ alert('URL pagamento mancante'); return; }
-      window.location.href = data.url;
-    }catch(err){
-      alert('Errore: ' + err.message);
-    }finally{
-      btn.disabled = false;
-    }
-  });
-})();
-// ====== Fine Checkout Bridge ======
-</script></body>
+</body>
 </html>
