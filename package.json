@@ -1,14 +1,10 @@
 {
   "name": "miele-backend",
-  "version": "1.0.0",
-  "description": "Backend per il negozio di miele con funzioni Vercel",
-  "main": "api/create-checkout-session.js",
+  "private": true,
   "scripts": {
-    "start": "node api/create-checkout-session.js"
+    "build": "echo \"No build needed\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "engines": { "node": "20.x" },
   "dependencies": {
     "stripe": "^14.0.0"
   }
