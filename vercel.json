@@ -1,12 +1,6 @@
 {
+  "version": 2,
   "functions": {
-    "api/**/*.js": { "runtime": "nodejs18.x" }
-  },
-  "routes": [
-    { "src": "/api/create-checkout-session", "dest": "/api/create-checkout-session.js" },
-    { "src": "/api/ping", "dest": "/api/ping.js" },
-    { "src": "/success.html", "dest": "/success.html" },
-    { "src": "/cancel.html", "dest": "/cancel.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+    "api/**/*.js": { "runtime": "nodejs20.x" }
+  }
 }
