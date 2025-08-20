@@ -1023,7 +1023,7 @@ body::after{
             // Chiave pubblicabile di Stripe e endpoint Vercel per il checkout
             // Assicurati che 'pk_test_YOUR_STRIPE_PUBLISHABLE_KEY' sia la tua chiave reale di test!
             const stripePublishableKey = typeof __stripe_publishable_key !== 'undefined' ? __stripe_publishable_key : "pk_test_51RwlzP16mJsbUDZ51vZhqt8l4YwXiBbLNTVhYwEiErHYKtvoilWUlG0dCUTKifvYFtPidyctsw0ukxwwZcls1nl9003F7LocJ2"; // Usa la chiave fornita in ambiente Canvas o la tua di test
-            const checkoutApiEndpoint = typeof __checkout_api_endpoint !== 'undefined' ? __checkout_api_endpoint : "https://miele-backend.vercel.app/api/checkout"; // Usa endpoint da ambiente Canvas o il tuo su Vercel
+            const checkoutApiEndpoint = '/api/create-checkout-session';
 
             const stripe = useMemo(() => {
                 // Inizializza Stripe solo una volta e solo se Stripe è caricato
@@ -1954,3 +1954,4 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
 </script>
 </body>
 </html>
+
