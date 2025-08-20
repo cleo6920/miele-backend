@@ -1478,21 +1478,25 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
                     console.log("DEBUG: Payload inviato a Stripe API:", payload);
 
                     // Chiamata alla funzione serverless su Vercel
-                    const response = await fetch(checkoutApiEndpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
-                    });
+                    // Chiamata alla funzione serverless su Vercel (con gestione errori sicura)
+const response = await fetch(checkoutApiEndpoint, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload),
+});
 
-                    const data = await response.json();
+// Se NON è ok, non provare a fare .json() (potrebbe essere HTML di errore)
+if (!response.ok) {
+  const errorText = await response.text(); // potrebbe essere una pagina HTML (404, ecc.)
+  console.error('ERRORE funzione Vercel:', response.status, errorText);
+  showNotification(`❌ Errore di pagamento (${response.status}).`, "error");
+  setIsSavingOrder(false);
+  return;
+}
 
-                    if (!response.ok) {
-                        const errorMessage = data.error || 'Errore nella creazione della sessione di checkout.';
-                        console.error("ERRORE Vercel Function:", errorMessage, data);
-                        showNotification(`❌ Errore di pagamento: ${errorMessage}`, "error");
-                        setIsSavingOrder(false);
+// Solo se è OK, parse JSON
+const data = await response.json();
+
                         return;
                     }
 
@@ -1954,4 +1958,5 @@ const updateProductStockInFirestore = useCallback(async (productId, newStockValu
 </script>
 </body>
 </html>
+
 
