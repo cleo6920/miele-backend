@@ -1,25 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pagamento Completato!</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pagamento completato · La Fabbrica delle Api</title>
+<style>
+:root{--forest:#0b3025;--cream:#f4efe4;--paper:#fffaf1;--gold:#dda52e;--ink:#13231c}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(160deg,#0b3025,#143e31 48%,#f4efe4 48.2%);font-family:Arial,Helvetica,sans-serif;color:var(--ink);padding:22px}
+.card{width:min(720px,100%);background:var(--paper);border-radius:30px;padding:34px;box-shadow:0 28px 80px rgba(0,0,0,.28);text-align:center}
+.bee{font-size:58px}.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:900;color:#9b6813}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(36px,7vw,58px);line-height:1;margin:10px 0 14px}
+p{font-size:17px;color:#5f6a64}.status{margin:20px auto;padding:16px 18px;border-radius:18px;background:#eee6d8;max-width:590px;font-weight:800}
+.status.ok{background:#e5f2df;color:#214b2d}.status.warn{background:#fff0b8;color:#6b5315}.status.err{background:#ffe2db;color:#7b2d1c}
+.order{margin:18px auto;background:#fff;border:1px solid #dfd5c4;border-radius:20px;padding:18px;max-width:590px;text-align:left}
+.order strong{display:block;margin-bottom:5px}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+a,button{border:0;border-radius:999px;padding:13px 19px;font-weight:900;cursor:pointer;text-decoration:none}.primary{background:var(--forest);color:#fff}.secondary{background:var(--gold);color:#172019}
+small{display:block;color:#77827c;margin-top:18px}
+</style>
 </head>
-<body class="bg-gradient-to-br from-lime-100 to-green-200 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full text-center border border-lime-300">
-        <svg class="w-24 h-24 text-lime-500 mx-auto mb-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-        </svg>
-        <h1 class="text-4xl font-bold text-lime-700 mb-4">Grazie per il tuo ordine!</h1>
-        <p class="text-lg text-stone-700 mb-6">Il tuo pagamento è stato completato con successo. Riceverai una conferma via email a breve.</p>
-        <a href="index.html" class="inline-block bg-lime-600 hover:bg-lime-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-200 button-press-effect">
-            Torna al Negozio
-        </a>
-    </div>
+<body>
+<main class="card">
+  <div class="bee">🐝</div>
+  <div class="eyebrow" id="eyebrow">La Fabbrica delle Api</div>
+  <h1 id="title">Verifica del pagamento…</h1>
+  <p id="intro">Stiamo verificando il pagamento e registrando il tuo ordine.</p>
+  <div class="status" id="status">Attendi qualche istante…</div>
+  <div class="order" id="orderBox" hidden></div>
+  <div class="actions">
+    <button class="secondary" id="retry" type="button" hidden>Riprova verifica</button>
+    <a class="primary" id="back" href="/shop">Torna allo shop</a>
+  </div>
+  <small id="note">Il pagamento viene verificato direttamente con Stripe prima dell’invio dell’ordine.</small>
+</main>
+<script>
+const L={
+ it:{title:'Pagamento completato',intro:'Pagamento verificato. Il tuo ordine è stato registrato correttamente.',wait:'Stiamo verificando il pagamento e registrando il tuo ordine.',paid:'Pagamento confermato',sent:'Ordine inviato alla Fabbrica delle Api',pending:'Il pagamento risulta ancora in verifica. Riprova tra qualche secondo.',notify:'Il pagamento è confermato. La notifica ordine non è ancora partita: puoi riprovare senza effettuare un secondo pagamento.',bad:'Non è stato possibile verificare questo pagamento.',retry:'Riprova verifica',back:'Torna allo shop',code:'Codice ordine',total:'Totale',points:'Punti Ape'},
+ en:{title:'Payment completed',intro:'Payment verified. Your order has been recorded successfully.',wait:'We are verifying your payment and recording your order.',paid:'Payment confirmed',sent:'Order sent to La Fabbrica delle Api',pending:'The payment is still being verified. Try again in a few seconds.',notify:'Payment is confirmed. The order notification has not been sent yet: you can retry without paying again.',bad:'We could not verify this payment.',retry:'Verify again',back:'Back to shop',code:'Order code',total:'Total',points:'Bee Points'},
+ de:{title:'Zahlung abgeschlossen',intro:'Zahlung bestätigt. Deine Bestellung wurde erfolgreich erfasst.',wait:'Wir prüfen die Zahlung und erfassen deine Bestellung.',paid:'Zahlung bestätigt',sent:'Bestellung an La Fabbrica delle Api gesendet',pending:'Die Zahlung wird noch geprüft. Versuche es in einigen Sekunden erneut.',notify:'Die Zahlung ist bestätigt. Die Bestellbenachrichtigung wurde noch nicht gesendet: Du kannst es erneut versuchen, ohne noch einmal zu zahlen.',bad:'Diese Zahlung konnte nicht überprüft werden.',retry:'Erneut prüfen',back:'Zurück zum Shop',code:'Bestellnummer',total:'Gesamt',points:'Bienenpunkte'},
+ fr:{title:'Paiement terminé',intro:'Paiement vérifié. Votre commande a été enregistrée correctement.',wait:'Nous vérifions le paiement et enregistrons votre commande.',paid:'Paiement confirmé',sent:'Commande envoyée à La Fabbrica delle Api',pending:'Le paiement est encore en cours de vérification. Réessayez dans quelques secondes.',notify:'Le paiement est confirmé. La notification de commande n’a pas encore été envoyée : vous pouvez réessayer sans payer une deuxième fois.',bad:'Impossible de vérifier ce paiement.',retry:'Vérifier à nouveau',back:'Retour à la boutique',code:'Code commande',total:'Total',points:'Points Abeille'},
+ es:{title:'Pago completado',intro:'Pago verificado. Tu pedido se ha registrado correctamente.',wait:'Estamos verificando el pago y registrando tu pedido.',paid:'Pago confirmado',sent:'Pedido enviado a La Fabbrica delle Api',pending:'El pago todavía se está verificando. Inténtalo de nuevo en unos segundos.',notify:'El pago está confirmado. La notificación del pedido aún no se ha enviado: puedes volver a intentarlo sin pagar de nuevo.',bad:'No se ha podido verificar este pago.',retry:'Verificar de nuevo',back:'Volver a la tienda',code:'Código de pedido',total:'Total',points:'Puntos Abeja'}
+};
+function lang(){try{const x=localStorage.getItem('fda-site-language');if(L[x])return x}catch(_){}return 'it'}
+const T=L[lang()]||L.it;
+const status=document.getElementById('status'),retry=document.getElementById('retry');
+document.getElementById('retry').textContent=T.retry;document.getElementById('back').textContent=T.back;
+function money(v){try{return new Intl.NumberFormat(lang()==='it'?'it-IT':lang(),{style:'currency',currency:'EUR'}).format(Number(v||0))}catch(_){return '€ '+Number(v||0).toFixed(2)}}
+function pendingOrder(){try{return JSON.parse(localStorage.getItem('fda-production-pending-order')||'null')}catch(_){return null}}
+async function finalize(){
+  retry.hidden=true;status.className='status';status.textContent=T.wait;
+  const sessionId=new URLSearchParams(location.search).get('session_id');
+  if(!sessionId){status.className='status err';status.textContent=T.bad;retry.hidden=false;return}
+  try{
+    const vr=await fetch('/api/stripe-session-status?session_id='+encodeURIComponent(sessionId),{cache:'no-store'});
+    const vd=await vr.json().catch(()=>null);
+    if(!vr.ok||!vd?.ok){throw new Error(T.bad)}
+    if(vd.paymentStatus!=='paid'){
+      status.className='status warn';status.textContent=T.pending;retry.hidden=false;return;
+    }
+
+    const marker='fda-paid-session-notified-'+sessionId;
+    const already=localStorage.getItem(marker)==='1';
+    const order=pendingOrder();
+    document.getElementById('title').textContent=T.title;
+    document.getElementById('intro').textContent=T.intro;
+
+    if(order){
+      const box=document.getElementById('orderBox');box.hidden=false;
+      box.innerHTML='<strong>'+T.code+': '+String(order.id||'')+'</strong>'+
+        '<div>'+T.total+': <b>'+money(order.total)+'</b></div>'+
+        '<div>'+T.points+': <b>'+Number(order.points||0)+'</b></div>';
+    }
+
+    if(!order){
+      status.className='status ok';status.textContent=T.paid;
+      return;
+    }
+
+    if(!already){
+      const nr=await fetch('/api/order-notification',{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(order)
+      });
+      const nd=await nr.json().catch(()=>null);
+      if(!nr.ok||!nd?.ok){
+        status.className='status warn';status.textContent=T.notify;retry.hidden=false;return;
+      }
+      localStorage.setItem(marker,'1');
+      localStorage.removeItem('fda-shop-v2-cart');
+      localStorage.removeItem('fda-production-pending-order');
+    }
+    status.className='status ok';status.textContent=T.paid+' · '+T.sent;
+  }catch(e){
+    status.className='status err';status.textContent=e?.message||T.bad;retry.hidden=false;
+  }
+}
+retry.addEventListener('click',finalize);
+finalize();
+</script>
 </body>
 </html>
