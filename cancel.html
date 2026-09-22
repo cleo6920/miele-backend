@@ -1,25 +1,16 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento Annullato</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-red-100 to-orange-200 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full text-center border border-red-300">
-        <svg class="w-24 h-24 text-red-500 mx-auto mb-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-        </svg>
-        <h1 class="text-4xl font-bold text-red-700 mb-4">Pagamento Annullato</h1>
-        <p class="text-lg text-stone-700 mb-6">Il pagamento è stato annullato. Puoi riprovare o contattarci per assistenza.</p>
-        <a href="index.html" class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-200 button-press-effect">
-            Torna al Negozio
-        </a>
-    </div>
-</body>
-</html>
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pagamento annullato · La Fabbrica delle Api</title>
+<style>
+:root{--forest:#0b3025;--cream:#f4efe4;--paper:#fffaf1;--gold:#dda52e;--ink:#13231c}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(160deg,#0b3025,#143e31 48%,#f4efe4 48.2%);font-family:Arial,Helvetica,sans-serif;color:var(--ink);padding:22px}
+.card{width:min(680px,100%);background:var(--paper);border-radius:30px;padding:36px;box-shadow:0 28px 80px rgba(0,0,0,.28);text-align:center}
+.bee{font-size:58px}h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(36px,7vw,56px);line-height:1;margin:10px 0 16px}p{font-size:17px;color:#5f6a64}
+.note{background:#fff0b8;color:#604b13;border-radius:18px;padding:16px;margin:22px auto;max-width:560px;font-weight:800}
+a{display:inline-block;background:var(--forest);color:#fff;text-decoration:none;border-radius:999px;padding:14px 20px;font-weight:900}
+</style></head><body><main class="card"><div class="bee">🐝</div><h1 id="title">Pagamento annullato</h1><p id="text">Nessun addebito è stato completato.</p><div class="note" id="note">Il tuo carrello è stato conservato: puoi tornare allo shop e riprovare quando vuoi.</div><a href="/shop" id="back">Torna allo shop</a></main>
+<script>
+const t={it:['Pagamento annullato','Nessun addebito è stato completato.','Il tuo carrello è stato conservato: puoi tornare allo shop e riprovare quando vuoi.','Torna allo shop'],en:['Payment cancelled','No charge was completed.','Your cart has been kept: you can return to the shop and try again whenever you want.','Back to shop'],de:['Zahlung abgebrochen','Es wurde keine Zahlung abgeschlossen.','Dein Warenkorb wurde gespeichert: Du kannst zum Shop zurückkehren und es erneut versuchen.','Zurück zum Shop'],fr:['Paiement annulé','Aucun débit n’a été effectué.','Votre panier a été conservé : vous pouvez revenir à la boutique et réessayer quand vous le souhaitez.','Retour à la boutique'],es:['Pago cancelado','No se ha realizado ningún cargo.','Tu carrito se ha conservado: puedes volver a la tienda e intentarlo de nuevo cuando quieras.','Volver a la tienda']};
+let l='it';try{const x=localStorage.getItem('fda-site-language');if(t[x])l=x}catch(_){}
+const x=t[l];document.getElementById('title').textContent=x[0];document.getElementById('text').textContent=x[1];document.getElementById('note').textContent=x[2];document.getElementById('back').textContent=x[3];
+</script></body></html>
