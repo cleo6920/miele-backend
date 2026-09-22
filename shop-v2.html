@@ -1,0 +1,2086 @@
+<!doctype html>
+<html lang="it" translate="no" class="notranslate">
+<head>
+<meta charset="utf-8">\n<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La Fabbrica delle Api · Un mondo da vivere</title>
+<meta name="description" content="La Fabbrica delle Api: storie, luoghi, esperienze e prodotti dal mondo dell'alveare. Un nuovo modo di scoprire prima di acquistare.">
+<style>
+:root{
+  --ink:#13231c;--forest:#0b3025;--deep:#071b15;--cream:#f4efe4;--paper:#fffaf1;
+  --gold:#dda52e;--honey:#f1c357;--earth:#7c4b1f;--sage:#dce7d3;--muted:#68756e;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{width:min(1200px,calc(100% - 40px));margin:auto}
+.serif{font-family:Georgia,'Times New Roman',serif}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:900;color:#a36c11}
+.top{display:none}
+.nav{width:min(1280px,calc(100% - 28px));margin:auto;display:flex;align-items:center;gap:22px;padding:11px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;white-space:nowrap}
+.brand-mark{width:38px;height:38px;border-radius:14px;background:var(--gold);display:grid;place-items:center;color:var(--deep)}
+.links{display:flex;gap:18px;align-items:center;margin-left:auto;font-size:13px;white-space:nowrap;min-width:0}
+.links .pill{border:1px solid rgba(255,255,255,.38);padding:9px 14px;border-radius:999px}
+.links .shop-jump{color:#f6d884}
+.hero{min-height:88vh;position:relative;display:grid;align-items:end;color:#fff;overflow:hidden;background:#071b15}
+.hero-bg{position:absolute;inset:0;background:
+ linear-gradient(90deg,rgba(3,25,18,.9),rgba(4,28,20,.62) 48%,rgba(5,20,15,.18)),
+ url('/images/alveari-busatello.jpg') center/cover no-repeat;transform:scale(1.02)}
+.hero::after{content:"";position:absolute;inset:auto 0 0;height:180px;background:linear-gradient(transparent,var(--cream))}
+.hero-inner{position:relative;z-index:2;padding:155px 0 120px}
+.hero-kicker{font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:900;color:#ffd46d}
+.hero h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(58px,8vw,106px);line-height:.92;letter-spacing:-.045em;max-width:1000px;margin:22px 0}
+.hero h1 em{font-style:normal;color:#ffd66c}
+.hero p{font-size:clamp(19px,2vw,24px);max-width:720px;color:#f5f1e7}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:999px;font-weight:900}
+.btn-gold{background:var(--gold);color:#172019}
+.btn-glass{border:1px solid rgba(255,255,255,.46);background:rgba(255,255,255,.08);color:#fff}
+.chapter{padding:95px 0}
+.section-head{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:end;margin-bottom:40px}
+.section-head h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(44px,6vw,74px);line-height:.98;margin:10px 0 0}
+.section-head p{font-size:18px;color:#5d6a63;margin:0;max-width:650px}
+.today{background:var(--paper)}
+.today-grid{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:18px}
+.today-card{position:relative;min-height:350px;border-radius:28px;overflow:hidden;background:#111;color:#fff;box-shadow:0 16px 42px rgba(26,31,27,.12)}
+.today-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.today-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 25%,rgba(0,0,0,.82))}
+.today-copy{position:absolute;z-index:2;left:25px;right:25px;bottom:24px}
+.today-copy small{display:block;text-transform:uppercase;letter-spacing:.14em;color:#f5cb68;font-weight:900;margin-bottom:7px}
+.today-copy h3{font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.03;margin:0 0 8px}
+.today-copy p{margin:0;color:#ece8df}
+.story-flow{background:#12382c;color:#fff}
+.story-flow .eyebrow{color:#f3c257}
+.story-flow .section-head p{color:#dce7df}
+.story-flow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.story-step{border-top:1px solid rgba(255,255,255,.24);padding:24px 0 6px}
+.story-step b{display:block;font-family:Georgia,serif;font-size:58px;color:#f0bd4d;line-height:1}
+.story-step h3{font-family:Georgia,serif;font-size:28px;margin:12px 0 8px}
+.story-step p{color:#dce7df;margin:0}
+.feature-story{display:grid;grid-template-columns:1fr 1fr;min-height:620px}
+.feature-image{position:relative;min-height:520px;overflow:hidden}
+.feature-image img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.feature-copy{padding:78px max(38px,7vw);display:flex;flex-direction:column;justify-content:center;background:#fff9ed}
+.feature-copy.dark{background:#1d1208;color:#fff}
+.feature-copy.dark .eyebrow{color:#efb83f}
+.feature-copy h2{font-family:Georgia,serif;font-size:clamp(44px,5vw,68px);line-height:.98;margin:12px 0 22px}
+.feature-copy p{font-size:18px;max-width:620px;color:#5f675f}
+.feature-copy.dark p{color:#eadfce}
+.quote{font-family:Georgia,serif;font-size:26px;line-height:1.2;color:#8d5c0b;border-left:3px solid var(--gold);padding-left:18px;margin:26px 0}
+.feature-copy.dark .quote{color:#f7d98b}
+.pathways{background:#f0eadf}
+.path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.path{background:#fff;border-radius:24px;padding:27px;min-height:300px;display:flex;flex-direction:column;border:1px solid #ded5c5}
+.path .icon{font-size:32px}
+.path h3{font-family:Georgia,serif;font-size:28px;line-height:1.06;margin:22px 0 10px}
+.path p{color:#69736e;margin:0 0 20px}
+.path a{margin-top:auto;font-weight:900;color:#96640d}
+.product-world{padding:96px 0;background:#fffdf8}
+.product-world-head{display:grid;grid-template-columns:1.05fr .95fr;gap:45px;align-items:end;margin-bottom:44px}
+.product-world-head h2{font-family:Georgia,serif;font-size:clamp(48px,6vw,76px);line-height:.96;margin:9px 0 0}
+.product-world-head p{font-size:18px;color:#647069;margin:0}
+.taste-guide{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
+.taste-guide span{background:#efe6d4;border:1px solid #dfd1b6;border-radius:999px;padding:9px 13px;font-size:13px;font-weight:800}
+.products-new{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.product-new{display:grid;grid-template-columns:190px 1fr;background:#fff;border:1px solid #e5dccd;border-radius:28px;overflow:hidden;min-height:280px;box-shadow:0 14px 38px rgba(28,36,31,.07)}
+.product-new-media{background:#f3ead9;display:flex;align-items:center;justify-content:center;min-height:280px;padding:18px}
+.product-new-media img{width:100%;height:100%;max-height:245px;object-fit:contain}
+.product-new-copy{padding:27px;display:flex;flex-direction:column}
+.product-new-copy small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:900;color:#9d6b12}
+.product-new-copy h3{font-family:Georgia,serif;font-size:29px;line-height:1.04;margin:8px 0 9px}
+.product-new-copy p{margin:0;color:#657069;font-size:15px}
+.product-choice{font-family:Georgia,serif;font-size:18px!important;color:#7b5616!important;margin:14px 0!important}
+.product-buy{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:auto;padding-top:18px}
+.product-price strong{display:block;font-size:27px}.product-price span{display:block;font-size:14px;line-height:1.3;color:#4f5b54;font-weight:850;margin-top:5px}
+.add-btn{border:0;background:#dfaa2d;color:#172019;font-weight:900;border-radius:999px;padding:12px 16px;cursor:pointer}
+.cart-fab{position:fixed;right:18px;bottom:18px;z-index:80;border:0;background:#0b3025;color:#fff;border-radius:999px;padding:13px 18px;font-weight:900;box-shadow:0 12px 32px rgba(0,0,0,.25);cursor:pointer}
+.cart-fab b{display:inline-grid;place-items:center;min-width:23px;height:23px;margin-left:7px;background:#e5aa2d;color:#172019;border-radius:999px}
+.cart-drawer{position:fixed;inset:0 0 0 auto;width:min(430px,100%);background:#fffaf1;z-index:100;box-shadow:-20px 0 60px rgba(0,0,0,.22);transform:translateX(105%);transition:.28s ease;display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.cart-head{padding:22px 24px;border-bottom:1px solid #e6ddcf;display:flex;justify-content:space-between;align-items:center}
+.cart-head h2{font-family:Georgia,serif;font-size:30px;margin:0}
+.cart-close{border:0;background:#ece4d6;width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer}
+.cart-items{padding:18px 24px;overflow:auto;flex:1}
+.cart-empty{color:#69736d;padding:25px 0}
+.cart-item{display:grid;grid-template-columns:1fr auto;gap:10px;padding:15px 0;border-bottom:1px solid #e6ddcf}
+.cart-item strong{display:block}.cart-item small{color:#747c77}.cart-item button{border:0;background:transparent;color:#93620d;text-decoration:underline;cursor:pointer}
+.cart-foot{padding:20px 24px;border-top:1px solid #e6ddcf;background:#fff}
+.cart-total{display:flex;justify-content:space-between;font-size:20px;font-weight:900;margin-bottom:14px}
+.checkout-new{display:block;width:100%;border:0;border-radius:999px;padding:14px;background:#0b3025;color:#fff;font-weight:900;text-align:center}
+.cart-note{font-size:12px;color:#747c77;margin-top:10px;text-align:center}
+.api-explainer{margin:28px 0 36px;background:linear-gradient(135deg,#fff5cf,#f4d77e);border:1px solid #e8c452;border-radius:24px;padding:22px 24px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.api-bee{font-size:34px}.api-explainer strong{display:block;font-family:Georgia,serif;font-size:24px;line-height:1.05}.api-explainer p{margin:5px 0 0;color:#5c4b1e}.api-goal{font-weight:900;background:#153629;color:#fff;border-radius:999px;padding:10px 14px;white-space:nowrap}
+.api-badge{display:inline-flex;align-items:center;gap:6px;background:#ffcf43;color:#2a230c;border-radius:999px;padding:8px 11px;font-size:14px;line-height:1;font-weight:950;margin:12px 0 0;width:max-content}
+.cart-points{display:flex;justify-content:space-between;gap:12px;margin:0 0 14px;padding:12px 14px;border-radius:16px;background:#fff1bb;font-weight:900;color:#49380d}
+.checkout-new{cursor:pointer}
+.checkout-overlay{position:fixed;inset:0;background:rgba(4,19,14,.72);z-index:150;display:none;align-items:center;justify-content:center;padding:18px}
+.checkout-overlay.open{display:flex}
+.checkout-panel{width:min(920px,100%);max-height:94vh;overflow:auto;background:#fffaf1;border-radius:30px;box-shadow:0 30px 90px rgba(0,0,0,.35)}
+.checkout-top{padding:24px 28px;border-bottom:1px solid #e7ddce;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.checkout-top h2{font-family:Georgia,serif;font-size:36px;margin:4px 0 0}.checkout-top p{margin:4px 0 0;color:#66726b}
+.checkout-close{border:0;background:#eee5d6;width:42px;height:42px;border-radius:50%;font-size:22px;cursor:pointer}
+.checkout-body{padding:28px}
+.checkout-steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.checkout-step{padding:8px 11px;border-radius:999px;background:#eee6da;font-size:12px;font-weight:900}.checkout-step.active{background:#17382b;color:#fff}
+.checkout-screen{display:none}.checkout-screen.active{display:block}
+.checkout-screen h3{font-family:Georgia,serif;font-size:30px;margin:0 0 18px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:900;color:#49554f}.field input,.field select,.field textarea{width:100%;border:1px solid #d8cfbf;background:#fff;border-radius:14px;padding:12px 13px;font:inherit}.field textarea{min-height:90px;resize:vertical}
+.phone-split{display:grid;grid-template-columns:112px minmax(0,1fr);gap:8px}
+.phone-split input{width:100%}
+.phone-prefix{text-align:center;font-weight:900;letter-spacing:.02em}
+@media(max-width:560px){.phone-split{grid-template-columns:96px minmax(0,1fr)}}
+.delivery-options{display:grid;grid-template-columns:1fr 1fr;gap:14px}.delivery-option{border:1px solid #d8cfbf;border-radius:18px;padding:18px;cursor:pointer;background:#fff}.delivery-option input{margin-right:8px}.delivery-option strong{display:block;margin-bottom:5px}.delivery-option p{margin:0;color:#66726b;font-size:14px}
+.order-summary{display:grid;gap:10px}.summary-row{display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid #eee5d7}.summary-row.total{font-size:20px;font-weight:900;border:0;padding-top:16px}.summary-api{background:#fff0ae;border-radius:18px;padding:16px;margin-top:18px}.summary-api strong{font-size:19px}
+.fake-card{background:#102f24;color:#fff;border-radius:22px;padding:22px;margin-top:14px}.fake-card label{display:block;font-weight:900;margin-bottom:7px}.fake-card .mock-line{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:12px;color:#e9f0eb;margin-top:8px}
+.checkout-actions{display:flex;justify-content:space-between;gap:12px;margin-top:24px}.checkout-actions button{border:0;border-radius:999px;padding:13px 18px;font-weight:900;cursor:pointer}.back-btn{background:#ece4d7;color:#26342d}.next-btn{background:#17382b;color:#fff;margin-left:auto}.pay-btn{background:#dfa72c;color:#162319;margin-left:auto}
+.success-wrap{text-align:center;padding:20px 10px 10px}.success-bee{font-size:58px}.success-wrap h3{font-family:Georgia,serif;font-size:42px;margin:8px 0 10px}.success-order{font-weight:900;color:#6d5315}.success-api{margin:22px auto;background:#fff0ae;border-radius:22px;padding:18px;max-width:560px}.success-api strong{display:block;font-family:Georgia,serif;font-size:28px;margin-bottom:6px}
+.success-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.download-order-pdf{border:0;border-radius:999px;background:#dfaa2d;color:#172019;padding:14px 20px;font-weight:950;cursor:pointer}
+@media(max-width:560px){.success-actions{flex-direction:column}.success-actions button{width:100%}}
+@media(max-width:700px){.api-explainer{grid-template-columns:auto 1fr}.api-goal{grid-column:1/-1;width:max-content}.form-grid,.delivery-options{grid-template-columns:1fr}.field.full{grid-column:auto}}
+.journal{background:#fffdf8}
+.journal-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:25px}
+.journal-main{background:#0c2d22;color:#fff;border-radius:30px;padding:44px;min-height:370px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}
+.journal-main::before{content:"";position:absolute;inset:0;background:url('/images/centro-alveoterapia-hq.webp') center/cover;opacity:.22}
+.journal-main>*{position:relative}
+.journal-main h3{font-family:Georgia,serif;font-size:42px;line-height:1.02;margin:10px 0 12px}
+.journal-side{display:grid;gap:16px}
+.note-card{background:#f1e7d4;border-radius:24px;padding:28px}
+.note-card h3{font-family:Georgia,serif;font-size:27px;margin:7px 0 10px}
+.note-card p{color:#67726b;margin:0}
+.bottega{background:#e0a52d;color:#16261e}
+.bottega-inner{display:grid;grid-template-columns:1.2fr .8fr;gap:44px;align-items:center}
+.bottega h2{font-family:Georgia,serif;font-size:clamp(48px,6vw,78px);line-height:.95;margin:10px 0 20px}
+.bottega p{font-size:19px;max-width:720px}
+.bottega-box{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.42);border-radius:28px;padding:30px}
+.bottega-box strong{display:block;font-family:Georgia,serif;font-size:28px;margin-bottom:10px}
+.footer{background:#071b15;color:#dce5df;padding:52px 0}
+.footer-grid{display:grid;grid-template-columns:1.3fr .7fr .7fr;gap:30px}
+.footer h3{color:#f1c55f;margin-top:0}.footer a{display:block;margin:7px 0}
+.project-bar{position:sticky;top:68px;z-index:45;background:#10392c;color:#fff;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.project-bar .wrap{display:flex;align-items:center;gap:10px;overflow:visible;padding:8px 0;position:relative}
+.project-links{display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1}
+.project-links::-webkit-scrollbar{display:none}
+.project-links a{white-space:nowrap;font-size:12px;font-weight:850;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10)}
+.project-links a:first-child{background:var(--gold);color:#152119;border-color:transparent}
+.site-search{position:relative;flex:0 0 clamp(220px,24vw,310px);z-index:72}
+.site-search-box{height:38px;display:flex;align-items:center;gap:8px;border-radius:999px;background:#fff;color:#173126;border:1px solid rgba(255,255,255,.55);box-shadow:0 4px 14px rgba(0,0,0,.12);padding:0 7px 0 13px}
+.site-search-box svg{width:17px;height:17px;flex:0 0 17px;color:#31594b}
+.site-search-box input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#173126;font:700 13px/1 Arial,Helvetica,sans-serif}
+.site-search-box input::placeholder{color:#718077;font-weight:600}
+.site-search-go{width:29px;height:29px;flex:0 0 29px;border:0;border-radius:999px;background:#e0aa2d;color:#152119;display:grid;place-items:center;cursor:pointer;padding:0}
+.site-search-go svg{width:15px;height:15px;color:currentColor}
+.site-search-results{position:absolute;top:calc(100% + 7px);right:0;width:min(440px,calc(100vw - 24px));max-height:min(460px,65vh);overflow:auto;background:#fffaf1;color:#16261e;border:1px solid #ddcfb8;border-radius:18px;box-shadow:0 20px 55px rgba(0,0,0,.28);padding:7px;display:none}
+.site-search-results.open{display:block}
+.site-search-result{width:100%;border:0;background:transparent;color:inherit;text-align:left;border-radius:13px;padding:10px 11px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;cursor:pointer;font:inherit}
+.site-search-result:hover,.site-search-result.active{background:#f2e7d3}
+.site-search-result strong{font-size:13px;line-height:1.25}
+.site-search-result small{grid-column:1;color:#69756e;font-size:11px;line-height:1.25}
+.site-search-result em{font-style:normal;align-self:start;background:#0f392c;color:#fff;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+.site-search-empty{padding:13px 12px;color:#66736c;font-size:12px;line-height:1.4}
+.site-search-hint{padding:6px 11px 4px;color:#8a7760;font-size:10px;border-top:1px solid #eadfcd;margin-top:4px}
+@media(max-width:760px){
+ .project-bar{position:relative;top:auto}
+ .project-bar .wrap{flex-wrap:wrap;gap:7px;padding:7px 0 9px}
+ .project-links{flex:1 1 100%;order:1}
+ .site-search{flex:1 1 100%;order:2}
+ .site-search-results{left:0;right:auto;width:100%}
+}
+.quick-buy{background:#fff8eb;padding:76px 0}
+.quick-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:26px}
+.quick-head h2{font-family:Georgia,serif;font-size:clamp(40px,5vw,62px);line-height:.98;margin:8px 0 0}
+.quick-head p{max-width:560px;color:#67726b;margin:0}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.quick-card{background:white;border:1px solid #e5dccb;border-radius:22px;padding:24px;display:flex;flex-direction:column;min-height:230px;box-shadow:0 10px 28px rgba(26,31,27,.06)}
+.quick-card small{font-weight:900;color:#9c690f;text-transform:uppercase;letter-spacing:.1em}
+.quick-card h3{font-family:Georgia,serif;font-size:27px;line-height:1.05;margin:12px 0 8px}
+.quick-card p{color:#68736d;margin:0 0 20px}
+.quick-card a{margin-top:auto;font-weight:900;color:#875b0d}
+.guide-card{margin-top:24px;background:#0d3327;color:#fff;border-radius:28px;padding:28px 30px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}
+.guide-card h3{font-family:Georgia,serif;font-size:34px;line-height:1.03;margin:6px 0 10px}
+.guide-card p{color:#dbe5df;margin:0}
+.guide-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.buy-step{margin-top:28px;padding:24px 0 0;border-top:1px solid rgba(0,0,0,.12)}
+.buy-step .why{font-family:Georgia,serif;font-size:22px;line-height:1.25;color:#7c5108;margin-bottom:14px}
+.buy-row{display:flex;gap:10px;flex-wrap:wrap}
+.buy-row .btn{margin:0}
+.feature-copy.dark .buy-step{border-color:rgba(255,255,255,.14)}
+.feature-copy.dark .buy-step .why{color:#f7d98b}
+.ape-chat-launch{position:relative;z-index:86;flex:0 0 350px;min-height:46px;border:1px solid rgba(255,255,255,.22);background:#f0b52f;color:#173126;border-radius:999px;padding:5px 16px 5px 8px;display:flex;align-items:center;justify-content:flex-start;gap:10px;box-shadow:0 5px 16px rgba(0,0,0,.10);cursor:pointer;white-space:nowrap}
+.ape-chat-launch svg{width:34px;height:34px;flex:0 0 34px}
+.ape-chat-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;line-height:1.08}
+.ape-chat-copy strong{font:950 13px/1.05 Arial,Helvetica,sans-serif}
+.ape-chat-copy small{font:750 10.5px/1.1 Arial,Helvetica,sans-serif;color:#355646}
+.ape-chat-panel{position:fixed;left:min(330px,32vw);top:72px;z-index:140;width:min(390px,calc(100vw - 30px));height:min(620px,calc(100vh - 92px));background:#fffaf1;border:1px solid #decfAF;border-radius:28px;box-shadow:0 28px 80px rgba(0,0,0,.28);display:none;overflow:hidden}
+.ape-chat-panel.open{display:flex;flex-direction:column}
+.ape-chat-head{background:#0e3529;color:#fff;padding:15px 16px;display:flex;align-items:center;gap:11px}
+.ape-chat-head svg{width:44px;height:44px;flex:0 0 44px}
+.ape-chat-head strong{display:block;font-family:Georgia,serif;font-size:21px;line-height:1}
+.ape-chat-head small{display:block;color:#d7e5dd;margin-top:4px}
+.ape-chat-close{margin-left:auto;border:0;background:rgba(255,255,255,.12);color:#fff;width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer}
+.ape-chat-messages{flex:1;overflow:auto;padding:16px;background:linear-gradient(180deg,#fffaf1,#f6efe3)}
+.ape-msg{max-width:88%;padding:11px 13px;border-radius:18px;margin:8px 0;font-size:14px;line-height:1.45}
+.ape-msg.bot{background:#fff;border:1px solid #e3d9c7;border-bottom-left-radius:6px}
+.ape-msg.user{background:#17382b;color:#fff;margin-left:auto;border-bottom-right-radius:6px}
+.ape-context-link{display:inline-flex;align-items:center;gap:7px;margin:4px 0 10px 2px;padding:9px 13px;border-radius:999px;background:#e0aa2d;color:#18251f;text-decoration:none;font-weight:950;font-size:12px;border:1px solid #c9941f;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.ape-context-link:hover{filter:brightness(.97);transform:translateY(-1px)}
+
+.catalog-world{padding:82px 0;background:#fbf6eb;scroll-margin-top:125px}
+.catalog-world.soft{background:#f3eadb}
+.catalog-world.venom-world{background:#171915;color:#f6edd7}
+.catalog-world-head{max-width:820px;margin-bottom:28px}
+.catalog-world-head h2{font-family:Georgia,serif;font-size:clamp(34px,5vw,58px);line-height:1.02;margin:8px 0 12px}
+.catalog-world-head p{font-size:17px;line-height:1.65;opacity:.84}
+.catalog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.catalog-card{background:#fff;border:1px solid #dfd2bc;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;min-width:0;box-shadow:0 8px 22px rgba(38,30,15,.05);scroll-margin-top:135px}
+.venom-world .catalog-card{background:#22241f;border-color:#4c4a3e;color:#f7eed9}
+.catalog-card-media{height:210px;background:#f1e8d8;display:flex;align-items:center;justify-content:center;padding:18px}
+.catalog-card-media img{width:100%;height:100%;object-fit:contain}
+.catalog-card-body{padding:18px;display:flex;flex-direction:column;gap:11px;flex:1}
+.catalog-card-body small{font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.62}
+.catalog-card-body h3{font-family:Georgia,serif;font-size:24px;line-height:1.08;margin:0}
+.catalog-card-body p{margin:0;line-height:1.5;opacity:.82}
+.catalog-points{width:max-content;max-width:100%;padding:8px 11px;border-radius:999px;background:#fff3c9;color:#6d5008;font:950 13px/1 Arial,Helvetica,sans-serif}
+.venom-world .catalog-points{background:#3b3524;color:#f4c75d;border:1px solid #5a4d2d}
+.catalog-buy-row{margin-top:auto;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.catalog-price strong{display:block;font-size:26px}.catalog-price span{display:block;font-size:14px;line-height:1.3;font-weight:850;opacity:.82;margin-top:5px}
+.catalog-card .add-btn{border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:11px 15px;font-weight:950;cursor:pointer}
+.product-new,.catalog-card{cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.product-new:hover,.catalog-card:hover{transform:translateY(-2px);box-shadow:0 18px 46px rgba(28,36,31,.12);border-color:#d5bd8d}
+.venom-world .catalog-card:hover{border-color:#b9964d}
+.product-detail-link{border:0;background:transparent;color:#98650e;padding:0;text-align:left;font:900 12px/1.2 Arial,Helvetica,sans-serif;cursor:pointer;width:max-content}
+.venom-world .product-detail-link{color:#f0bd4d}
+.product-detail-overlay{position:fixed;inset:0;z-index:175;background:rgba(4,19,14,.78);display:none;align-items:center;justify-content:center;padding:20px}
+.product-detail-overlay.open{display:flex}
+.product-detail-panel{position:relative;width:min(980px,100%);max-height:94vh;overflow:auto;background:#fffaf1;color:#17251f;border-radius:30px;box-shadow:0 32px 100px rgba(0,0,0,.38)}
+.product-detail-close{position:absolute;right:16px;top:16px;z-index:2;width:42px;height:42px;border:0;border-radius:50%;background:#17382b;color:#fff;font-size:25px;line-height:1;cursor:pointer}
+.product-detail-grid{display:grid;grid-template-columns:minmax(300px,.9fr) minmax(0,1.1fr);min-height:560px}
+.product-detail-media{background:#efe5d3;display:flex;align-items:center;justify-content:center;padding:42px;min-height:520px}
+.product-detail-media img{width:100%;height:100%;max-width:430px;max-height:450px;object-fit:contain;filter:drop-shadow(0 14px 18px rgba(0,0,0,.08))}
+.product-detail-copy{padding:48px 48px 38px;display:flex;flex-direction:column}
+.product-detail-category{font:950 11px/1 Arial,Helvetica,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#98650e;margin-bottom:10px}
+.product-detail-copy h2{font-family:Georgia,serif;font-size:clamp(34px,4vw,52px);line-height:1.02;margin:0 45px 12px 0}
+.product-detail-format{font-weight:850;color:#6f7973;margin-bottom:24px}
+.product-detail-description{font-size:16px;line-height:1.68;color:#4f5d56}
+.product-detail-description p{margin:0 0 14px}
+.product-detail-description strong{color:#263b31}
+.product-detail-description span[style]{display:block!important;margin-top:15px!important;padding:14px!important;border-radius:14px!important;background:#fff5cf!important;border:1px solid #e3bd55!important;color:#5f4812!important;font-weight:750!important}
+.product-detail-warning{display:none;margin:18px 0 22px;padding:15px 16px;border-radius:16px;background:#fff3df;border:1px solid #d9983e;color:#5f3510;font-size:13px;line-height:1.5}
+.product-detail-warning.show{display:block}
+.product-detail-warning strong{display:block;margin-bottom:6px;color:#8a3a12;font-size:14px}
+.product-detail-warning::before{content:"⚠";float:left;margin-right:9px;font-size:18px;line-height:1.1}
+
+.product-detail-buy{margin-top:auto;padding-top:28px;display:flex;align-items:end;justify-content:space-between;gap:18px;border-top:1px solid #e1d6c3}
+.product-detail-price strong{display:block;font-size:34px}.product-detail-price span{display:block;color:#30483d;font-size:16px;line-height:1.35;font-weight:900;margin-top:8px}
+.product-detail-add{border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:14px 22px;font-weight:950;cursor:pointer;font-size:14px}
+.product-detail-source-note{font-size:10px;color:#7a837e;margin-top:12px}
+@media(max-width:760px){
+ .product-detail-overlay{padding:8px}
+ .product-detail-panel{border-radius:22px;max-height:97vh}
+ .product-detail-grid{grid-template-columns:1fr}
+ .product-detail-media{min-height:280px;padding:28px}
+ .product-detail-media img{max-height:270px}
+ .product-detail-copy{padding:28px 22px 24px}
+ .product-detail-copy h2{font-size:34px;margin-right:34px}
+ .product-detail-buy{align-items:stretch;flex-direction:column}
+ .product-detail-price span{font-size:16px}
+ .product-detail-add{width:100%}
+}
+@media(max-width:950px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.catalog-grid{grid-template-columns:1fr}.catalog-world{padding:58px 0}}
+#miele-millefiori,#miele-melone,#miele-fragola,#miele-pesca,#miele-arancia,#mieli,#punti-ape{scroll-margin-top:130px}
+.ape-quick{display:flex;gap:7px;flex-wrap:wrap;padding:0 14px 12px;background:#f6efe3}
+.ape-quick button{border:1px solid #dccb9c;background:#fff8dd;color:#5d4813;border-radius:999px;padding:8px 10px;font-weight:850;font-size:12px;cursor:pointer}
+.ape-chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid #e4d9c7;background:#fff}
+.ape-chat-input input{flex:1;border:1px solid #d9cfbf;border-radius:999px;padding:11px 13px;font:inherit;min-width:0}
+.ape-chat-input button{border:0;background:#e0aa2d;color:#18251f;border-radius:999px;padding:0 16px;font-weight:950;cursor:pointer}
+.ape-note{padding:0 14px 10px;background:#fff;font-size:11px;color:#79827c}
+@media(max-width:760px){.ape-chat-launch{flex:1 1 100%;width:100%;padding:5px 14px 5px 8px}.ape-chat-launch svg{width:34px;height:34px;flex-basis:34px}.ape-chat-copy{display:flex}.ape-chat-copy small{white-space:normal}.ape-chat-panel{left:8px;right:8px;top:66px;bottom:8px;width:auto;height:auto}}
+@media(max-width:950px){.quick-grid{grid-template-columns:1fr 1fr}.guide-card{grid-template-columns:1fr}.guide-actions{justify-content:flex-start}}
+@media(max-width:620px){.project-bar{top:60px}.quick-head{display:block}.quick-head p{margin-top:14px}.quick-grid{grid-template-columns:1fr}}
+
+@media(max-width:950px){
+ .links{overflow-x:auto}.section-head,.feature-story,.journal-grid,.bottega-inner,.product-world-head{grid-template-columns:1fr}
+ .products-new{grid-template-columns:1fr}
+ .today-grid{grid-template-columns:1fr 1fr}.today-card:first-child{grid-column:1/-1}
+ .story-flow-grid{grid-template-columns:1fr}.path-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:620px){
+ .wrap{width:min(100% - 24px,1200px)}
+ .product-new{grid-template-columns:1fr}.product-new-media{min-height:220px}.product-new-media img{max-height:190px}.nav{width:calc(100% - 18px)}.links{gap:12px}.links a:not(.shop-jump):not(.pill){display:none}
+ .hero{min-height:760px}.hero-inner{padding:145px 0 105px}.hero h1{font-size:clamp(52px,16vw,76px)}
+ .chapter{padding:68px 0}.section-head{gap:18px}.today-grid,.path-grid{grid-template-columns:1fr}.today-card:first-child{grid-column:auto}
+ .feature-copy{padding:52px 24px}.story-flow-grid{gap:8px}.footer-grid{grid-template-columns:1fr}
+}
+</style>
+<link rel="stylesheet" href="/global-nav-v2.css?v=20260922-1">
+</head>
+<body translate="no" class="notranslate">
+<header class="site-header">
+  <nav class="nav" aria-label="Navigazione principale">
+    <a class="brand" href="/" aria-label="La Fabbrica delle Api · Home"><span class="brand-mark">✦</span><span>LA FABBRICA DELLE API</span></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/alveoterapia">Alveoterapia</a>
+      <a href="/#luoghi">I luoghi</a>
+      <a href="/chi-siamo">Chi siamo</a>
+      <a href="/bacheca">Bacheca</a>
+      <a href="/shop#linea-veleni">Linea Veleni</a>
+      <a class="shop" href="/shop" aria-current="page">Prodotti & Shop</a>
+      <a class="talk" href="/contatti">Parliamone</a>
+    </div>
+  </nav>
+</header>
+<div class="project-bar" aria-label="Navigazione della Bottega">
+  <div class="wrap">
+    <div class="project-links">
+      <a href="#scegli">Bottega</a>
+      <a href="#mieli">Mieli</a>
+      <a href="#alveare">Alveare</a>
+      <a href="#propoli">Propoli</a>
+      <a href="#cosmesi">Cosmesi</a>
+      <a href="#linea-veleni">Linea Veleni</a>
+      <a href="#tesori-francesco">Tesori</a>
+      <a href="#punti-ape">🐝 Punti Ape</a>
+    </div>
+    <button class="ape-chat-launch" id="apeChatLaunch" type="button" aria-label="Chiedi a Ape Pelù: scopri, chiedi e lasciati guidare nel mondo delle api"><svg viewBox="0 0 64 64" aria-hidden="true">
+<ellipse cx="32" cy="35" rx="16" ry="19" fill="#f6bd2f"/>
+<path d="M19 29h26M18 38h28M23 47h18" stroke="#2d2412" stroke-width="5" stroke-linecap="round"/>
+<ellipse cx="18" cy="24" rx="11" ry="8" fill="#e9f7f4" opacity=".9" transform="rotate(-28 18 24)"/>
+<ellipse cx="46" cy="24" rx="11" ry="8" fill="#e9f7f4" opacity=".9" transform="rotate(28 46 24)"/>
+<circle cx="26" cy="18" r="2.4" fill="#1b211d"/><circle cx="38" cy="18" r="2.4" fill="#1b211d"/>
+<path d="M27 23q5 5 10 0" fill="none" stroke="#1b211d" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M24 10q-4-6-8-4M40 10q4-6 8-4" fill="none" stroke="#1b211d" stroke-width="2.4" stroke-linecap="round"/>
+</svg><span class="ape-chat-copy"><strong>Chiedi a Ape Pelù</strong><small>Scopri, chiedi, lasciati guidare nel mondo delle api.</small></span></button>
+    <div class="site-search" id="siteSearch">
+      <div class="site-search-box">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="siteSearchInput" type="search" placeholder="Cerca nel sito..." autocomplete="off" aria-label="Cerca nella Fabbrica delle Api" aria-autocomplete="list" aria-controls="siteSearchResults">
+        <button class="site-search-go" id="siteSearchGo" type="button" aria-label="Avvia la ricerca">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="site-search-results" id="siteSearchResults" role="listbox" aria-label="Risultati della ricerca"></div>
+    </div>
+  </div>
+</div>
+
+<main>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-kicker">LA BOTTEGA DELLA FABBRICA DELLE API</div>
+    <h1>Scegli cosa <em>portare con te.</em></h1>
+    <p>Qui trovi i prodotti della Fabbrica delle Api senza perdere il legame con l’alveare, i luoghi e le stagioni che li accompagnano.</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="#scegli">Scopri i prodotti</a>
+      <a class="btn btn-glass" href="#mieli">Vai ai Mieli del Busatello →</a>
+    </div>
+  </div>
+</section>
+
+<section class="chapter today" id="oggi">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Oggi nella Fabbrica delle Api</span><h2>C'è sempre qualcosa che cambia.</h2></div>
+      <p>Stagioni, fioriture, esperienze, prodotti e racconti dal Centro e dall'Oasi: qui trovi sempre qualcosa da scoprire, anche quando non stai cercando un prodotto.</p>
+    </div>
+    <div class="today-grid">
+      <a class="today-card" href="/alveoterapia">
+        <img src="/images/alveari-busatello.jpg" alt="Arnie all'Oasi del Busatello">
+        <div class="today-copy"><small>Primavera · Estate</small><h3>Dentro il paesaggio del Busatello</h3><p>Scopri perché l'Oasi non è soltanto il luogo delle arnie, ma parte del racconto dei nostri mieli.</p></div>
+      </a>
+      <a class="today-card" href="/centro">
+        <img src="/images/centro-alveoterapia-hq.webp" alt="Galena delle Api">
+        <div class="today-copy"><small>Autunno · Inverno</small><h3>La Galena delle Api</h3><p>L'esperienza dell'alveare continua anche al coperto.</p></div>
+      </a>
+      <a class="today-card" href="/bacheca">
+        <img src="/images/alveo-digitale-card-render.webp" alt="Novità dalla Fabbrica delle Api">
+        <div class="today-copy"><small>Novità</small><h3>La Bacheca</h3><p>Comunicazioni, idee, nuovi contenuti e aggiornamenti dalla Fabbrica delle Api.</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="quick-buy" id="scegli">
+  <div class="wrap">
+    <div class="quick-head">
+      <div><span class="eyebrow">Sai già cosa ti interessa?</span><h2>Arriva subito alla scelta giusta.</h2></div>
+      <p>Il racconto resta sempre disponibile, ma acquistare deve essere facile. Scegli il mondo che ti interessa e ti portiamo direttamente ai prodotti relativi.</p>
+    </div>
+    <div class="quick-grid">
+      <article class="quick-card"><small>Territorio</small><h3>Mieli del Busatello</h3><p>Se cerchi il sapore legato all'Oasi, parti da qui.</p><a href="#mieli">Vedi i mieli disponibili →</a></article>
+      <article class="quick-card"><small>Alveare</small><h3>Polline, Pane delle Api e alimenti</h3><p>Per chi vuole conoscere e assaggiare ciò che nasce dalla vita dell'alveare.</p><a href="#alveare">Scopri gli alimenti →</a></article>
+      <article class="quick-card"><small>Quotidianità</small><h3>Propoli e integratori</h3><p>Una selezione semplice da esplorare, senza promesse e senza tecnicismi inutili.</p><a href="#propoli">Vedi la selezione →</a></article>
+      <article class="quick-card"><small>Gesti</small><h3>Cosmesi dell'alveare</h3><p>Creme, saponi e prodotti per trasformare piccoli gesti quotidiani in momenti più curati.</p><a href="#cosmesi">Scopri la cosmesi →</a></article>
+      <article class="quick-card"><small>Linea specialistica</small><h3>Linea Veleni</h3><p>Massaggio, viso e corpo raccontati attraverso uno degli elementi più sorprendenti dell'alveare.</p><a href="#linea-veleni">Vai alla Linea Veleni →</a></article>
+      <article class="quick-card"><small>Digitale</small><h3>Alveo Digitale</h3><p>Ricette, contenuti e idee da vivere anche lontano dal Centro.</p><a href="/alveo-digitale">Scopri Alveo Digitale →</a></article>
+    </div>
+    <div class="guide-card">
+      <div><span class="eyebrow">Non sai cosa scegliere?</span><h3>Parti da ciò che ti incuriosisce, non dal nome del prodotto.</h3><p>Ti guidiamo per sapore, esperienza o momento d'uso. La parte commerciale arriva solo quando hai capito cosa può avere senso per te.</p></div>
+      <div class="guide-actions"><a class="btn btn-gold" href="#percorsi">Fammi scegliere per interesse →</a><a class="btn btn-glass" href="/contatti">Parliamone</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter story-flow" id="storie">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Il nuovo modo di entrare nello shop</span><h2>Non categorie.<br>Storie da seguire.</h2></div>
+      <p>Ogni prodotto ha un prima e un dopo: da dove nasce, cosa racconta e perché è arrivato qui. Il prezzo viene dopo la comprensione.</p>
+    </div>
+    <div class="story-flow-grid">
+      <div class="story-step"><b>01</b><h3>Guarda il luogo</h3><p>Oasi, Galena, alveare, persone e stagioni danno un contesto reale.</p></div>
+      <div class="story-step"><b>02</b><h3>Capisci il perché</h3><p>Ogni linea ha una ragione per esistere. La raccontiamo prima di mostrare le confezioni.</p></div>
+      <div class="story-step"><b>03</b><h3>Scegli cosa portare con te</h3><p>Solo a quel punto il prodotto diventa la continuazione naturale dell'esperienza.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="feature-story">
+  <div class="feature-image"><img src="/images/alveari-busatello.jpg" alt="Oasi del Busatello"></div>
+  <div class="feature-copy">
+    <span class="eyebrow">Storia 01 · Il territorio</span>
+    <h2>I Mieli del Busatello non iniziano dal vasetto.</h2>
+    <p>Iniziano da un luogo. Da un'oasi, dalle fioriture, dall'acqua, dalla vegetazione e dal lavoro delle api. Se mostriamo soltanto la confezione, perdiamo la parte più importante.</p>
+    <div class="quote">Prima conosci il paesaggio. Poi assaggi ciò che quel paesaggio ha contribuito a creare.</div>
+    <div class="buy-step">
+      <div class="why">Se questo racconto ti incuriosisce, il passo successivo è semplice: guarda i mieli legati a questo mondo e scegli quello che ti attira di più.</div>
+      <div class="buy-row"><a class="btn btn-gold" href="#mieli">Scegli un Miele del Busatello →</a><a class="btn btn-dark" href="/alveoterapia">Prima voglio conoscere meglio l'Oasi</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="feature-story">
+  <div class="feature-copy dark">
+    <span class="eyebrow">Storia 02 · Linea specialistica</span>
+    <h2>Linea Veleni. Un lato sorprendente dell'alveare.</h2>
+    <p>Una linea che va oltre una successione di schede cosmetiche. Prima viene il fascino di uno degli elementi più particolari dell'alveare; poi massaggio, gesti quotidiani, pelle e prodotti.</p>
+    <div class="quote">Non una promessa di cura. Un modo diverso di scoprire il carattere dell'alveare.</div>
+    <div class="buy-step">
+      <div class="why">Se ti interessa soprattutto il massaggio, la cura quotidiana della pelle o un gesto più particolare, puoi passare direttamente alla scelta del prodotto legato a quel momento.</div>
+      <div class="buy-row"><a class="btn btn-gold" href="#linea-veleni">Scopri e scegli nella Linea Veleni →</a><a class="btn btn-glass" href="/#veleni">Prima voglio conoscere la storia</a></div>
+    </div>
+  </div>
+  <div class="feature-image"><img src="/images/veleno-apis1-hd.svg" alt="Linea Veleni d'Api"></div>
+</section>
+
+<section class="product-world" id="mieli">
+  <div class="wrap">
+    <div class="product-world-head">
+      <div><span class="eyebrow">Dal Busatello alla tua tavola</span><h2>Scegli il miele dal gusto che vuoi vivere.</h2></div>
+      <p>Non serve conoscere termini tecnici. Parti da una sensazione: classico, fruttato, delicato o agrumato. Ogni scelta ti porta a un prodotto reale, con formato e prezzo chiari.</p>
+    </div>
+    <div class="taste-guide"><span>🍯 Classico e armonico</span><span>🍈 Dolce e fruttato</span><span>🍓 Morbido e profumato</span><span>🍑 Delicato</span><span>🍊 Fresco e agrumato</span></div>
+    <div class="api-explainer" id="punti-ape">
+      <div class="api-bee">🐝</div>
+      <div><strong>Ogni acquisto fa crescere il tuo Saldo Api.</strong><p>Questi mieli valgono <b>2 Punti Ape ciascuno</b>. I punti si sommano acquisto dopo acquisto.</p></div>
+      <div class="api-goal">100 punti = cesto omaggio · 5 prodotti</div>
+    </div>
+    <div class="products-new">
+      <article class="product-new" id="miele-millefiori">
+        <div class="product-new-media"><img src="https://i.postimg.cc/Wpky9NLX/millefiori.png" alt="Miele Millefiori dell'Oasi del Busatello"></div>
+        <div class="product-new-copy"><small>Oasi del Busatello · 250 g</small><h3>Miele Millefiori</h3><p>Il Millefiori dell’Oasi del Busatello nasce dalla varietà di fioriture spontanee presenti nell’oasi. Il suo profilo è armonico, con una dolcezza equilibrata e profumi che possono cambiare naturalmente da raccolto a raccolto, proprio perché seguono il ritmo reale delle stagioni. È piacevole da gustare al cucchiaio, sul pane, nello yogurt oppure per dolcificare bevande e preparazioni. La naturale cristallizzazione è una caratteristica tipica del miele e non ne altera la qualità.</p><p class="product-choice">Sceglilo se vuoi partire dal miele che racconta in modo più diretto il paesaggio del Busatello.</p><div class="api-badge">🐝 +2 Punti Ape</div><div class="product-buy"><div class="product-price"><strong>€4,90</strong><span>1 vasetto · 250 g</span></div><button class="add-btn" data-id="millefiori" data-name="Miele Millefiori" data-price="4.90" data-size="250 g" data-points="2">Aggiungi</button></div></div>
+      </article>
+      <article class="product-new" id="miele-melone">
+        <div class="product-new-media"><img src="https://i.postimg.cc/4NN3kxLt/Chat-GPT-Image-15-ago-2025-12-16-12.png" alt="Specialità al miele con note di melone"></div>
+        <div class="product-new-copy"><small>Busatello · 250 g</small><h3>Miele al Melone</h3><p>Un miele dal gusto dolce e fruttato, arricchito da una nota di melone piacevole e immediata. È pensato per chi vuole scoprire un sapore diverso dal miele più classico, ma sempre semplice da gustare. Si presta bene al cucchiaio, sul pane, nello yogurt oppure in abbinamento a dessert e preparazioni fresche. Servito a temperatura ambiente esprime al meglio il suo profilo aromatico.</p><p class="product-choice">Sceglilo se vuoi un miele morbido, fruttato e originale, senza perdere il carattere del prodotto da cui parte.</p><div class="api-badge">🐝 +2 Punti Ape</div><div class="product-buy"><div class="product-price"><strong>€4,90</strong><span>1 vasetto · 250 g</span></div><button class="add-btn" data-id="melone" data-name="Miele al Melone" data-price="4.90" data-size="250 g" data-points="2">Aggiungi</button></div></div>
+      </article>
+      <article class="product-new" id="miele-fragola">
+        <div class="product-new-media"><img src="https://i.postimg.cc/VvP0zWCN/Chat-GPT-Image-15-ago-2025-11-43-11.png" alt="Specialità al miele con note di fragola"></div>
+        <div class="product-new-copy"><small>Busatello · 250 g</small><h3>Miele alla Fragola</h3><p>Un miele dal gusto morbido e fruttato, con una nota di fragola ben riconoscibile che lo rende immediato e piacevole. È facile da portare a colazione, nello yogurt, con formaggi freschi oppure nella preparazione di dolci semplici. Il suo profilo dolce e profumato lo rende adatto anche a una piccola degustazione al cucchiaio.</p><p class="product-choice">Sceglilo se ami un miele più profumato, fruttato e facile da riconoscere fin dal primo assaggio.</p><div class="api-badge">🐝 +2 Punti Ape</div><div class="product-buy"><div class="product-price"><strong>€4,90</strong><span>1 vasetto · 250 g</span></div><button class="add-btn" data-id="fragola" data-name="Miele alla Fragola" data-price="4.90" data-size="250 g" data-points="2">Aggiungi</button></div></div>
+      </article>
+      <article class="product-new" id="miele-pesca">
+        <div class="product-new-media"><img src="https://i.postimg.cc/HszhfSqB/Chat-GPT-Image-15-ago-2025-12-04-55.png" alt="Specialità al miele con note di pesca"></div>
+        <div class="product-new-copy"><small>Busatello · 250 g</small><h3>Miele alla Pesca</h3><p>Un miele dal profilo delicato e fruttato, con una nota di pesca morbida e piacevole. Si abbina facilmente al pane e alle fette biscottate, allo yogurt, alla ricotta, ai formaggi freschi e ai dessert. Il gusto rotondo e non troppo intenso lo rende particolarmente adatto a chi preferisce sapori gentili e facili da apprezzare.</p><p class="product-choice">Sceglilo se cerchi un miele delicato, morbido e fruttato, senza note troppo marcate.</p><div class="api-badge">🐝 +2 Punti Ape</div><div class="product-buy"><div class="product-price"><strong>€4,90</strong><span>1 vasetto · 250 g</span></div><button class="add-btn" data-id="pesca" data-name="Miele alla Pesca" data-price="4.90" data-size="250 g" data-points="2">Aggiungi</button></div></div>
+      </article>
+      <article class="product-new" id="miele-arancia">
+        <div class="product-new-media"><img src="/images/arancia.png" alt="Specialità al miele con note di arancia"></div>
+        <div class="product-new-copy"><small>Busatello · 250 g</small><h3>Miele all'Arancia</h3><p>Un miele dal carattere fresco e agrumato, in cui le note di arancia accompagnano la naturale dolcezza del miele senza coprirla. È piacevole a colazione, nello yogurt, sul pane e sui biscotti, ma si abbina bene anche a dolci e formaggi freschi. Può inoltre dare una nota aromatica interessante a bevande tiepide e preparazioni da dessert.</p><p class="product-choice">Sceglilo se ami i profumi agrumati e vuoi un miele dal carattere più fresco e vivace.</p><div class="api-badge">🐝 +2 Punti Ape</div><div class="product-buy"><div class="product-price"><strong>€4,90</strong><span>1 vasetto · 250 g</span></div><button class="add-btn" data-id="arancia" data-name="Miele all'Arancia" data-price="4.90" data-size="250 g" data-points="2">Aggiungi</button></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="chapter pathways" id="percorsi">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Scegli da dove partire</span><h2>Quattro porte.<br>Non quattro scaffali.</h2></div>
+      <p>La Bottega organizza l'esplorazione per interesse e curiosità, non soltanto per tipologia merceologica.</p>
+    </div>
+    <div class="path-grid">
+      <article class="path"><div class="icon">🍯</div><h3>Voglio conoscere i sapori</h3><p>Mieli, specialità, degustazioni e territori.</p><a href="#mieli">Entra nei sapori →</a></article>
+      <article class="path"><div class="icon">🐝</div><h3>Voglio capire l'alveare</h3><p>Polline, pane delle api, propoli e ciò che raccontano della vita delle api.</p><a href="#alveare">Esplora l'alveare →</a></article>
+      <article class="path"><div class="icon">◇</div><h3>Voglio prendermi un momento</h3><p>Cosmesi, massaggio e gesti quotidiani ispirati all'alveare.</p><a href="#cosmesi">Scopri i gesti →</a></article>
+      <article class="path"><div class="icon">▣</div><h3>Voglio portare via un'esperienza</h3><p>Alveo Digitale, idee, contenuti e prodotti che continuano oltre la visita.</p><a href="/alveo-digitale">Scopri Alveo Digitale →</a></article>
+    </div>
+  </div>
+</section>
+
+<section class="chapter journal">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Diario della Fabbrica</span><h2>Un sito che vive.</h2></div>
+      <p>Qui trovi brevi storie, immagini, aggiornamenti, fioriture, dietro le quinte, arrivi e piccoli approfondimenti.</p>
+    </div>
+    <div class="journal-grid">
+      <a class="journal-main" href="/bacheca"><span class="eyebrow">Dal Centro</span><h3>Cosa sta succedendo alla Galena delle Api?</h3><p>Novità, aperture, iniziative e ciò che stiamo costruendo.</p></a>
+      <div class="journal-side">
+        <a class="note-card" href="/alveoterapia"><span class="eyebrow">Dal Busatello</span><h3>Il miele cambia con il paesaggio</h3><p>Un prodotto ha più valore quando conosci il luogo da cui parte.</p></a>
+        <a class="note-card" href="/chi-siamo"><span class="eyebrow">Dietro il progetto</span><h3>Perché stiamo costruendo tutto questo</h3><p>La Fabbrica delle Api vuole far conoscere il mondo dell'alveare prima ancora di venderne i prodotti.</p></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter bottega">
+  <div class="wrap bottega-inner">
+    <div>
+      <span class="eyebrow">La Bottega</span>
+      <h2>E quando vuoi acquistare, tutto diventa semplice.</h2>
+      <p>Il racconto accompagna la scelta senza complicarla. Se sai già cosa cerchi puoi arrivare subito ai prodotti; se invece vuoi esplorare puoi farlo con calma, senza sentirti dentro un e-commerce tradizionale.</p>
+    </div>
+    <div class="bottega-box">
+      <strong>Vuoi arrivare subito ai prodotti?</strong>
+      <p>Scegli una linea e vai direttamente alla selezione relativa, senza dover ripartire dal catalogo generale.</p>
+      <a class="btn btn-gold" href="#scegli">Scegli la tua strada →</a>
+    </div>
+  </div>
+</section>
+
+<section class="catalog-world" id="alveoterapia-prodotti"><div class="wrap"><div class="catalog-world-head"><span class="eyebrow">Alveoterapia</span><h2>Diffusore e capsule dedicate</h2><p>Diffusore e capsule dedicati all'esperienza di Alveoterapia Integrata.</p></div><div class="catalog-grid" data-official-section="alveoterapia-prodotti"></div></div></section>
+<section class="catalog-world soft" id="alveare"><div class="wrap"><div class="catalog-world-head"><span class="eyebrow">Linea Alimenti</span><h2>Altri prodotti dell’alveare</h2><p>Mieli selezionati, favo, polline, pappa reale e piccole specialità.</p></div><div class="catalog-grid" data-official-section="alveare"></div></div></section>
+<section class="catalog-world" id="propoli"><div class="wrap"><div class="catalog-world-head"><span class="eyebrow">Linea Integratori</span><h2>Propoli e integratori</h2><p>Una selezione di propoli e integratori da scoprire con semplicità.</p></div><div class="catalog-grid" data-official-section="propoli"></div></div></section>
+<section class="catalog-world soft" id="cosmesi"><div class="wrap"><div class="catalog-world-head"><span class="eyebrow">Linea Cosmesi e Tesori in Cera d’Api</span><h2>Cosmesi dell’alveare</h2><p>Creme, saponi, burrocacao e creazioni in cera d’api.</p></div><div class="catalog-grid" data-official-section="cosmesi"></div></div></section>
+<section class="catalog-world venom-world" id="linea-veleni"><div class="wrap"><div class="catalog-world-head"><span class="eyebrow">Linea specialistica</span><h2>Linea Cosmetica al Veleno d’Api</h2><p>Sette prodotti cosmetici dedicati a massaggio, viso e corpo.</p></div><div class="catalog-grid" data-official-section="linea-veleni"></div></div></section>
+<section class="catalog-world" id="tesori-francesco"><div class="wrap"><div class="catalog-world-head"><span class="eyebrow">I Tesori di Francesco</span><h2>Tre specialità da degustazione</h2><p>Limoncello, liquore al caffè e castagne al rum.</p></div><div class="catalog-grid" data-official-section="tesori-francesco"></div></div></section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div><h3>La Fabbrica delle Api</h3><p>Alveoterapia Integrata, luoghi, storie e prodotti dell'alveare.</p></div>
+    <div><h3>Vivi</h3><a href="/alveoterapia">Oasi del Busatello</a><a href="/centro">Galena delle Api</a><a href="/bacheca">Bacheca</a></div>
+    <div><h3>Continua</h3><a href="#scegli">Scegli prodotti</a><a href="/contatti">Parliamone</a><a href="/">Home Centro</a></div>
+  </div>
+</footer>
+
+<section class="product-detail-overlay" id="productDetailOverlay" aria-hidden="true" aria-label="Scheda completa prodotto">
+  <div class="product-detail-panel" role="dialog" aria-modal="true" aria-labelledby="productDetailName">
+    <button class="product-detail-close" id="productDetailClose" type="button" aria-label="Chiudi scheda prodotto">×</button>
+    <div class="product-detail-grid">
+      <div class="product-detail-media"><img id="productDetailImage" src="" alt=""></div>
+      <div class="product-detail-copy">
+        <div class="product-detail-category" id="productDetailCategory"></div>
+        <h2 id="productDetailName"></h2>
+        <div class="product-detail-format" id="productDetailFormat"></div>
+        <div class="product-detail-description" id="productDetailDescription"></div>
+        <div class="product-detail-warning" id="productDetailWarning"><strong>Avvertenze</strong><span id="productDetailWarningText"></span></div>
+        <div class="product-detail-buy">
+          <div class="product-detail-price"><strong id="productDetailPrice"></strong><span id="productDetailSize"></span></div>
+          <button class="product-detail-add" id="productDetailAdd" type="button">Aggiungi al carrello</button>
+        </div>
+        <div class="product-detail-source-note">Informazioni prodotto e descrizione completa della selezione.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<button class="cart-fab" type="button" id="cartFab">Il tuo cestino <b id="cartCount">0</b></button>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Cestino">
+  <div class="cart-head"><h2>Il tuo cestino</h2><button class="cart-close" id="cartClose" type="button">×</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot"><div class="cart-points"><span>🐝 Punti Ape di questo ordine</span><span id="cartPoints">0</span></div><div class="cart-total"><span>Totale prodotti</span><span id="cartTotal">€0,00</span></div><button class="checkout-new" type="button" id="startCheckout">Continua con l'ordine →</button><div class="cart-note">100 Punti Ape = cesto omaggio con 5 prodotti a scelta.</div></div>
+</aside>
+
+
+<section class="ape-chat-panel" id="apeChatPanel" aria-label="Chiedi a Ape Pelù">
+  <div class="ape-chat-head"><svg viewBox="0 0 64 64" aria-hidden="true">
+<ellipse cx="32" cy="35" rx="16" ry="19" fill="#f6bd2f"/>
+<path d="M19 29h26M18 38h28M23 47h18" stroke="#2d2412" stroke-width="5" stroke-linecap="round"/>
+<ellipse cx="18" cy="24" rx="11" ry="8" fill="#e9f7f4" opacity=".9" transform="rotate(-28 18 24)"/>
+<ellipse cx="46" cy="24" rx="11" ry="8" fill="#e9f7f4" opacity=".9" transform="rotate(28 46 24)"/>
+<circle cx="26" cy="18" r="2.4" fill="#1b211d"/><circle cx="38" cy="18" r="2.4" fill="#1b211d"/>
+<path d="M27 23q5 5 10 0" fill="none" stroke="#1b211d" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M24 10q-4-6-8-4M40 10q4-6 8-4" fill="none" stroke="#1b211d" stroke-width="2.4" stroke-linecap="round"/>
+</svg><div><strong>Ape Pelù</strong><small>La tua guida nella Fabbrica delle Api</small></div><button class="ape-chat-close" id="apeChatClose" type="button">×</button></div>
+  <div class="ape-chat-messages" id="apeChatMessages">
+    <div class="ape-msg bot"><strong>Ciao, sono Ape Pelù 🐝</strong><br>Posso accompagnarti tra Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, Mieli, Linea Veleni, Punti Ape, ordini e spedizioni. Cosa ti incuriosisce?</div>
+  </div>
+  <div class="ape-quick" id="apeQuick">
+    <button type="button" data-ape-q="Cos'è l'Alveoterapia Integrata?">Alveoterapia</button>
+    <button type="button" data-ape-q="Parlami dell'Oasi del Busatello">Oasi</button>
+    <button type="button" data-ape-q="Cos'è la Galena delle Api?">Galena</button>
+    <button type="button" data-ape-q="Come scelgo un miele?">Mieli</button>
+    <button type="button" data-ape-q="Parlami della Linea Veleni">Linea Veleni</button>
+    <button type="button" data-ape-q="Come funzionano i Punti Ape?">Punti Ape</button>
+    <button type="button" data-ape-q="Come funzionano spedizioni e ordini?">Ordini e spedizioni</button>
+  </div>
+  <div class="ape-chat-input"><input id="apeChatInput" type="text" placeholder="Scrivi la tua domanda..." autocomplete="off"><button id="apeChatSend" type="button">Invia</button></div>
+  <div class="ape-note">Ape Pelù informa e orienta. Non sostituisce un medico o un professionista sanitario.</div>
+</section>
+
+<div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
+  <section class="checkout-panel">
+    <div class="checkout-top">
+      <div><span class="eyebrow">Il tuo ordine</span><h2>Concludi il tuo ordine</h2><p>Un percorso semplice, dall'indirizzo alla conferma finale.</p></div>
+      <button class="checkout-close" id="checkoutClose" type="button">×</button>
+    </div>
+    <div class="checkout-body">
+      <div class="checkout-steps"><span class="checkout-step active" data-step-pill="1">1 · Dati</span><span class="checkout-step" data-step-pill="2">2 · Consegna</span><span class="checkout-step" data-step-pill="3">3 · Riepilogo</span><span class="checkout-step" data-step-pill="4">4 · Conferma</span></div>
+
+      <div class="checkout-screen active" data-step="1">
+        <h3>Dove possiamo associare questo ordine?</h3>
+        <div class="form-grid">
+          <div class="field"><label>Nome e cognome *</label><input id="coName" autocomplete="name"></div>
+          <div class="field"><label>Email *</label><input id="coEmail" type="email" autocomplete="email"></div>
+          <div class="field"><label>Paese di consegna *</label><select id="coCountry" autocomplete="country"><option value="">Seleziona Paese</option></select></div>
+          <div class="field"><label>Telefono *</label><div class="phone-split"><input id="coPhonePrefix" class="phone-prefix" inputmode="tel" autocomplete="tel-country-code" maxlength="6" aria-label="Prefisso internazionale"><input id="coPhone" class="phone-number" inputmode="tel" autocomplete="tel-national" aria-label="Numero di telefono"></div></div>
+          <div class="field"><label>Comune / Città *</label><input id="coCity" autocomplete="address-level2"></div>
+          <div class="field full"><label>Via e numero civico *</label><input id="coAddress" autocomplete="street-address"></div>
+          <div class="field"><label>CAP / Codice postale *</label><input id="coCap" maxlength="12" autocomplete="postal-code"></div>
+          <div class="field"><label>Provincia / Regione</label><input id="coProvince" maxlength="80" placeholder="es. MN / Madrid"></div>
+        </div>
+        <div class="checkout-actions"><button class="next-btn" type="button" data-next="2">Continua →</button></div>
+      </div>
+
+      <div class="checkout-screen" data-step="2">
+        <h3>Come vuoi ricevere l'ordine?</h3>
+        <div class="delivery-options">
+          <label class="delivery-option"><input type="radio" name="delivery" value="courier" checked><strong>Corriere</strong><p>Consegna indicativa entro 5–6 giorni.</p></label>
+          <label class="delivery-option"><input type="radio" name="delivery" value="pickup"><strong>Ritiro / accordo diretto</strong><p>Lo definiamo con te senza aggiungere passaggi inutili.</p></label>
+        </div>
+        <div class="field" style="margin-top:16px"><label>Note per la consegna</label><textarea id="coNotes" placeholder="Facoltativo"></textarea></div>
+        <div class="checkout-actions"><button class="back-btn" type="button" data-back="1">← Indietro</button><button class="next-btn" type="button" data-next="3">Vedi il riepilogo →</button></div>
+      </div>
+
+      <div class="checkout-screen" data-step="3">
+        <h3>Controlla tutto prima di continuare</h3>
+        <div id="checkoutSummary" class="order-summary"></div>
+        <div class="summary-api"><strong>🐝 <span id="summaryPoints">0</span> Punti Ape con questo ordine</strong><div>Si aggiungono al tuo Saldo Api. A 100 punti puoi comporre un cesto omaggio con 5 prodotti a scelta.</div></div>
+        <div class="checkout-actions"><button class="back-btn" type="button" data-back="2">← Indietro</button><button class="next-btn" type="button" data-next="4">Continua →</button></div>
+      </div>
+
+      <div class="checkout-screen" data-step="4">
+        <h3>Invia il tuo ordine</h3>
+        <p>Confermando, i dati dell’ordine verranno inviati alla Fabbrica delle Api.</p>
+        <div id="orderSubmitStatus" style="min-height:20px;margin:12px 0;color:#8a3b1f;font-weight:800"></div>
+        <div class="checkout-actions"><button class="back-btn" type="button" data-back="3">← Indietro</button><button class="pay-btn" id="confirmOrder" type="button">Invia l'ordine →</button></div>
+      </div>
+
+      <div class="checkout-screen" data-step="5">
+        <div class="success-wrap">
+          <div class="success-bee">🐝</div>
+          <h3>Ordine inviato</h3>
+          <div class="success-order" id="successOrder"></div>
+          <p>Abbiamo ricevuto il tuo ordine. Ti contatteremo utilizzando i recapiti che hai indicato.</p>
+          <div class="success-api"><strong>Hai guadagnato <span id="successPoints">0</span> Punti Ape</strong><div>Continua ad accumularli: a 100 punti puoi comporre un cesto omaggio con 5 prodotti a scelta.</div></div>
+          <div class="success-actions">
+            <button class="download-order-pdf" id="downloadOrderPdf" type="button">Scarica il riepilogo PDF</button>
+            <button class="next-btn" id="finishCheckout" type="button">Torna alla Fabbrica delle Api</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="/shop-purchase-i18n.js?v=20260922-14"></script>
+<script>
+const SHOP_V2_CART_KEY='fda-shop-v2-cart';
+const SHOP_V2_ORDERS_KEY='fda-shop-order-drafts';
+let shopV2Cart=[];
+try{shopV2Cart=JSON.parse(localStorage.getItem(SHOP_V2_CART_KEY)||'[]')||[];}catch(_){shopV2Cart=[];}
+const SHOP_PRODUCT_POINTS={
+  "millefiori": 2,
+  "melone": 2,
+  "fragola": 2,
+  "pesca": 2,
+  "arancia": 2,
+  "propolterapy-professional": 15,
+  "capsule-pb": 5,
+  "capsule-propolit": 5,
+  "castagno": 2,
+  "acacia-zenzero-apinfiore": 3,
+  "miele-eucalipto-apinfiore": 2,
+  "balsammiel": 4,
+  "acacia": 1,
+  "favo-integrale-bio": 4,
+  "polline-italiano": 4,
+  "pappa-reale-italiana-bio": 2,
+  "orsetti-gommosi": 1,
+  "bee-energy-bio": 4,
+  "propol-active-bio": 4,
+  "propoli-30-spray-integratore": 3,
+  "propoli-30-alcolica-integratore": 2,
+  "propoli-analcolica-integratore": 2,
+  "cosmesi-crema-mani": 3,
+  "cosmesi-burrocacao-propoli-aloe": 2,
+  "cosmesi-burrocacao-miele-pappa-reale": 2,
+  "cosmesi-shampoo-multivitaminico": 3,
+  "cosmesi-saponetta-frutti-bosco": 1,
+  "cosmesi-saponetta-lavanda": 1,
+  "cosmesi-saponetta-aloe-vera": 1,
+  "cosmesi-candela-alveare-cera-api": 2,
+  "cosmesi-travel-kit-benessere": 5,
+  "unguento-apis": 10,
+  "sos-dol-50ml": 10,
+  "apis1-crema-viso-veleno-api": 9,
+  "apis2-siero-viso-veleno-api": 9,
+  "apis4-crema-corpo-veleno-api-manuka": 9,
+  "apis5-gommage-veleno-api-manuka": 9,
+  "bagnodoccia-veleno-oro": 6,
+  "tesori-limoncello": 2,
+  "tesori-liquore-caffe": 2,
+  "tesori-castagne-rum": 2
+};
+function defaultPointsFor(id){return Number(SHOP_PRODUCT_POINTS[id]||0);}
+shopV2Cart=shopV2Cart.map(x=>({...x,points:defaultPointsFor(x.id)}));
+localStorage.setItem(SHOP_V2_CART_KEY,JSON.stringify(shopV2Cart));
+
+function saveV2Cart(){localStorage.setItem(SHOP_V2_CART_KEY,JSON.stringify(shopV2Cart));renderV2Cart();}
+function euro(v){return purchaseCurrency(v);}
+function cartPoints(){return shopV2Cart.reduce((s,x)=>s+(Number(x.points||defaultPointsFor(x.id))*x.qty),0);}
+function cartTotal(){return shopV2Cart.reduce((s,x)=>s+(x.qty*x.price),0);}
+function cartUnits(){return shopV2Cart.reduce((s,x)=>s+x.qty,0);}
+let shippingState={cost:null,pending:false,label:purchaseT('toCalculate'),reason:''};
+
+function kmBetween(lat1,lon1,lat2,lon2){
+  const R=6371,toRad=v=>v*Math.PI/180;
+  const dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+let lastAddressValidation=null;
+let lastAddressSignature='';
+
+function currentAddressSignature(){
+  return [
+    document.getElementById('coAddress').value.trim().toLowerCase(),
+    document.getElementById('coCap').value.trim(),
+    document.getElementById('coCity').value.trim().toLowerCase(),
+    document.getElementById('coProvince').value.trim().toUpperCase(),
+    document.getElementById('coCountry').value
+  ].join('|');
+}
+
+function invalidateAddressValidation(){
+  lastAddressValidation=null;
+  lastAddressSignature='';
+  shippingState={cost:null,pending:false,label:purchaseT('toCalculate'),reason:''};
+}
+
+async function checkLocalDelivery(force=false){
+  const address=document.getElementById('coAddress').value.trim();
+  const city=document.getElementById('coCity').value.trim();
+  const cap=document.getElementById('coCap').value.trim();
+  const province=document.getElementById('coProvince').value.trim();
+  const country=document.getElementById('coCountry').value.trim();
+  const signature=currentAddressSignature();
+
+  if(!force && lastAddressValidation && lastAddressSignature===signature){
+    return lastAddressValidation;
+  }
+
+  try{
+    const qs=new URLSearchParams({address,city,cap,province,country});
+    const res=await fetch('/api/local-delivery-check?'+qs.toString(),{cache:'no-store'});
+    const data=await res.json().catch(()=>null);
+    lastAddressValidation=data;
+    lastAddressSignature=signature;
+    return data;
+  }catch(_){
+    lastAddressValidation=null;
+    lastAddressSignature='';
+    return null;
+  }
+}
+async function calculateShipping(){
+  const method=document.querySelector('input[name="delivery"]:checked')?.value||'courier';
+  if(method==='pickup'){
+    shippingState={cost:0,pending:false,weightKg:0,label:purchaseT('free'),reason:purchaseT('pickupReason')};
+    return shippingState;
+  }
+  const country=document.getElementById('coCountry').value||'IT';
+  if(country==='IT' && cartTotal()>=200){
+    const estimate=await fetch('/api/shipping-estimate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({country,items:shopV2Cart.map(x=>({id:x.id,qty:x.qty}))})}).then(r=>r.json()).catch(()=>null);
+    shippingState={cost:0,pending:false,weightKg:Number(estimate?.weightKg||0),label:purchaseT('free'),reason:purchaseT('order200Reason')};
+    return shippingState;
+  }
+
+  const local=await checkLocalDelivery(false);
+  if(!local || local.ok!==true || local.validFullAddress!==true) throw new Error(purchaseT('addressVerify'));
+
+  const estimateRes=await fetch('/api/shipping-estimate',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({country,items:shopV2Cart.map(x=>({id:x.id,qty:x.qty}))})
+  });
+  const estimate=await estimateRes.json().catch(()=>null);
+  if(!estimateRes.ok||!estimate?.ok) throw new Error(purchaseT('shippingCalcError'));
+
+  if(country==='IT' && local.eligible){
+    shippingState={cost:0,pending:false,weightKg:Number(estimate.weightKg||0),label:purchaseT('free'),reason:purchaseT('localReason')(local.distanceKm)};
+    return shippingState;
+  }
+
+  if(estimate.pending){
+    shippingState={
+      cost:0,pending:true,weightKg:Number(estimate.weightKg||0),zone:estimate.zone||'',
+      label:purchaseT('shippingPending'),
+      reason:purchaseT('postePendingReason')(Number(estimate.weightKg||0))
+    };
+    return shippingState;
+  }
+
+  shippingState={
+    cost:Number(estimate.cost||0),pending:false,weightKg:Number(estimate.weightKg||0),zone:estimate.zone||'',
+    label:euro(estimate.cost),
+    reason:country==='IT'
+      ? purchaseT('posteItalyReason')(Number(estimate.weightKg||0))
+      : purchaseT('posteIntlReason')(Number(estimate.weightKg||0),estimate.zone||'')
+  };
+  return shippingState;
+}
+
+function addV2Product(btn){
+  const id=btn.dataset.id;
+  const found=shopV2Cart.find(x=>x.id===id);
+  if(found){
+    found.qty+=1;
+  }else{
+    shopV2Cart.push({
+      id,
+      name:btn.dataset.name,
+      price:Number(btn.dataset.price),
+      size:btn.dataset.size,
+      points:Number(btn.dataset.points||defaultPointsFor(id)),
+      qty:1
+    });
+  }
+  saveV2Cart();
+  document.getElementById('cartDrawer').classList.add('open');
+}
+
+function removeV2Product(id){shopV2Cart=shopV2Cart.filter(x=>x.id!==id);saveV2Cart();}
+function renderV2Cart(){
+  const box=document.getElementById('cartItems');
+  const count=shopV2Cart.reduce((s,x)=>s+x.qty,0);
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('cartTotal').textContent=euro(cartTotal());
+  document.getElementById('cartPoints').textContent=cartPoints();
+  if(!shopV2Cart.length){box.innerHTML='<div class="cart-empty">'+purchaseT('cartEmpty')+'</div>';return;}
+  box.innerHTML=shopV2Cart.map(x=>{
+    const name=purchaseProductName(x.id,x.name),size=purchaseProductSize(x.id,x.size);
+    return '<div class="cart-item"><div><strong>'+officialCatalogEsc(name)+'</strong><small>'+officialCatalogEsc(size)+' · '+purchaseT('quantity')+' '+x.qty+' · '+(x.points*x.qty)+' '+purchaseT('points')+'</small></div><div><strong>'+euro(x.price*x.qty)+'</strong><button type="button" onclick="removeV2Product(\''+x.id+'\')">'+purchaseT('remove')+'</button></div></div>';
+  }).join('');
+}
+
+function showCheckoutStep(step){
+  document.querySelectorAll('.checkout-screen').forEach(el=>el.classList.toggle('active',el.dataset.step===String(step)));
+  document.querySelectorAll('.checkout-step').forEach(el=>el.classList.toggle('active',Number(el.dataset.stepPill)<=Math.min(Number(step),4)));
+  if(step===3)document.getElementById('summaryPoints').textContent=cartPoints();
+}
+async function validStepOne(){
+  const ids=['coName','coEmail','coPhonePrefix','coPhone','coCountry','coCity','coAddress','coCap'];
+  const missing=ids.filter(id=>!document.getElementById(id).value.trim());
+  if(missing.length){alert(purchaseT('missing'));return false;}
+  if(!document.getElementById('coEmail').value.includes('@')){alert(purchaseT('invalidEmail'));return false;}
+
+  const cap=document.getElementById('coCap').value.trim();
+  const address=document.getElementById('coAddress').value.trim();
+  const country=document.getElementById('coCountry').value;
+  const normalizedCap=cap.normalize('NFKC').toUpperCase().replace(/[–—]/g,'-').replace(/\s+/g,' ').trim();
+  document.getElementById('coCap').value=normalizedCap;
+  if(country==='IT' ? !/^\d{5}$/.test(normalizedCap) : !/^[A-Z0-9][A-Z0-9 -]{1,11}$/.test(normalizedCap)){alert(purchaseT('invalidCap'));return false;}
+  const province=document.getElementById('coProvince').value.trim();
+  if(country==='IT' && !/^[A-Za-z]{2}$/.test(province)){alert(purchaseT('invalidProvince'));return false;}
+  try{
+    const phoneRes=await fetch('/api/phone-normalize?'+new URLSearchParams({
+      prefix:document.getElementById('coPhonePrefix').value.trim(),
+      phone:document.getElementById('coPhone').value.trim()
+    }).toString(),{cache:'no-store'});
+    const phoneData=await phoneRes.json().catch(()=>null);
+    if(!phoneRes.ok||!phoneData?.ok||!phoneData?.e164){alert(purchaseT('invalidPhone'));return false;}
+    document.getElementById('coPhonePrefix').value=phoneData.callingCode;
+    document.getElementById('coPhonePrefix').dataset.autoDial=phoneData.callingCode;
+    document.getElementById('coPhone').value=phoneData.national;
+    document.getElementById('coPhone').dataset.e164=phoneData.e164;
+  }catch(_){alert(purchaseT('invalidPhone'));return false;}
+  const normalizedAddress=address.normalize('NFKC').replace(/\s+/g,' ').trim();
+  const cityEl=document.getElementById('coCity');
+  const normalizedCity=cityEl.value.normalize('NFKC').replace(/\s+/g,' ').trim();
+  document.getElementById('coAddress').value=normalizedAddress;
+  cityEl.value=normalizedCity;
+  if(!/\p{L}/u.test(normalizedAddress) || normalizedAddress.length<3 || !/\p{L}/u.test(normalizedCity) || normalizedCity.length<2){
+    alert(purchaseT('invalidAddress'));
+    return false;
+  }
+
+  const result=await checkLocalDelivery(true);
+  if(!result || result.ok!==true || result.validFullAddress!==true){
+    alert(purchaseT('addressVerify'));
+    return false;
+  }
+
+  return true;
+}
+async function renderCheckoutSummary(){
+  const rows=shopV2Cart.map(x=>'<div class="summary-row"><span>'+officialCatalogEsc(purchaseProductName(x.id,x.name))+' × '+x.qty+'</span><strong>'+euro(x.price*x.qty)+'</strong></div>').join('');
+  document.getElementById('checkoutSummary').innerHTML=rows+'<div class="summary-row"><span>'+purchaseT('shipping')+'</span><strong>'+purchaseT('checking')+'</strong></div><div class="summary-row total"><span>'+purchaseT('total')+'</span><span>'+euro(cartTotal())+'</span></div>';
+  document.getElementById('summaryPoints').textContent=cartPoints();
+  try{
+    await calculateShipping();
+  }catch(error){
+    alert(purchaseT('addressVerify'));
+    showCheckoutStep(1);
+    return;
+  }
+  const grand=cartTotal()+Number(shippingState.cost||0);
+  const shippingText=shippingState.pending
+    ? '<strong>'+purchaseT('shippingPending')+'</strong><br><small>'+officialCatalogEsc(shippingState.reason)+'</small>'
+    : shippingState.cost===0
+      ? '<strong>'+purchaseT('free')+'</strong><br><small>'+officialCatalogEsc(shippingState.reason)+'</small>'
+      : '<strong>'+euro(shippingState.cost)+'</strong><br><small>'+officialCatalogEsc(shippingState.reason)+'</small>';
+  document.getElementById('checkoutSummary').innerHTML=rows+
+    '<div class="summary-row"><span>'+purchaseT('shipping')+'</span><span style="text-align:right">'+shippingText+'</span></div>'+
+    '<div class="summary-row total"><span>'+(shippingState.pending?purchaseT('goodsTotalPending'):purchaseT('total'))+'</span><span>'+euro(grand)+'</span></div>';
+}
+let lastSuccessfulOrder=null;
+async function completeOrderDraft(){
+  const confirmBtn=document.getElementById('confirmOrder');
+  const statusBox=document.getElementById('orderSubmitStatus');
+  if(!shopV2Cart.length){statusBox.textContent=purchaseT('emptyCart');return;}
+
+  confirmBtn.disabled=true;
+  const oldLabel=confirmBtn.textContent;
+  confirmBtn.textContent=purchaseT('sending');
+  statusBox.textContent='';
+
+  try{
+    if(shippingState.cost===null || shippingState.cost===undefined) await calculateShipping();
+
+    if(shippingState.pending){
+      throw new Error(purchaseT('shippingPending')+': '+shippingState.reason);
+    }
+
+    const orderId='API-'+new Date().toISOString().slice(0,10).replaceAll('-','')+'-'+String(Date.now()).slice(-5);
+    const order={
+      id:orderId,
+      createdAt:new Date().toISOString(),
+      customer:{
+        name:document.getElementById('coName').value.trim(),
+        email:document.getElementById('coEmail').value.trim(),
+        phone:document.getElementById('coPhone').dataset.e164||((document.getElementById('coPhonePrefix').value.trim())+(document.getElementById('coPhone').value.trim())),
+        country:document.getElementById('coCountry').value,
+        city:document.getElementById('coCity').value.trim(),
+        address:document.getElementById('coAddress').value.trim(),
+        cap:document.getElementById('coCap').value.trim(),
+        province:document.getElementById('coProvince').value.trim()
+      },
+      delivery:document.querySelector('input[name="delivery"]:checked')?.value||'courier',
+      notes:document.getElementById('coNotes').value.trim(),
+      items:shopV2Cart.map(x=>({id:x.id,qty:x.qty,name:x.name,price:x.price,size:x.size,points:x.points})),
+      goodsTotal:Number(cartTotal().toFixed(2)),
+      shipping:Number(shippingState.cost||0),
+      shippingPending:false,
+      shippingWeightKg:Number(shippingState.weightKg||0),
+      shippingZone:shippingState.zone||'',
+      shippingReason:shippingState.reason,
+      total:Number((cartTotal()+Number(shippingState.cost||0)).toFixed(2)),
+      points:Number(cartPoints()),
+      language:purchaseLanguage()
+    };
+
+    localStorage.setItem('fda-production-pending-order',JSON.stringify(order));
+
+    const payload={
+      items:shopV2Cart.map(x=>({
+        name:purchaseProductName(x.id,x.name),
+        amount:Number(x.price),
+        quantity:Number(x.qty)
+      })),
+      xpayCart:shopV2Cart.map(x=>({
+        productId:x.id,
+        productName:x.name,
+        pricePerPack:Number(x.price),
+        quantity:Number(x.qty)
+      })),
+      shippingCostOverride:Number(shippingState.cost||0),
+      customer:{
+        name:order.customer.name,
+        email:order.customer.email,
+        phone:order.customer.phone,
+        address:order.customer.address,
+        postal_code:order.customer.cap,
+        city:order.customer.city,
+        state:order.customer.province
+      },
+      email:order.customer.email,
+      notes:'ORDER:'+order.id+(order.notes?' | '+order.notes:'')
+    };
+
+    const response=await fetch('/api/create-checkout-session',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const data=await response.json().catch(()=>null);
+
+    if(!response.ok || !data?.url){
+      throw new Error(data?.error||purchaseT('sendError'));
+    }
+
+    if(data.testMode===true){
+      throw new Error('Configurazione pagamento non valida: il sito ufficiale non può usare la modalità TEST.');
+    }
+
+    window.location.href=data.url;
+  }catch(error){
+    statusBox.textContent=error?.message||purchaseT('sendError');
+    confirmBtn.disabled=false;
+    confirmBtn.textContent=oldLabel;
+  }
+}
+
+
+const SHOP_OFFICIAL_PRODUCTS=[{"id":"propolterapy-professional","section":"alveoterapia-prodotti","name":"PropolTerapy Professional","image":"/images/professional.png","size":"Diffusore + 5 capsule BIO","price":180,"desc":"Diffusore professionale per l’esperienza di alveoterapia negli ambienti, con accessori dedicati e confezione iniziale di 5 capsule BIO."},{"id":"capsule-pb","section":"alveoterapia-prodotti","name":"Capsule Propoli P+B (5 pz)","image":"/images/capsule-pb.png","size":"Scatola da 5 capsule","price":19.9,"desc":"Capsule monouso P+B dedicate ai diffusori compatibili, con propoli italiana e Boswellia Serrata."},{"id":"capsule-propolit","section":"alveoterapia-prodotti","name":"Capsule PROPOLIT (5 pz)","image":"/images/capsule-propolit.png","size":"Scatola da 5 capsule","price":19.9,"desc":"Capsule monouso di propoli per diffusori PROPOLAIR/PROPOLIT compatibili."},{"id":"castagno","section":"alveare","name":"Miele di Castagno","image":"/images/castagno.png","size":"250 g","price":6.9,"desc":"Miele dal profumo deciso e dal gusto intenso, poco dolce e con una caratteristica nota leggermente amarognola."},{"id":"acacia-zenzero-apinfiore","section":"alveare","name":"Miele di Acacia e Zenzero","image":"/images/acacia-zenzero-premium.jpg","size":"200 g","price":7.9,"desc":"Specialità alimentare a base di miele italiano di acacia e zenzero, dal profilo dolce e delicatamente speziato."},{"id":"miele-eucalipto-apinfiore","section":"alveare","name":"Miele Eucalipto","image":"/images/eucalipto-premium.jpg","size":"250 g","price":6.9,"desc":"Miele italiano di eucalipto dal profumo intenso e dal gusto aromatico, con caratteristiche note fresche e balsamiche."},{"id":"balsammiel","section":"alveare","name":"Balsamico Italiano","image":"/images/balsam-miel-final.jpg","size":"200 g","price":11.9,"desc":"Specialità alimentare dal gusto fresco e intensamente balsamico, preparata con miele di eucalipto e ingredienti aromatici."},{"id":"acacia","section":"alveare","name":"Miele Italiano di Acacia","image":"https://b2b.apinfiore.com/wp-content/uploads/2019/09/miele-italiano-di-acacia-250g-1-300x300.jpg","size":"40 g","price":2.9,"desc":"Miele italiano di acacia dal colore chiaro e dal gusto dolce e delicato, nel pratico formato da 40 g."},{"id":"favo-integrale-bio","section":"alveare","name":"Miele Italiano di Acacia in Favo","image":"https://b2b.apinfiore.com/wp-content/uploads/2019/09/miele-italiano-di-acacia-in-favo-astuccio-da-200g-1-300x300.jpg","size":"200 g","price":11.9,"desc":"Miele di acacia presentato direttamente nel favo, per una degustazione molto vicina al prodotto così come viene conservato dalle api."},{"id":"polline-italiano","section":"alveare","name":"Polline Italiano","image":"/images/polline-stable.svg","size":"125 g","price":10.9,"desc":"Polline italiano raccolto dalle api e selezionato come prodotto dell’alveare."},{"id":"pappa-reale-italiana-bio","section":"alveare","name":"Pappa Reale","image":"/images/pappa-reale-stable.svg","size":"10 g","price":6.9,"desc":"Pappa reale in formato da 10 g, uno dei prodotti più particolari dell’alveare."},{"id":"orsetti-gommosi","section":"alveare","name":"Orsetti Gommosi BIO con Propoli e Miele","image":"/images/orsetti-gommosi.png","size":"80 g","price":3.9,"desc":"Orsetti gommosi biologici con propoli e miele, in confezione da 80 g."},{"id":"bee-energy-bio","section":"propoli","name":"Bee Energy BIO","image":"/images/bee-energy.png","size":"12 flaconcini da 10 ml","price":14.9,"desc":"Integratore alimentare biologico con ingredienti dell’alveare, proposto in pratici flaconcini."},{"id":"propol-active-bio","section":"propoli","name":"Propol Active BIO","image":"/images/propol-active.png","size":"30 compresse masticabili","price":10.9,"desc":"Integratore in compresse masticabili a base di propoli italiana biologica."},{"id":"propoli-30-spray-integratore","section":"propoli","name":"Soluzione Propoli 30% Spray","image":"/images/spray.png","size":"20 ml","price":7.9,"desc":"Soluzione di propoli al 30% con pratico erogatore spray reclinabile."},{"id":"propoli-30-alcolica-integratore","section":"propoli","name":"Soluzione Propoli 30% con Contagocce - Alcolica","image":"/images/v2-propoli-contagocce-alcolica.webp","size":"20 ml","price":5.9,"desc":"Soluzione alcolica di propoli al 30% con contagocce, formato da 20 ml."},{"id":"propoli-analcolica-integratore","section":"propoli","name":"Soluzione Propoli con Contagocce Analcolica","image":"/images/v2-propoli-contagocce-analcolica.webp","size":"20 ml","price":5.9,"desc":"Soluzione analcolica di propoli con contagocce, formato da 20 ml."},{"id":"cosmesi-crema-mani","section":"cosmesi","name":"Crema Mani","image":"/images/cosmesi-crema-mani.jpg","size":"100 ml","price":9.9,"desc":"Crema mani formulata con ingredienti dell’alveare, pensata per un gesto cosmetico quotidiano."},{"id":"cosmesi-burrocacao-propoli-aloe","section":"cosmesi","name":"Burrocacao Propoli e Aloe Vera","image":"/images/cosmesi-burrocacao-propoli-aloe.jpg","size":"5 ml","price":4.9,"desc":"Stick labbra con propoli e aloe vera, pensato per mantenere le labbra morbide e protette."},{"id":"cosmesi-burrocacao-miele-pappa-reale","section":"cosmesi","name":"Burrocacao Miele e Pappa Reale","image":"/images/cosmesi-burrocacao-miele-pappa-reale.jpg","size":"5 ml","price":4.9,"desc":"Stick labbra con miele e pappa reale, per un gesto cosmetico quotidiano."},{"id":"cosmesi-shampoo-multivitaminico","section":"cosmesi","name":"Shampoo Multivitaminico","image":"/images/cosmesi-shampoo-multivitaminico.jpg","size":"250 ml","price":9.9,"desc":"Shampoo multivitaminico per la detersione quotidiana dei capelli."},{"id":"cosmesi-saponetta-frutti-bosco","section":"cosmesi","name":"Saponetta Miele e Frutti di Bosco","image":"/images/cosmesi-saponetta-frutti-bosco.jpg","size":"100 g","price":3.9,"desc":"Sapone vegetale con miele e frutti di bosco, per la detersione quotidiana."},{"id":"cosmesi-saponetta-lavanda","section":"cosmesi","name":"Saponetta Miele e Lavanda","image":"/images/cosmesi-saponetta-lavanda.jpg","size":"100 g","price":3.9,"desc":"Sapone vegetale con miele e lavanda, per la detersione quotidiana."},{"id":"cosmesi-saponetta-aloe-vera","section":"cosmesi","name":"Saponetta Miele e Aloe Vera","image":"/images/cosmesi-saponetta-aloe-vera.jpg","size":"100 g","price":3.9,"desc":"Sapone vegetale con miele e aloe vera, per la detersione quotidiana."},{"id":"cosmesi-candela-alveare-cera-api","section":"cosmesi","name":"Candela Alveare Grande in Cera d’Api","image":"/images/cosmesi-candela-alveare.jpg","size":"1 candela","price":5.9,"desc":"Candela artigianale in cera d’api, modellata nella caratteristica forma dell’alveare."},{"id":"cosmesi-travel-kit-benessere","section":"cosmesi","name":"Kit da Viaggio Benessere dell’Alveare","image":"/images/linea-cosmesi-cera-home.jpg","size":"4 x 50 ml + pochette","price":17.9,"desc":"Quattro formati da viaggio raccolti in una pochette riutilizzabile, pensati per corpo e capelli."},{"id":"unguento-apis","section":"linea-veleni","name":"SOS DOL – Unguento al Veleno d’Api","image":"/images/veleno-sos-dol-hd.svg","size":"15 ml","price":29.9,"desc":"Unguento cosmetico da massaggio formulato con veleno d’api e ingredienti cosmetici selezionati."},{"id":"sos-dol-50ml","section":"linea-veleni","name":"SOS DOL – Unguento al Veleno d’Api","image":"https://gcdn.picsart.com/editing-temp/64d0b851-5087-40ca-84d4-5d6e404bd064.jpeg","size":"50 ml","price":39.9,"desc":"Formato da 50 ml dell’unguento cosmetico da massaggio SOS DOL, formulato con veleno d’api, cera d’api e oli essenziali di Tea Tree, timo ed eucalipto."},{"id":"apis1-crema-viso-veleno-api","section":"linea-veleni","name":"Crema Viso al Veleno d’Api – APIS1","image":"/images/veleno-apis1-hd.svg","size":"50 ml","price":39.9,"desc":"Crema viso cosmetica formulata con veleno d’api, pensata per viso, collo e décolleté."},{"id":"apis2-siero-viso-veleno-api","section":"linea-veleni","name":"Siero Viso al Veleno d’Api – APIS2","image":"/images/veleno-apis2-hd.svg","size":"30 ml","price":34.9,"desc":"Siero viso cosmetico formulato con veleno d’api e altri ingredienti dell’alveare."},{"id":"apis4-crema-corpo-veleno-api-manuka","section":"linea-veleni","name":"Crema Corpo Veleno d’Api e Miele di Manuka – APIS4","image":"/images/veleno-apis4-hd.svg","size":"250 ml","price":31.9,"desc":"Crema corpo cosmetica formulata con veleno d’api e miele di Manuka."},{"id":"apis5-gommage-veleno-api-manuka","section":"linea-veleni","name":"Gommage Viso e Corpo Veleno d’Api e Miele di Manuka – APIS5","image":"/images/veleno-apis5-hd.svg","size":"250 ml","price":34.9,"desc":"Gommage cosmetico per viso e corpo formulato con veleno d’api e miele di Manuka."},{"id":"bagnodoccia-veleno-oro","section":"linea-veleni","name":"Bagnodoccia Veleno d’Oro – APIS7","image":"/images/veleno-apis7-hd.svg","size":"250 ml","price":14.9,"desc":"Bagnodoccia cosmetico formulato con veleno d’api e miele di Manuka."},{"id":"tesori-limoncello","section":"tesori-francesco","name":"Limoncello “I Tesori di Francesco”","image":"/images/v2-tesori-limoncello.webp","size":"250 ml","price":5.9,"desc":"Limoncello della linea I Tesori di Francesco, dal profilo fresco e agrumato."},{"id":"tesori-liquore-caffe","section":"tesori-francesco","name":"Liquore di Caffè “I Tesori di Francesco”","image":"/images/v2-tesori-liquore-caffe.webp","size":"250 ml","price":5.9,"desc":"Liquore al caffè della linea I Tesori di Francesco, dal gusto intenso e avvolgente."},{"id":"tesori-castagne-rum","section":"tesori-francesco","name":"Castagne al Rum “I Tesori di Francesco”","image":"/images/v2-tesori-castagne-rum.webp","size":"250 ml","price":5.9,"desc":"Castagne al rum della linea I Tesori di Francesco, una piccola specialità da degustazione."}];
+const SHOP_PRODUCT_DETAIL_DESCRIPTIONS={"propolterapy-professional":"Diffusore professionale per alveoterapia con doppia modalità di utilizzo: diffusione nell’ambiente e utilizzo con maschera dedicata. Il sistema è dotato di ionizzatore e ventola con copertura fino a 60 m². In dotazione: maschera adulti, mascherina pediatrica e tubo di raccordo. La confezione iniziale comprende 5 capsule P+B, a base di propoli italiana 95% e Boswellia Serrata 5%.","capsule-pb":"Capsule monouso P+B dedicate ai diffusori per alveoterapia compatibili. La formulazione abbina propoli italiana al 95% e Boswellia Serrata al 5% ed è pensata per essere utilizzata esclusivamente con il dispositivo previsto. Ogni capsula si inserisce nel diffusore secondo le istruzioni dell’apparecchio e va sostituita secondo le indicazioni del produttore. Confezione pratica da 5 capsule, da conservare in luogo asciutto e lontano da fonti di calore.","capsule-propolit":"Capsule monouso di propoli per diffusori PROPOLAIR/PROPOLIT compatibili. Sono pensate per un utilizzo semplice nel diffusore dedicato, senza dover preparare miscele o dosare manualmente il prodotto. La confezione contiene 5 capsule e consente di avere ricambi pronti all’uso. Utilizzare sempre secondo le istruzioni del proprio diffusore.","millefiori":"Il Millefiori dell’Oasi del Busatello nasce dalla varietà di fioriture spontanee presenti nell’oasi. Ha un profilo aromatico armonico, con dolcezza equilibrata e profumi che possono variare naturalmente da raccolto a raccolto. È ottimo da gustare al cucchiaio, sul pane, nello yogurt o per dolcificare bevande e preparazioni. La naturale cristallizzazione è una caratteristica tipica del miele e non ne altera la qualità.","melone":"Specialità al miele dal gusto dolce e fruttato, caratterizzata da note di melone piacevoli e immediate. È pensata per chi cerca un sapore originale da gustare al cucchiaio, sul pane, nello yogurt o in abbinamento a dessert e preparazioni fresche. Servita a temperatura ambiente sprigiona al meglio il suo profilo aromatico.","fragola":"Specialità al miele dal gusto morbido e fruttato, con una nota di fragola ben riconoscibile. Si presta bene alla prima colazione, allo yogurt, ai formaggi freschi e alla preparazione di dolci semplici. Il sapore dolce e profumato la rende adatta anche come piccola degustazione al cucchiaio.","pesca":"Specialità al miele dal profilo delicato e fruttato, con una nota di pesca morbida e piacevole. È ideale da provare su pane e fette biscottate, nello yogurt, con ricotta o formaggi freschi e come accompagnamento a dessert. Il gusto rotondo la rende facile da apprezzare anche da chi preferisce sapori non troppo intensi.","arancia":"Specialità al miele dal carattere fresco e agrumato, con note di arancia che accompagnano la naturale dolcezza del miele. È piacevole a colazione, nello yogurt, su pane e biscotti oppure in abbinamento a dolci e formaggi freschi. Ottima anche per dare una nota aromatica a bevande tiepide e preparazioni da dessert.","castagno":"Miele dal colore ambrato scuro, dal profumo deciso e dal gusto intenso, poco dolce e con una caratteristica nota leggermente amarognola. È apprezzato da chi cerca un miele dal sapore forte e persistente. Si abbina molto bene a formaggi stagionati, pane rustico e preparazioni dal gusto marcato. La cristallizzazione, quando presente, è un fenomeno naturale.","acacia-zenzero-apinfiore":"Specialità alimentare a base di miele italiano di acacia e zenzero. Il miele di acacia offre una base dolce e delicata, mentre lo zenzero aggiunge una nota speziata e vivace. È piacevole da gustare al cucchiaio, sul pane, nello yogurt o come ingrediente per bevande e ricette dal profilo aromatico originale. Formato pratico da 200 g.","miele-eucalipto-apinfiore":"Miele italiano di eucalipto dal profumo intenso e dal gusto aromatico, con caratteristiche note fresche e balsamiche. Ha una personalità più marcata rispetto ai mieli delicati ed è adatto a chi ama sapori decisi. Si può gustare al cucchiaio, sul pane, con formaggi oppure per dolcificare bevande calde senza portarle a temperature troppo elevate.","balsammiel":"Specialità alimentare dal gusto fresco e intensamente balsamico, preparata con miele di eucalipto e soluzioni idroalcoliche di pino mugo, eucalipto e menta, con eucaliptolo e mentolo. È pensata soprattutto per chi apprezza sapori aromatici e freschi, particolarmente gradevoli nella stagione fredda. Può essere consumata da sola oppure sciolta in un infuso o in una tisana, come indicato dal produttore Apinfiore.","acacia":"Miele italiano di acacia dal colore molto chiaro, dal profumo delicato e dal gusto dolce e fine. Rimane generalmente liquido a lungo e per questo è particolarmente pratico da versare e dosare. È ideale a colazione, nello yogurt, sulle fette biscottate e per dolcificare bevande senza coprirne il sapore. Il formato da 40 g è comodo anche per assaggio o regalo.","favo-integrale-bio":"Miele di acacia presentato direttamente nel favo, per un’esperienza di degustazione molto vicina al prodotto così come viene conservato dalle api. Il favo può essere tagliato in piccoli pezzi e masticato lentamente insieme al miele. È particolarmente adatto a degustazioni, taglieri e abbinamenti con formaggi. Conservare in luogo fresco e asciutto, lontano da fonti di calore.","polline-italiano":"Polline italiano raccolto dalle api e selezionato come prodotto dell’alveare. Ha un gusto caratteristico e può essere consumato tal quale oppure aggiunto a yogurt, miele, frutta o altre preparazioni fredde. Per apprezzarne meglio aroma e consistenza è consigliabile iniziare con piccole quantità. Conservare secondo le indicazioni riportate sulla confezione.","pappa-reale-italiana-bio":"Pappa reale fresca in formato da 10 g, prodotto dell’alveare dalla consistenza cremosa e dal gusto intenso e caratteristico. Si utilizza in piccole quantità, preferibilmente seguendo le indicazioni riportate sull’etichetta del prodotto. Per mantenere al meglio le sue caratteristiche va conservata secondo le indicazioni del produttore, generalmente in frigorifero.","orsetti-gommosi":"Morbide caramelle gommose dalla forma di orsetto, pensate come piccolo momento goloso. La consistenza morbida e il gusto dolce le rendono pratiche da condividere o portare con sé. Confezione da 80 g, adatta anche come idea regalo insieme ad altri prodotti della Fabbrica delle Api.","bee-energy-bio":"Integratore alimentare biologico con miele italiano, pappa reale, polline, propoli, mirtillo, limone e rosmarino, proposto in pratici flaconcini.","propol-active-bio":"Integratore in compresse masticabili a base di propoli italiana biologica al 20%. Ogni compressa da 500 mg contiene 100 mg di propoli.","propoli-30-spray-integratore":"Estratto di propoli al 30% in soluzione alcolica con pratico erogatore spray reclinabile, pensato per un’applicazione semplice e mirata nel cavo orale. Ingredienti indicati da Apinfiore: propoli 30%, alcool 80% e acqua. Senza glutine. Modo d’uso del produttore: 5-6 nebulizzazioni, 2-3 volte al giorno o al bisogno; può essere applicato direttamente oppure assunto con un po’ di miele, zucchero o un alimento. Per l’elevato contenuto alcolico non è adatto ai bambini o a chi non può assumere alcool; in gravidanza o allattamento è indicato chiedere consiglio al medico.","propoli-30-alcolica-integratore":"Integratore alimentare per adulti a base di propoli al 30% in soluzione alcolica. Ingredienti indicati da Apinfiore: propoli 30%, alcool 80% e acqua. Senza glutine. Il contagocce permette un dosaggio preciso e versatile. Modo d’uso del produttore: 10-15 gocce, 2-3 volte al giorno o al bisogno, da assumere con miele, zucchero, pane o biscotto oppure direttamente. Per l’elevato contenuto alcolico non è adatto ai bambini o a chi non può assumere alcool; in gravidanza o allattamento è indicato chiedere consiglio al medico.","propoli-analcolica-integratore":"Estratto di propoli al 30% in soluzione idroglicerica senza alcool. Ingredienti indicati da Apinfiore: propoli 30%, gliceroli, acqua e aromi naturali. Senza glutine. Il produttore la indica anche per bambini sopra i 3 anni. Modo d’uso: 10-20 gocce sciolte in un cucchiaio di miele o in una bevanda, 2 volte al giorno e preferibilmente lontano dai pasti. Non utilizzare nei bambini di età inferiore ai 3 anni.","cosmesi-crema-mani":"Crema formulata con propoli, cera d’api ed echinacea, pensata per mani secche o fragili. Nutre e protegge la pelle, aiutando a mantenerla morbida e curata.","cosmesi-burrocacao-propoli-aloe":"Burrocacao cremoso formulato con propoli e aloe vera, pensato per proteggere e mantenere le labbra morbide e idratate. Aiuta a contrastare secchezza e screpolature, lasciando una piacevole sensazione di comfort.","cosmesi-burrocacao-miele-pappa-reale":"Burrocacao cremoso formulato con miele e pappa reale, pensato per nutrire e proteggere le labbra. Aiuta a contrastare secchezza e screpolature, mantenendo le labbra morbide, elastiche e confortevoli.","cosmesi-shampoo-multivitaminico":"Shampoo formulato con proteine del frumento, rosmarino e pappa reale, pensato per capelli fragili, stressati o spenti. Aiuta a nutrire e rinforzare la fibra capillare, lasciando i capelli più curati e vitali.","cosmesi-saponetta-frutti-bosco":"Sapone vegetale formulato con miele e frutti di bosco, adatto alla detersione quotidiana della pelle. Deterge delicatamente e aiuta a mantenere la pelle morbida, lasciando una piacevole profumazione fruttata.","cosmesi-saponetta-lavanda":"Sapone vegetale formulato con miele e lavanda, adatto alla detersione quotidiana della pelle. Deterge delicatamente e lascia una piacevole sensazione di freschezza, con la caratteristica profumazione della lavanda.","cosmesi-saponetta-aloe-vera":"Sapone vegetale formulato con miele e aloe vera, pensato per una detersione delicata della pelle. Aiuta a mantenere la pelle morbida e idratata, lasciando una piacevole sensazione di comfort.","cosmesi-candela-alveare-cera-api":"Candela artigianale realizzata in cera d’api, modellata nella caratteristica forma dell’alveare. La cera d’api è una sostanza naturale prodotta dalle api e utilizzata nell’alveare per costruire le celle dei favi.","unguento-apis":"Unguento da massaggio formulato con veleno d’api, cera d’api e oli essenziali.<br/><br/>È pensato per il massaggio del corpo e lascia una piacevole sensazione di comfort dopo l’applicazione.<br/><br/><strong>È importante sapere che il veleno d’api viene utilizzato qui all’interno di una formulazione cosmetica specifica per il massaggio.</strong>","apis1-crema-viso-veleno-api":"Crema viso formulata con veleno d’api, pensata per viso, collo e décolleté.<br/><br/>Aiuta a mantenere la pelle idratata, tonica ed elastica, contribuendo a un aspetto più compatto e curato.<br/><br/><strong>È importante sapere che il veleno d’api è inserito in una formulazione cosmetica specifica per il trattamento della pelle.</strong>","apis2-siero-viso-veleno-api":"Siero viso cosmetico levigante e tonificante, formulato con veleno d’api.<br/><br/>Tra gli ingredienti caratterizzanti contiene soprattutto prodotti dell’alveare: veleno d’api, polline e miele, associati ad acido ialuronico, olio di borragine, olio di germe di grano, collagene idrolizzato e vitamina E.<br/><br/>Aiuta a idratare, levigare e tonificare la pelle, contribuendo a un aspetto più disteso e compatto.<br/><br/><strong>È importante sapere che riunisce in un unico trattamento tre elementi dell’alveare: veleno d’api, polline e miele.</strong>","apis4-crema-corpo-veleno-api-manuka":"Crema corpo formulata con veleno d’api e miele di Manuka, pensata per idratare e lasciare la pelle morbida e curata.<br/><br/>Aiuta a mantenere la pelle tonica, elastica e compatta, lasciandola più morbida e nutrita.<br/><br/><strong>È importante sapere che unisce due ingredienti caratteristici dell’alveare in una formulazione cosmetica specifica per il corpo.</strong><br/><br/><span style='display:block;padding:12px;border-radius:10px;background:#fffbeb;border:2px solid #f59e0b;color:#78350f;font-weight:800;'><strong>Sapevate che...</strong> La Manuka (Leptospermum scoparium) è un arbusto originario della Nuova Zelanda e dell’Australia sud-orientale. Dai suoi fiori le api producono il miele di Manuka, caratterizzato dalla presenza naturale di composti come il metilgliossale (MGO).</span>","apis5-gommage-veleno-api-manuka":"Trattamento esfoliante delicato per viso e corpo formulato con veleno d’api e miele di Manuka.<br/><br/>Aiuta a rimuovere le cellule superficiali della pelle, lasciandola più liscia, morbida e luminosa.<br/><br/><strong>È importante sapere che il gommage prepara la pelle ai successivi trattamenti cosmetici, migliorandone la sensazione di pulizia e levigatezza.</strong><br/><br/><span style='display:block;padding:12px;border-radius:10px;background:#fffbeb;border:2px solid #f59e0b;color:#78350f;font-weight:800;'><strong>SAPEVATE CHE... IL MIELE DI MANUKA DERIVA DAI FIORI DELLA PIANTA DI MANUKA, ORIGINARIA SOPRATTUTTO DELLA NUOVA ZELANDA, ED È CONOSCIUTO PER LA PRESENZA NATURALE DI COMPOSTI CARATTERISTICI COME IL METILGLIOSSALe (MGO).</strong></span>","bagnodoccia-veleno-oro":"Bagnodoccia formulato con veleno d’api e miele di Manuka, pensato per detergere delicatamente la pelle durante la doccia.<br/><br/>La formulazione unisce l’azione detergente alla presenza di ingredienti caratteristici dell’alveare, lasciando la pelle pulita, morbida e piacevolmente curata.<br/><br/><strong>È importante sapere che associa il veleno d’api al miele di Manuka all’interno di un prodotto cosmetico per l’uso quotidiano.</strong><br/><br/><span style='display:block;padding:12px;border-radius:10px;background:#fffbeb;border:2px solid #f59e0b;color:#78350f;font-weight:800;'><strong>SAPEVATE CHE... IL MIELE DI MANUKA È CONSIDERATO UNO DEI MIELI PIÙ PARTICOLARI AL MONDO? VIENE PRODOTTO SOLO DOVE CRESCE LA PIANTA DI MANUKA E LA SUA QUALITÀ VIENE SPESSO IDENTIFICATA ANCHE ATTRAVERSO IL LIVELLO DI MGO, UNO DEI COMPOSTI NATURALMENTE PRESENTI CHE CONTRIBUISCE A RENDERLO CARATTERISTICO E UNICO.</strong></span>","tesori-limoncello":"Limoncello della linea I Tesori di Francesco, dal profilo fresco e intensamente agrumato. Nasce da un’infusione di scorze di limone selezionate per ottenere un gusto pieno, equilibrato e persistente. È piacevole servito ben fresco a fine pasto oppure come piccolo liquore da degustazione. La bottiglia da 250 ml è adatta anche come idea regalo.","tesori-liquore-caffe":"Liquore al caffè della linea I Tesori di Francesco, dal gusto intenso e avvolgente. L’aroma del caffè si unisce alla dolcezza del liquore creando un profilo pieno e persistente. Si può servire fresco o a temperatura ambiente, da solo oppure in abbinamento a dessert. Formato da 250 ml, adatto anche come piccolo regalo gastronomico.","tesori-castagne-rum":"Castagne al rum della linea I Tesori di Francesco, una specialità dal gusto ricco in cui la dolcezza naturale delle castagne incontra le note aromatiche del rum. Sono pensate come prodotto da degustazione e si prestano bene a essere servite a fine pasto o insieme a dessert. Il formato compatto le rende adatte anche come idea regalo gastronomica.","cosmesi-travel-kit-benessere":"Kit da viaggio con quattro prodotti da 50 ml raccolti in una pochette riutilizzabile: Shampoo Idratante Lenitivo, Balsamo Intensivo Multivitaminico, Crema Corpo Relax Intenso e Bagnodoccia Relax Intenso. I formati compatti sono pensati per accompagnare la routine di corpo e capelli anche fuori casa e sono adatti al bagaglio a mano. Lo shampoo contiene calendula, miele e camomilla; il balsamo riunisce miele, polline, pappa reale e olio di lino; la crema corpo associa miele e burro di karité; il bagnodoccia contiene miele ed estratti botanici di lavanda, iperico e timo.","sos-dol-50ml":"SOS DOL nel formato da 50 ml è un unguento cosmetico da massaggio della linea Apinfiore al veleno d’api. La formulazione abbina veleno d’api e cera d’api a olio di mandorle dolci, olio di oliva, burro di karité e oli essenziali di Tea Tree, timo ed eucalipto. Applicare sulla zona interessata con un massaggio, seguendo le indicazioni riportate sulla confezione."};
+const SHOP_PRODUCT_WARNINGS={"unguento-apis":"Solo uso esterno. Non utilizzare in caso di allergia nota al veleno d’api o a uno degli ingredienti. Tenere fuori dalla portata dei bambini e lontano da luce diretta e fonti di calore. Evitare il contatto con occhi e mucose. Non usare su bambini di età inferiore ai 3 anni. Non esporsi a sole o lampade UV dopo l’uso. Richiudere il contenitore dopo l’utilizzo.","sos-dol-50ml":"Solo uso esterno. Non utilizzare in caso di allergia nota al veleno d’api o a uno degli ingredienti. Tenere fuori dalla portata dei bambini e lontano da luce diretta e fonti di calore. Evitare il contatto con occhi e mucose. Non usare su bambini di età inferiore ai 3 anni. Non esporsi a sole o lampade UV dopo l’uso. Richiudere il contenitore dopo l’utilizzo.","apis1-crema-viso-veleno-api":"Solo uso esterno. Non utilizzare in caso di allergia nota al veleno d’api o a uno degli ingredienti. Tenere fuori dalla portata dei bambini e lontano da luce diretta e fonti di calore. Evitare il contatto con occhi e mucose. Non usare su bambini di età inferiore ai 3 anni. Richiudere il contenitore dopo l’utilizzo.","apis2-siero-viso-veleno-api":"Solo uso esterno. Non utilizzare in caso di allergia nota al veleno d’api o a uno degli ingredienti. Tenere fuori dalla portata dei bambini e lontano da luce diretta e fonti di calore. Evitare il contatto con occhi e mucose. Non usare su bambini di età inferiore ai 3 anni. Richiudere il contenitore dopo l’utilizzo.","apis4-crema-corpo-veleno-api-manuka":"Solo uso esterno. Non utilizzare in caso di allergia nota al veleno d’api o a uno degli ingredienti. Tenere fuori dalla portata dei bambini e lontano da luce diretta e fonti di calore. Evitare il contatto con occhi e mucose. Non usare su bambini di età inferiore ai 3 anni.","apis5-gommage-veleno-api-manuka":"Solo uso esterno. Non utilizzare in caso di allergia nota al veleno d’api o a uno degli ingredienti. Tenere fuori dalla portata dei bambini e lontano da luce diretta e fonti di calore. Evitare il contatto con occhi e mucose. Non usare su bambini di età inferiore ai 3 anni.","bagnodoccia-veleno-oro":"Solo uso esterno. Non utilizzare in caso di allergia nota al veleno d’api o a uno degli ingredienti. Tenere fuori dalla portata dei bambini e lontano da luce diretta e fonti di calore. Evitare il contatto con occhi e mucose. Non usare su bambini di età inferiore ai 3 anni."};
+
+const SHOP_OFFICIAL_PRODUCT_ALIASES={"propolterapy-professional":["propolterapy professional","propolterapy","diffusore professional"],"capsule-pb":["capsule p+b","capsule propoli p+b","p+b"],"capsule-propolit":["capsule propolit","propolit"],"acacia-zenzero-apinfiore":["acacia e zenzero","acacia zenzero"],"miele-eucalipto-apinfiore":["miele di eucalipto"],"balsammiel":["balsammiel","balsam miel"],"acacia":["acacia 40 g","acacia 40g"],"favo-integrale-bio":["acacia in favo","miele in favo","favo integrale"],"orsetti-gommosi":["orsetti gommosi"],"bee-energy-bio":["bee energy"],"propol-active-bio":["propol active"],"propoli-30-spray-integratore":["propoli 30% spray","propoli spray"],"propoli-30-alcolica-integratore":["propoli 30% alcolica","propoli alcolica"],"propoli-analcolica-integratore":["propoli analcolica"],"cosmesi-burrocacao-propoli-aloe":["burrocacao propoli aloe"],"cosmesi-burrocacao-miele-pappa-reale":["burrocacao miele pappa reale"],"cosmesi-shampoo-multivitaminico":["shampoo multivitaminico"],"cosmesi-saponetta-frutti-bosco":["saponetta frutti di bosco"],"cosmesi-saponetta-lavanda":["saponetta lavanda"],"cosmesi-saponetta-aloe-vera":["saponetta aloe vera"],"cosmesi-candela-alveare-cera-api":["candela alveare","candela in cera d api"],"cosmesi-travel-kit-benessere":["kit da viaggio","travel kit apinfiore","travel kit"],"unguento-apis":["sos dol 15 ml","sos dol 15ml"],"sos-dol-50ml":["sos dol 50 ml","sos dol 50ml","347bis"],"apis1-crema-viso-veleno-api":["apis1"],"apis2-siero-viso-veleno-api":["apis2"],"apis4-crema-corpo-veleno-api-manuka":["apis4"],"apis5-gommage-veleno-api-manuka":["apis5"],"bagnodoccia-veleno-oro":["apis7"],"tesori-limoncello":["tesori limoncello"],"tesori-liquore-caffe":["tesori liquore caffe","liquore al caffe"],"tesori-castagne-rum":["tesori castagne rum","castagne al rum"]};
+function officialProductContextNormalize(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim();}
+function findOfficialProductContext(value){
+  const hay=officialProductContextNormalize(value);
+  let best=null;
+  for(const product of SHOP_OFFICIAL_PRODUCTS){
+    const candidates=[product.name,...(SHOP_OFFICIAL_PRODUCT_ALIASES[product.id]||[])];
+    for(const raw of candidates){
+      const candidate=officialProductContextNormalize(raw);
+      if(candidate.length<4 || !hay.includes(candidate))continue;
+      if(!best || candidate.length>best.length)best={product,length:candidate.length};
+    }
+  }
+  return best?.product||null;
+}
+function findOfficialProductsContext(value){
+  const hay=officialProductContextNormalize(value);
+  return SHOP_OFFICIAL_PRODUCTS.filter(product=>{
+    const candidates=[product.name,...(SHOP_OFFICIAL_PRODUCT_ALIASES[product.id]||[])];
+    return candidates.some(raw=>{
+      const candidate=officialProductContextNormalize(raw);
+      return candidate.length>=4 && hay.includes(candidate);
+    });
+  });
+}
+function officialCatalogEsc(v){return apeEscape(String(v||''));}
+function officialCatalogCategory(section){
+  return ({
+    'alveoterapia-prodotti':'Alveoterapia',
+    'alveare':'Linea Alimenti',
+    'propoli':'Linea Integratori',
+    'cosmesi':'Cosmesi e Cera d’Api',
+    'linea-veleni':'Linea Cosmetica al Veleno d’Api',
+    'tesori-francesco':'I Tesori di Francesco'
+  })[section]||'Bottega';
+}
+function renderOfficialCatalog(){
+  document.querySelectorAll('[data-official-section]').forEach(box=>{
+    const section=box.dataset.officialSection;
+    const items=SHOP_OFFICIAL_PRODUCTS.filter(p=>p.section===section);
+    box.innerHTML=items.map(p=>'<article class="catalog-card product-openable" id="prodotto-'+officialCatalogEsc(p.id)+'" data-product-id="'+officialCatalogEsc(p.id)+'" tabindex="0" role="button" aria-label="Apri la scheda completa di '+officialCatalogEsc(p.name)+'"><div class="catalog-card-media"><img src="'+officialCatalogEsc(p.image)+'" alt="'+officialCatalogEsc(p.name)+'" loading="lazy"></div><div class="catalog-card-body"><small>'+officialCatalogEsc(officialCatalogCategory(p.section))+'</small><h3>'+officialCatalogEsc(p.name)+'</h3><p>'+officialCatalogEsc(p.desc)+'</p><div class="catalog-points">🐝 +'+defaultPointsFor(p.id)+' Punti Ape</div><button class="product-detail-link" type="button" data-open-product="'+officialCatalogEsc(p.id)+'">Apri la scheda completa →</button><div class="catalog-buy-row"><div class="catalog-price"><strong>'+euro(p.price)+'</strong><span>'+officialCatalogEsc(p.size)+'</span></div><button class="add-btn official-add" data-id="'+officialCatalogEsc(p.id)+'" data-name="'+officialCatalogEsc(p.name)+'" data-price="'+p.price+'" data-size="'+officialCatalogEsc(p.size)+'" data-points="'+defaultPointsFor(p.id)+'">Aggiungi</button></div></div></article>').join('');
+  });
+}
+renderOfficialCatalog();
+
+const BUSATELLO_DETAIL_META={
+  millefiori:{article:'miele-millefiori',category:'Mieli del Busatello'},
+  melone:{article:'miele-melone',category:'Mieli del Busatello'},
+  fragola:{article:'miele-fragola',category:'Mieli del Busatello'},
+  pesca:{article:'miele-pesca',category:'Mieli del Busatello'},
+  arancia:{article:'miele-arancia',category:'Mieli del Busatello'}
+};
+
+function getShopProductDetail(id){
+  const dynamic=SHOP_OFFICIAL_PRODUCTS.find(p=>p.id===id);
+  if(dynamic){
+    return {
+      id:dynamic.id,name:dynamic.name,image:dynamic.image,size:dynamic.size,
+      price:Number(dynamic.price),points:defaultPointsFor(dynamic.id),category:officialCatalogCategory(dynamic.section),
+      detail:SHOP_PRODUCT_DETAIL_DESCRIPTIONS[dynamic.id]||dynamic.desc
+    };
+  }
+  const meta=BUSATELLO_DETAIL_META[id];
+  if(!meta)return null;
+  const article=document.getElementById(meta.article);
+  if(!article)return null;
+  const btn=article.querySelector('.add-btn');
+  const img=article.querySelector('img');
+  return {
+    id,
+    name:btn?.dataset.name||article.querySelector('h3')?.textContent||id,
+    image:img?.getAttribute('src')||'',
+    size:btn?.dataset.size||'',
+    price:Number(btn?.dataset.price||0),
+    points:Number(btn?.dataset.points||0),
+    category:meta.category,
+    detail:SHOP_PRODUCT_DETAIL_DESCRIPTIONS[id]||article.querySelector('.product-new-copy>p')?.textContent||''
+  };
+}
+
+function detailHtml(value){
+  const raw=String(value||'');
+  if(/<\/?(br|strong|span)\b/i.test(raw))return raw;
+  return '<p>'+officialCatalogEsc(raw)+'</p>';
+}
+
+const productDetailOverlay=document.getElementById('productDetailOverlay');
+const productDetailClose=document.getElementById('productDetailClose');
+const productDetailAdd=document.getElementById('productDetailAdd');
+let currentDetailProduct=null;
+
+function openProductDetail(id){
+  const p=getShopProductDetail(id);
+  if(!p)return;
+  currentDetailProduct=p;
+  const image=document.getElementById('productDetailImage');
+  image.src=p.image;
+  image.alt=p.name;
+  document.getElementById('productDetailCategory').textContent=p.category;
+  document.getElementById('productDetailName').textContent=p.name;
+  document.getElementById('productDetailFormat').textContent=p.size;
+  document.getElementById('productDetailDescription').innerHTML=detailHtml(p.detail);
+  const warningBox=document.getElementById('productDetailWarning');
+  const warningText=SHOP_PRODUCT_WARNINGS[p.id]||'';
+  document.getElementById('productDetailWarningText').textContent=warningText;
+  warningBox.classList.toggle('show',Boolean(warningText));
+  document.getElementById('productDetailPrice').textContent=euro(p.price);
+  document.getElementById('productDetailSize').textContent=p.size+(p.points?' · 🐝 '+p.points+' Punti Ape':'');
+  productDetailAdd.dataset.id=p.id;
+  productDetailAdd.dataset.name=p.name;
+  productDetailAdd.dataset.price=String(p.price);
+  productDetailAdd.dataset.size=p.size;
+  productDetailAdd.dataset.points=String(p.points||0);
+  productDetailOverlay.classList.add('open');
+  productDetailOverlay.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+  if(window.fdaTranslateNow) window.fdaTranslateNow(productDetailOverlay);
+  setTimeout(()=>productDetailClose.focus(),40);
+}
+
+function closeProductDetail(){
+  productDetailOverlay.classList.remove('open');
+  productDetailOverlay.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+  currentDetailProduct=null;
+}
+
+Object.entries(BUSATELLO_DETAIL_META).forEach(([id,meta])=>{
+  const article=document.getElementById(meta.article);
+  if(!article)return;
+  article.classList.add('product-openable');
+  article.dataset.productId=id;
+  article.tabIndex=0;
+  article.setAttribute('role','button');
+  const title=article.querySelector('h3')?.textContent||'prodotto';
+  article.setAttribute('aria-label','Apri la scheda completa di '+title);
+  const buy=article.querySelector('.product-buy');
+  if(buy && !article.querySelector('.product-detail-link')){
+    const link=document.createElement('button');
+    link.type='button';
+    link.className='product-detail-link';
+    link.dataset.openProduct=id;
+    link.textContent='Apri la scheda completa →';
+    buy.parentNode.insertBefore(link,buy);
+  }
+});
+
+document.addEventListener('click',e=>{
+  const add=e.target.closest('.add-btn,.product-detail-add');
+  if(add)return;
+  const direct=e.target.closest('[data-open-product]');
+  if(direct){
+    e.preventDefault();
+    e.stopPropagation();
+    openProductDetail(direct.dataset.openProduct);
+    return;
+  }
+  const card=e.target.closest('.product-openable[data-product-id]');
+  if(card)openProductDetail(card.dataset.productId);
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && productDetailOverlay.classList.contains('open')){closeProductDetail();return;}
+  if((e.key==='Enter'||e.key===' ') && document.activeElement?.matches('.product-openable[data-product-id]')){
+    e.preventDefault();
+    openProductDetail(document.activeElement.dataset.productId);
+  }
+});
+
+productDetailClose.addEventListener('click',closeProductDetail);
+productDetailOverlay.addEventListener('click',e=>{if(e.target===productDetailOverlay)closeProductDetail();});
+productDetailAdd.addEventListener('click',e=>{
+  e.stopPropagation();
+  addV2Product(productDetailAdd);
+  closeProductDetail();
+});
+
+
+function siteSearchNormalize(value){
+  return String(value||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .replace(/[’‘]/g,"'")
+    .replace(/[^a-z0-9+]+/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function buildSiteSearchIndex(){
+  const fixed=[
+    {title:'Alveoterapia Integrata',type:'Esperienza',href:'/alveoterapia',keywords:'alveoterapia api respirazione alveare esperienza primavera estate autunno inverno diffusori'},
+    {title:'Oasi del Busatello',type:'Luogo',href:'/alveoterapia',keywords:'oasi busatello arnie api natura territorio primavera estate'},
+    {title:'Galena delle Api',type:'Luogo',href:'/centro',keywords:'galena centro castel d ario ambienti diffusori autunno inverno'},
+    {title:'Bacheca',type:'Sezione',href:'/bacheca',keywords:'novita aggiornamenti notizie iniziative diario'},
+    {title:'Chi siamo',type:'Pagina',href:'/chi-siamo',keywords:'progetto fabbrica delle api storia chi siamo'},
+    {title:'Contatti',type:'Pagina',href:'/contatti',keywords:'contatti telefono email informazioni scrivici'},
+    {title:'Alveo Digitale',type:'Contenuto',href:'/alveo-digitale',keywords:'alveo digitale ricette contenuti ebook pdf colazioni'},
+    {title:'Punti Ape',type:'Programma',href:'/shop#punti-ape',keywords:'punti ape saldo api 100 punti cesto omaggio'},
+    {title:'Mieli del Busatello',type:'Sezione',href:'/shop#mieli',keywords:'miele mieli busatello sapori vasetti territorio millefiori melone fragola pesca arancia'},
+    {title:'Alveoterapia · diffusore e capsule',type:'Sezione',href:'/shop#alveoterapia-prodotti',keywords:'alveoterapia diffusore capsule propolterapy propolit p+b'},
+    {title:'Prodotti dell’alveare',type:'Sezione',href:'/shop#alveare',keywords:'alimenti alveare miele favo polline pappa reale orsetti'},
+    {title:'Propoli e integratori',type:'Sezione',href:'/shop#propoli',keywords:'propoli integratori spray contagocce bee energy propol active'},
+    {title:'Cosmesi dell’alveare',type:'Sezione',href:'/shop#cosmesi',keywords:'cosmesi crema mani shampoo sapone saponetta burrocacao cera candela kit viaggio'},
+    {title:'Linea Veleni d’Api',type:'Sezione',href:'/shop#linea-veleni',keywords:'linea veleni veleno api sos dol apis1 apis2 apis4 apis5 apis7 massaggio viso corpo gommage bagnodoccia'},
+    {title:'I Tesori di Francesco',type:'Sezione',href:'/shop#tesori-francesco',keywords:'tesori francesco limoncello caffe castagne rum degustazione'},
+    {title:'Storie della Fabbrica',type:'Sezione',href:'/shop#storie',keywords:'storie racconto territorio progetto'},
+    {title:'Oggi nella Fabbrica delle Api',type:'Sezione',href:'/shop#oggi',keywords:'oggi novita stagione fioriture centro oasi'},
+    {title:'Scegli prodotti',type:'Sezione',href:'/shop#scegli',keywords:'scegli prodotti bottega compra acquista'}
+  ];
+
+  const busatello=[
+    {id:'millefiori',name:'Miele Millefiori',keywords:'millefiori classico armonico oasi busatello'},
+    {id:'melone',name:'Miele al Melone',keywords:'melone dolce fruttato busatello'},
+    {id:'fragola',name:'Miele alla Fragola',keywords:'fragola morbido profumato busatello'},
+    {id:'pesca',name:'Miele alla Pesca',keywords:'pesca delicato fruttato busatello'},
+    {id:'arancia',name:"Miele all'Arancia",keywords:'arancia agrumato fresco busatello'}
+  ].map(p=>({title:p.name,type:'Prodotto',href:'/shop#miele-'+p.id,keywords:'miele 250 g '+p.keywords}));
+
+  const dynamic=SHOP_OFFICIAL_PRODUCTS.map(p=>({
+    title:p.name,
+    type:'Prodotto',
+    href:'/shop#prodotto-'+p.id,
+    keywords:[
+      officialCatalogCategory(p.section),
+      p.size,
+      p.desc,
+      ...(SHOP_OFFICIAL_PRODUCT_ALIASES[p.id]||[])
+    ].join(' ')
+  }));
+
+  return [...fixed,...busatello,...dynamic].map((item,index)=>({
+    ...item,
+    index,
+    search:siteSearchNormalize(item.title+' '+item.type+' '+item.keywords)
+  }));
+}
+
+const SITE_SEARCH_INDEX=buildSiteSearchIndex();
+const siteSearchInput=document.getElementById('siteSearchInput');
+const siteSearchResults=document.getElementById('siteSearchResults');
+const siteSearchGo=document.getElementById('siteSearchGo');
+let siteSearchMatches=[];
+let siteSearchActive=-1;
+
+function siteSearchScore(item,query){
+  const q=siteSearchNormalize(query);
+  if(!q)return -1;
+  const title=siteSearchNormalize(item.title);
+  const words=q.split(' ').filter(Boolean);
+  if(!words.every(word=>item.search.includes(word)))return -1;
+  let score=0;
+  if(title===q)score+=1000;
+  if(title.startsWith(q))score+=520;
+  if(title.includes(q))score+=260;
+  for(const word of words){
+    if(title.split(' ').includes(word))score+=120;
+    else if(title.includes(word))score+=75;
+    else score+=25;
+  }
+  if(item.type==='Sezione'||item.type==='Luogo'||item.type==='Esperienza')score+=15;
+  return score;
+}
+
+function siteSearchFind(query){
+  return SITE_SEARCH_INDEX
+    .map(item=>({item,score:siteSearchScore(item,query)}))
+    .filter(x=>x.score>=0)
+    .sort((a,b)=>b.score-a.score || a.item.index-b.item.index)
+    .slice(0,8)
+    .map(x=>x.item);
+}
+
+function closeSiteSearch(){
+  siteSearchResults.classList.remove('open');
+  siteSearchResults.innerHTML='';
+  siteSearchMatches=[];
+  siteSearchActive=-1;
+  siteSearchInput.removeAttribute('aria-activedescendant');
+}
+
+function goToSiteSearchResult(item){
+  if(!item)return;
+  closeSiteSearch();
+  siteSearchInput.blur();
+  const href=String(item.href||'');
+  const hashIndex=href.indexOf('#');
+  if(hashIndex>=0 && (href.startsWith('#')||href.startsWith('/shop#')||location.pathname==='/shop'||location.pathname==='/shop-v2'||location.pathname==='/shop.html')){
+    const hash=href.slice(hashIndex);
+    const target=document.querySelector(hash);
+    if(target){
+      history.replaceState(null,'',hash);
+      setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),40);
+      return;
+    }
+  }
+  location.href=href;
+}
+
+function renderSiteSearch(query){
+  const q=String(query||'').trim();
+  siteSearchResults.innerHTML='';
+  siteSearchActive=-1;
+  if(!q){closeSiteSearch();return;}
+
+  siteSearchMatches=siteSearchFind(q);
+  if(!siteSearchMatches.length){
+    const empty=document.createElement('div');
+    empty.className='site-search-empty';
+    empty.textContent='Nessun risultato. Prova con un prodotto, una linea, un luogo o un argomento.';
+    siteSearchResults.appendChild(empty);
+    siteSearchResults.classList.add('open');
+    return;
+  }
+
+  siteSearchMatches.forEach((item,i)=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='site-search-result';
+    btn.id='site-search-result-'+i;
+    btn.setAttribute('role','option');
+    btn.innerHTML='<strong>'+apeEscape(item.title)+'</strong><em>'+apeEscape(item.type)+'</em><small>'+apeEscape(item.keywords.split(' ').slice(0,11).join(' '))+'</small>';
+    btn.addEventListener('mousedown',e=>e.preventDefault());
+    btn.addEventListener('click',()=>goToSiteSearchResult(item));
+    siteSearchResults.appendChild(btn);
+  });
+
+  const hint=document.createElement('div');
+  hint.className='site-search-hint';
+  hint.textContent='Invio apre il primo risultato · ↑ ↓ per scegliere';
+  siteSearchResults.appendChild(hint);
+  siteSearchResults.classList.add('open');
+}
+
+function setSiteSearchActive(index){
+  if(!siteSearchMatches.length)return;
+  const buttons=[...siteSearchResults.querySelectorAll('.site-search-result')];
+  buttons.forEach(b=>b.classList.remove('active'));
+  siteSearchActive=(index+siteSearchMatches.length)%siteSearchMatches.length;
+  const active=buttons[siteSearchActive];
+  if(active){
+    active.classList.add('active');
+    active.scrollIntoView({block:'nearest'});
+    siteSearchInput.setAttribute('aria-activedescendant',active.id);
+  }
+}
+
+siteSearchInput.addEventListener('input',()=>renderSiteSearch(siteSearchInput.value));
+siteSearchInput.addEventListener('focus',()=>{if(siteSearchInput.value.trim())renderSiteSearch(siteSearchInput.value);});
+siteSearchInput.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'){e.preventDefault();if(!siteSearchResults.classList.contains('open'))renderSiteSearch(siteSearchInput.value);setSiteSearchActive(siteSearchActive+1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();setSiteSearchActive(siteSearchActive-1);}
+  else if(e.key==='Enter'){
+    e.preventDefault();
+    if(!siteSearchMatches.length)renderSiteSearch(siteSearchInput.value);
+    const chosen=siteSearchMatches[siteSearchActive>=0?siteSearchActive:0];
+    if(chosen)goToSiteSearchResult(chosen);
+  }else if(e.key==='Escape'){closeSiteSearch();siteSearchInput.blur();}
+});
+siteSearchGo.addEventListener('click',()=>{
+  if(!siteSearchInput.value.trim()){siteSearchInput.focus();return;}
+  siteSearchMatches=siteSearchFind(siteSearchInput.value);
+  if(siteSearchMatches[0])goToSiteSearchResult(siteSearchMatches[0]);
+  else renderSiteSearch(siteSearchInput.value);
+});
+document.addEventListener('click',e=>{if(!document.getElementById('siteSearch').contains(e.target))closeSiteSearch();});
+
+document.querySelectorAll('.add-btn').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();addV2Product(btn);}));
+document.getElementById('cartFab').addEventListener('click',()=>document.getElementById('cartDrawer').classList.add('open'));
+document.getElementById('cartClose').addEventListener('click',()=>document.getElementById('cartDrawer').classList.remove('open'));
+document.getElementById('startCheckout').addEventListener('click',()=>{
+  if(!shopV2Cart.length){alert(purchaseT('addFirst'));return;}
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('checkoutOverlay').classList.add('open');
+  document.getElementById('checkoutOverlay').setAttribute('aria-hidden','false');
+  showCheckoutStep(1);
+});
+document.getElementById('checkoutClose').addEventListener('click',()=>{document.getElementById('checkoutOverlay').classList.remove('open');document.getElementById('checkoutOverlay').setAttribute('aria-hidden','true');});
+document.querySelectorAll('[data-next]').forEach(btn=>btn.addEventListener('click',async()=>{
+  const next=Number(btn.dataset.next);
+  if(next===2){
+    btn.disabled=true;
+    const ok=await validStepOne();
+    btn.disabled=false;
+    if(!ok)return;
+  }
+  showCheckoutStep(next);
+  if(next===3)await renderCheckoutSummary();
+}));
+document.querySelectorAll('[data-back]').forEach(btn=>btn.addEventListener('click',()=>showCheckoutStep(Number(btn.dataset.back))));
+document.getElementById('coCountry').addEventListener('change',()=>{
+  invalidateAddressValidation();
+  shippingState={cost:null,pending:false,label:purchaseT('toCalculate'),reason:''};
+  purchaseApplyCountryFields(true);
+});
+document.getElementById('confirmOrder').addEventListener('click',completeOrderDraft);
+document.getElementById('downloadOrderPdf').addEventListener('click',()=>{if(lastSuccessfulOrder)downloadCustomerOrderPdf(lastSuccessfulOrder);});
+document.getElementById('finishCheckout').addEventListener('click',()=>{document.getElementById('checkoutOverlay').classList.remove('open');document.getElementById('checkoutOverlay').setAttribute('aria-hidden','true');window.scrollTo({top:0,behavior:'smooth'});});
+const apeChatPanel=document.getElementById('apeChatPanel');
+const apeChatMessages=document.getElementById('apeChatMessages');
+const apeChatInput=document.getElementById('apeChatInput');
+
+function apeEscape(value){
+  return String(value||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function apeAddMessage(text,who='bot'){
+  const el=document.createElement('div');
+  el.className='ape-msg '+who;
+  el.innerHTML=who==='user'?apeEscape(text):text;
+  apeChatMessages.appendChild(el);
+  apeChatMessages.scrollTop=apeChatMessages.scrollHeight;
+}
+
+function apeAddContextLink(action){
+  if(!action||!action.href||!action.label)return;
+  const link=document.createElement('a');
+  link.className='ape-context-link';
+  link.href=action.href;
+  link.textContent=action.label+' →';
+  link.addEventListener('click',(e)=>{
+    const href=String(action.href||'');
+    const hashIndex=href.indexOf('#');
+    if(hashIndex>=0 && (href.startsWith('#') || href.startsWith('/shop#') || location.pathname==='/shop')){
+      const hash=href.slice(hashIndex);
+      const target=document.querySelector(hash);
+      if(target){
+        e.preventDefault();
+        apeChatPanel.classList.remove('open');
+        history.replaceState(null,'',hash);
+        setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),80);
+        return;
+      }
+    }
+    if(href.startsWith('#')||href.startsWith('/shop#'))apeChatPanel.classList.remove('open');
+  });
+  apeChatMessages.appendChild(link);
+  apeChatMessages.scrollTop=apeChatMessages.scrollHeight;
+}
+
+function findPrimaryOfficialProductContext(reply){
+  const raw=String(reply||'');
+  const firstBlock=raw.split(/\n\s*\n/)[0].slice(0,900);
+  const hay=officialProductContextNormalize(firstBlock);
+  let best=null;
+  for(const product of SHOP_OFFICIAL_PRODUCTS){
+    const candidates=[product.name,...(SHOP_OFFICIAL_PRODUCT_ALIASES[product.id]||[])];
+    for(const rawCandidate of candidates){
+      const candidate=officialProductContextNormalize(rawCandidate);
+      if(candidate.length<4)continue;
+      const pos=hay.indexOf(candidate);
+      if(pos<0)continue;
+      if(!best || pos<best.pos || (pos===best.pos && candidate.length>best.length)) best={product,pos,length:candidate.length};
+    }
+  }
+  return best?.product||null;
+}
+
+function apeContextActionFromText(message,reply){
+  const l=apeCurrentLanguage();
+  const normalize=(v)=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const messageText=normalize(message);
+  const replyText=normalize(reply);
+  const labels={
+    it:{millefiori:'Vai al Miele Millefiori',melone:'Vai al Miele al Melone',fragola:'Vai al Miele alla Fragola',pesca:'Vai al Miele alla Pesca',arancia:"Vai al Miele all'Arancia",mieli:'Scopri i Mieli del Busatello',punti:'Vai ai Punti Ape',oasi:"Scopri l'Oasi del Busatello",galena:'Scopri la Galena delle Api',alveoterapia:"Scopri l'Alveoterapia Integrata",veleni:'Scopri la Linea Veleni',bacheca:'Vai alla Bacheca',alveo:'Scopri Alveo Digitale'},
+    en:{millefiori:'Go to Millefiori Honey',melone:'Go to Melon Honey',fragola:'Go to Strawberry Honey',pesca:'Go to Peach Honey',arancia:'Go to Orange Honey',mieli:'Discover Busatello Honeys',punti:'Go to Bee Points',oasi:'Discover Busatello Oasis',galena:'Discover Galena delle Api',alveoterapia:'Discover Integrated Alveotherapy',veleni:'Discover the Bee Venom Line',bacheca:'Go to News',alveo:'Discover Alveo Digitale'},
+    de:{millefiori:'Zum Millefiori-Honig',melone:'Zum Melonenhonig',fragola:'Zum Erdbeerhonig',pesca:'Zum Pfirsichhonig',arancia:'Zum Orangenhonig',mieli:'Busatello-Honige entdecken',punti:'Zu den Bienenpunkten',oasi:'Oase Busatello entdecken',galena:'Galena delle Api entdecken',alveoterapia:'Integrierte Alveotherapie entdecken',veleni:'Bienengift-Linie entdecken',bacheca:'Zu den Neuigkeiten',alveo:'Alveo Digitale entdecken'},
+    fr:{millefiori:'Voir le Miel Millefiori',melone:'Voir le Miel au Melon',fragola:'Voir le Miel à la Fraise',pesca:'Voir le Miel à la Pêche',arancia:"Voir le Miel à l'Orange",mieli:'Découvrir les Miels du Busatello',punti:'Voir les Points Abeille',oasi:"Découvrir l'Oasis du Busatello",galena:'Découvrir Galena delle Api',alveoterapia:"Découvrir l'Alvéothérapie Intégrée",veleni:"Découvrir la Ligne Venin d'Abeille",bacheca:'Voir les Actualités',alveo:'Découvrir Alveo Digitale'},
+    es:{millefiori:'Ir a la Miel Millefiori',melone:'Ir a la Miel al Melón',fragola:'Ir a la Miel a la Fresa',pesca:'Ir a la Miel al Melocotón',arancia:'Ir a la Miel a la Naranja',mieli:'Descubrir las Mieles del Busatello',punti:'Ir a los Puntos Abeja',oasi:'Descubrir el Oasis del Busatello',galena:'Descubrir Galena delle Api',alveoterapia:'Descubrir la Alveoterapia Integrada',veleni:'Descubrir la Línea Veneno de Abeja',bacheca:'Ir a Novedades',alveo:'Descubrir Alveo Digitale'}
+  };
+  const L=labels[l]||labels.it;
+  const hasMsg=(...xs)=>xs.some(x=>messageText.includes(x));
+  const promotionIntent=/(^|\s)(offerta|offerte|promozione|promozioni|sconto|sconti)(\s|$)|\b(on sale|discounts?|promotions?|deals?|angebot|angebote|rabatt|rabatte|promo|promos|remise|remises|oferta|ofertas|descuento|descuentos)\b/i.test(messageText);
+  if(promotionIntent)return null;
+
+  const exactMessage=findOfficialProductContext(messageText);
+  if(exactMessage){
+    const prefix={it:'Scopri',en:'Discover',de:'Entdecke',fr:'Découvrir',es:'Descubrir'}[l]||'Scopri';
+    return {href:'/shop#prodotto-'+exactMessage.id,label:prefix+' '+exactMessage.name};
+  }
+
+  if(hasMsg('millefiori'))return {href:'/shop#miele-millefiori',label:L.millefiori};
+  if(hasMsg('miele al melone','miele di melone','miel al melon','melon honey','melonenhonig'))return {href:'/shop#miele-melone',label:L.melone};
+  if(hasMsg('miele alla fragola','miele di fragola','miel a la fresa','strawberry honey','erdbeerhonig'))return {href:'/shop#miele-fragola',label:L.fragola};
+  if(hasMsg('miele alla pesca','miele di pesca','miel al melocoton','peach honey','pfirsichhonig'))return {href:'/shop#miele-pesca',label:L.pesca};
+  if(hasMsg("miele all'arancia",'miele di arancia','miel a la naranja','orange honey','orangenhonig'))return {href:'/shop#miele-arancia',label:L.arancia};
+
+  const primaryReplyProduct=findPrimaryOfficialProductContext(reply);
+  if(primaryReplyProduct){
+    const prefix={it:'Scopri',en:'Discover',de:'Entdecke',fr:'Découvrir',es:'Descubrir'}[l]||'Scopri';
+    return {href:'/shop#prodotto-'+primaryReplyProduct.id,label:prefix+' '+primaryReplyProduct.name};
+  }
+
+  const replyProducts=findOfficialProductsContext(replyText);
+  if(replyProducts.length===1){
+    const exact=replyProducts[0];
+    const prefix={it:'Scopri',en:'Discover',de:'Entdecke',fr:'Découvrir',es:'Descubrir'}[l]||'Scopri';
+    return {href:'/shop#prodotto-'+exact.id,label:prefix+' '+exact.name};
+  }
+
+  if(hasMsg('punti ape','bee points','bienenpunkte','points abeille','puntos abeja'))return {href:'/shop#punti-ape',label:L.punti};
+  if(hasMsg('oasi del busatello','oasis del busatello','busatello oasis','oase busatello','oasis du busatello'))return {href:'/alveoterapia',label:L.oasi};
+  if(hasMsg('galena delle api'))return {href:'/centro',label:L.galena};
+  if(hasMsg('alveo digitale'))return {href:'/alveo-digitale',label:L.alveo};
+  if(hasMsg('bacheca','news','novedades','actualites','aktuelles'))return {href:'/bacheca',label:L.bacheca};
+  if(hasMsg('linea veleni','bee venom line','bienengift-linie',"ligne venin d'abeille",'linea veneno de abeja'))return {href:'/shop#linea-veleni',label:L.veleni};
+  if(hasMsg('alveoterapia integrata','integrated alveotherapy','integrierte alveotherapie','alveotherapie integree','alveoterapia integrada'))return {href:'/alveoterapia',label:L.alveoterapia};
+  if(replyProducts.length===0 && hasMsg('miele','mieli','honey','honeys','honig','miel','miels'))return {href:'/shop#mieli',label:L.mieli};
+  return null;
+}
+function apeNormalize(text){
+  return String(text||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+}
+function apePelùReply(question,history=[]){
+  const q=apeNormalize(question);
+  const recent=apeNormalize((Array.isArray(history)?history:[]).map(x=>x&&x.content||'').join(' '));
+  const has=(...words)=>words.some(w=>q.includes(w));
+  const asksUse=has('a cosa serve','cosa serve','serve a','come si usa','a che serve');
+  const officialProduct=findOfficialProductContext(q);
+  const busatelloCatalog=[
+    {id:'miele-millefiori',name:'Miele Millefiori',size:'250 g',price:4.9},
+    {id:'miele-melone',name:'Miele al Melone',size:'250 g',price:4.9},
+    {id:'miele-fragola',name:'Miele alla Fragola',size:'250 g',price:4.9},
+    {id:'miele-pesca',name:'Miele alla Pesca',size:'250 g',price:4.9},
+    {id:'miele-arancia',name:"Miele all'Arancia",size:'250 g',price:4.9}
+  ];
+  const allCatalogProducts=[...busatelloCatalog,...SHOP_OFFICIAL_PRODUCTS];
+  const promotionIntent=/(^|\s)(offerta|offerte|promozione|promozioni|sconto|sconti)(\s|$)|\b(on sale|discounts?|promotions?|deals?|angebot|angebote|rabatt|rabatte|promo|promos|remise|remises|oferta|ofertas|descuento|descuentos)\b/i.test(q);
+  if(promotionIntent){
+    return 'Al momento <strong>non risultano offerte, sconti o promozioni attive</strong>. I prezzi mostrati sono i prezzi correnti del catalogo.<br><br>Se vuoi, posso invece dirti qual è il prodotto che costa meno, mostrarti i prodotti sotto una certa cifra oppure confrontare due prodotti.';
+  }
+  const priceIntent=/\b(costa|costano|prezzo|prezzi|economico|economica|economici|economiche|caro|cara|cari|care)\b/.test(q);
+  const explicitCatalogSubject=/\b(prodotto|prodotti|articolo|articoli|referenza|referenze|catalogo|shop)\b/.test(q);
+  const inheritedCatalogSubject=/\b(prodotto|prodotti|articolo|articoli|referenza|referenze|catalogo|shop|miele|propoli|polline|pappa reale|crema|unguento|apis|tesori)\b/.test(recent);
+  const catalogContext=explicitCatalogSubject||(priceIntent&&inheritedCatalogSubject);
+  if(catalogContext && priceIntent && /(costa\s+(?:di\s+)?meno|piu\s+economico|meno\s+caro|prezzo\s+piu\s+basso)/.test(q)){
+    const minPrice=Math.min(...allCatalogProducts.map(p=>Number(p.price)));
+    const cheapest=allCatalogProducts.filter(p=>Number(p.price)===minPrice);
+    const first=cheapest[0];
+    if(cheapest.length===1){
+      return 'Tra i prodotti presenti nel nostro shop, quello con il prezzo più basso è <strong>'+apeEscape(first.name)+' · '+apeEscape(first.size)+' · '+euro(first.price)+'</strong>.';
+    }
+    return 'Il prezzo più basso del catalogo è <strong>'+euro(minPrice)+'</strong>. I prodotti a questo prezzo sono: '+cheapest.map(p=>'<strong>'+apeEscape(p.name)+'</strong>').join(', ')+'.';
+  }
+  if(catalogContext && priceIntent && /(costa\s+(?:di\s+)?piu|piu\s+caro|prezzo\s+piu\s+alto)/.test(q)){
+    const maxPrice=Math.max(...allCatalogProducts.map(p=>Number(p.price)));
+    const mostExpensive=allCatalogProducts.filter(p=>Number(p.price)===maxPrice);
+    const first=mostExpensive[0];
+    if(mostExpensive.length===1){
+      return 'Tra i prodotti presenti nel nostro shop, quello con il prezzo più alto è <strong>'+apeEscape(first.name)+' · '+apeEscape(first.size)+' · '+euro(first.price)+'</strong>.';
+    }
+    return 'Il prezzo più alto del catalogo è <strong>'+euro(maxPrice)+'</strong>. I prodotti a questo prezzo sono: '+mostExpensive.map(p=>'<strong>'+apeEscape(p.name)+'</strong>').join(', ')+'.';
+  }
+  const productHealthConcern=officialProduct && /(cura|curare|guarire|diagnosi|dose|dosaggio|dolore|dolori|artrosi|artrite|antinfiamm|analges|circolazione|patologia|sintomo|farmac|medicine|medication|pain|arthritis|inflammation|symptom|schmerz|arthrose|medikament|douleur|médicament|medicament|dolor|artrosis|medicamento)/i.test(q);
+  if(productHealthConcern){
+    return 'Posso descriverti <strong>'+apeEscape(officialProduct.name)+'</strong> solo per ciò che è realmente indicato nel catalogo e senza trasformarlo in una cura o in un consiglio medico. Se vuoi, posso spiegarti formato, prezzo e uso alimentare, cosmetico o da massaggio previsto per questo prodotto.';
+  }
+
+  // Salute: blocco solo quando l'utente chiede davvero diagnosi, cure o dosaggi.
+  const medicalIntent=
+    has('mi cura','puo curare','può curare','guarisce','guarire','diagnosi','dosaggio','che dose','quanto ne devo prendere',
+        'sostituisce il farmaco','sostituire il farmaco','terapia per','cura per','trattamento per');
+  if(medicalIntent){
+    return 'Posso spiegarti <strong>cos’è</strong> un prodotto dell’alveare, come viene usato e cosa sappiamo del suo ruolo naturale, ma non posso fare diagnosi, indicare dosaggi personali o presentarlo come una cura. Per un problema di salute è meglio parlarne con un medico, farmacista o altro professionista sanitario.';
+  }
+
+  if(officialProduct){
+    return '<strong>'+apeEscape(officialProduct.name)+' · '+apeEscape(officialProduct.size)+' · '+euro(officialProduct.price)+'</strong><br>'+apeEscape(officialProduct.desc);
+  }
+
+  // PRODOTTI E SOSTANZE DELL'ALVEARE: prima la spiegazione, poi il collegamento al progetto.
+  if(has('veleno d api','veleno di api','veleno delle api','veleno')){
+    if(has('mal di schiena','dolore','dolori','cura')){
+      return 'Il <strong>veleno d’api</strong> è prima di tutto uno strumento naturale di difesa dell’ape e dell’alveare. Nella nostra <strong>Linea Veleni</strong> viene raccontato attraverso prodotti cosmetici e da massaggio, ma non lo presentiamo come cura o trattamento del dolore. Se hai un dolore persistente, è corretto rivolgersi a un professionista sanitario.';
+    }
+    return '<strong>Il veleno d’api</strong> è una sostanza naturale prodotta dall’ape e utilizzata soprattutto per <strong>difendere sé stessa e la colonia</strong> quando percepisce una minaccia.<br><br><strong>Per le api:</strong> è quindi uno strumento di difesa.<br><strong>Per noi:</strong> è una sostanza studiata anche in ambito scientifico e utilizzata in alcuni prodotti cosmetici e da massaggio. Questo però non significa che sia una cura o un trattamento medico.<br><br>Nella Fabbrica delle Api lo raccontiamo attraverso la <strong>Linea Veleni</strong>, con un linguaggio prudente e centrato su cosmetica, massaggio e sensazioni di comfort.';
+  }
+
+  if(has('polline')){
+    if(has('pappa reale','pappa')){
+      return '<strong>Polline e pappa reale sono due cose diverse.</strong><br><br><strong>Polline:</strong> viene raccolto sui fiori e portato nell’alveare. Per le api è una fonte fondamentale di proteine, grassi, vitamine e altri nutrienti, soprattutto per nutrire la covata.<br><br><strong>Pappa reale:</strong> viene prodotta dalle api nutrici. Nutre tutte le larve nei primi giorni e la regina per tutta la vita.<br><br>Per l’uomo entrambi vengono utilizzati come alimenti o ingredienti, ma con caratteristiche molto diverse.';
+    }
+    return '<strong>Il polline</strong> è la polvere finissima prodotta dai fiori. Le api la raccolgono sulle zampe e la portano nell’alveare.<br><br><strong>A cosa serve alle api?</strong><br>È una delle loro principali fonti di nutrimento: apporta soprattutto proteine e altri nutrienti importanti per la crescita della colonia e per l’alimentazione della covata.<br><br><strong>A cosa serve a noi?</strong><br>Il polline raccolto dalle api viene consumato come alimento o ingrediente alimentare. La sua composizione cambia in base ai fiori e alla zona di raccolta. Non è un farmaco e, per chi è allergico ai pollini o ai prodotti dell’alveare, è bene prestare particolare attenzione.';
+  }
+
+  if(has('pappa reale','pappa')){
+    return '<strong>La pappa reale</strong> è una sostanza prodotta dalle api nutrici.<br><br><strong>A cosa serve alle api?</strong><br>Nutre tutte le larve nei primi giorni di vita e soprattutto la <strong>regina</strong>, che la riceve per tutta la sua esistenza. È uno degli elementi che accompagnano lo sviluppo particolare della regina.<br><br><strong>A cosa serve a noi?</strong><br>Viene raccolta e utilizzata come alimento o ingrediente di prodotti alimentari e integratori. È un prodotto dell’alveare molto particolare, ma non va descritto come una cura o come qualcosa dagli effetti garantiti.';
+  }
+
+  if(has('propoli')){
+    return '<strong>La propoli</strong> è una sostanza resinosa che le api raccolgono soprattutto da gemme e parti vegetali e poi lavorano nell’alveare.<br><br><strong>A cosa serve alle api?</strong><br>La usano come una specie di “materiale di protezione”: sigillano piccole fessure, rivestono superfici e contribuiscono a mantenere l’ambiente dell’alveare protetto.<br><br><strong>A cosa serve a noi?</strong><br>La propoli viene utilizzata in diversi prodotti, per esempio preparazioni alimentari, spray, estratti e cosmetici. Posso spiegarti i prodotti della nostra gamma, senza attribuire alla propoli proprietà di cura.';
+  }
+
+  if(has('pane delle api','pane d api','pane d’api')){
+    return '<strong>Il Pane delle Api</strong> è polline che le api hanno già portato nell’alveare, depositato nelle celle e trasformato naturalmente.<br><br><strong>A cosa serve alle api?</strong><br>È una vera riserva alimentare della colonia, utilizzata soprattutto come fonte di nutrienti per le api e per l’allevamento della covata.<br><br><strong>Per noi:</strong> viene raccolto e consumato come prodotto alimentare dell’alveare. È diverso dal polline fresco perché ha già subito trasformazioni naturali all’interno del favo.';
+  }
+
+  if(has('cera d api','cera delle api','cera')){
+    return '<strong>La cera d’api</strong> viene prodotta dalle api operaie tramite speciali ghiandole.<br><br><strong>A cosa serve alle api?</strong><br>Serve per costruire i <strong>favi</strong>: le strutture con celle esagonali dove vengono allevate le giovani api e conservati miele e polline.<br><br><strong>A cosa serve a noi?</strong><br>Viene utilizzata, tra le altre cose, per candele, cosmetici, balsami, lavorazioni artigianali e prodotti protettivi.';
+  }
+
+  if(has('cosmesi','cosmetica','cosmetici','crema','creme')){
+    return '<strong>Le api hanno un ruolo importante anche nella cosmesi</strong>, perché dall’alveare arrivano diverse sostanze che possono essere usate come ingredienti cosmetici.<br><br><strong>Miele:</strong> viene apprezzato per la sua capacità di trattenere umidità e per la sensazione morbida che può lasciare sulla pelle.<br><strong>Cera d’api:</strong> aiuta a dare consistenza a balsami e creme e crea una barriera protettiva sulla superficie della pelle.<br><strong>Propoli:</strong> viene utilizzata in alcune formulazioni cosmetiche, soprattutto in prodotti pensati per la cura quotidiana della pelle.<br><strong>Pappa reale:</strong> può comparire in creme e trattamenti cosmetici come ingrediente legato al mondo dell’alveare.<br><strong>Veleno d’api:</strong> viene utilizzato in alcune linee cosmetiche specialistiche, come la nostra <strong>Linea Veleni</strong>, sempre senza presentarlo come cura o trattamento medico.<br><br>In pratica, il mondo delle api entra nella cosmesi attraverso ingredienti naturali molto diversi tra loro, ognuno con una funzione precisa nella formulazione.';
+  }
+
+  if(has('miele')){
+    if(has('cristall','diventa duro','indurisce','granul')){
+      return 'La <strong>cristallizzazione del miele</strong> è un fenomeno naturale. Alcuni mieli diventano più densi o formano cristalli più velocemente di altri, soprattutto in base alla quantità di glucosio, alla temperatura e alla composizione del miele. <strong>Non significa che il miele sia rovinato.</strong>';
+    }
+    if(has('come fanno','come si fa','come viene fatto','come nasce','producono')){
+      return 'Le api producono il <strong>miele</strong> partendo soprattutto dal nettare dei fiori. Lo raccolgono, lo trasportano nell’alveare e lo lavorano più volte. Poi lo depositano nelle celle del favo e fanno evaporare parte dell’acqua ventilando con le ali. Quando è abbastanza maturo, le celle vengono chiuse con un sottile tappo di cera chiamato <strong>opercolo</strong>.';
+    }
+    if(has('montagna','montano')){
+      return 'Con <strong>mieli di montagna</strong> si indicano mieli prodotti in territori montani. A seconda della zona e delle fioriture si possono trovare, per esempio, millefiori di montagna, castagno, rododendro, tarassaco o mieli di melata. Non esiste quindi un unico “miele di montagna”: cambia con territorio, quota e stagione.';
+    }
+    if(has('colazione','mattina')){
+      return '<strong>Per colazione dipende soprattutto da quello che ti piace 🐝</strong><br><br>Se vuoi un miele semplice e versatile, partirei dal <strong>Millefiori del Busatello</strong>: va bene sul pane, sulle fette biscottate, nello yogurt e nelle bevande calde.<br><br>Se preferisci qualcosa di più fruttato, puoi scegliere <strong>Fragola, Pesca, Melone o Arancia</strong>. Se mi dici cosa mangi di solito a colazione, ti aiuto a restringere la scelta.';
+    }
+    if(asksUse){
+      return '<strong>Il miele</strong> è prima di tutto la riserva energetica della colonia.<br><br><strong>A cosa serve alle api?</strong><br>È il loro alimento energetico: lo conservano nei favi per avere una scorta quando fuori c’è poco nettare, soprattutto nei periodi più difficili.<br><br><strong>A cosa serve a noi?</strong><br>È un alimento dolce che usiamo al cucchiaio, sul pane, nello yogurt, nelle bevande e in cucina. Non va dato ai bambini sotto i 12 mesi.';
+    }
+  }
+
+  // COME È FATTA L'ARNIA / ALVEARE
+  if(has('come e fatta un arnia','come e fatta l arnia','come è fatta un arnia','come è fatta l arnia','parti dell arnia','com e fatta un arnia','arnia')){
+    return '<strong>Un’arnia</strong> è la “casa” costruita dall’uomo per ospitare una colonia di api. Immaginala come una scatola composta da più parti sovrapposte.<br><br><strong>In basso</strong> c’è il fondo e l’ingresso da cui entrano ed escono le api.<br><strong>Al centro</strong> c’è il nido, con telaini mobili che contengono i favi: qui vive la colonia, cresce la covata e vengono conservate scorte.<br><strong>Sopra</strong> possono esserci uno o più melari, cioè spazi aggiuntivi dove le api accumulano miele.<br><strong>In alto</strong> ci sono coprifavo e tetto, che proteggono l’interno.<br><br>L’<strong>alveare</strong> è invece la colonia con il suo nido; l’<strong>arnia</strong> è la struttura che la ospita.';
+  }
+
+  if(has('alveare')){
+    if(has('come funziona','organizzato','organizzata','dentro')){
+      return 'Un <strong>alveare</strong> funziona come una piccola società molto organizzata. Ci sono una regina, migliaia di operaie e, in alcuni periodi, i fuchi. Le operaie cambiano compito con l’età: puliscono, nutrono le larve, producono cera, sorvegliano l’ingresso e infine escono a raccogliere nettare, polline, acqua e resine.';
+    }
+    return 'Un <strong>alveare</strong> è l’insieme della colonia di api e del suo nido. Al suo interno troviamo la regina, le api operaie, in certi periodi i fuchi, i favi di cera, la covata e le scorte di miele e polline. L’arnia è invece la struttura costruita dall’uomo che può ospitare questo alveare.';
+  }
+
+  if(has('favo','celle esagonali','celle')){
+    return 'Il <strong>favo</strong> è la struttura di cera che le api costruiscono dentro l’alveare. È formato da tantissime celle esagonali, tutte vicine tra loro.<br><br><strong>A cosa serve?</strong><br>• nelle celle le api allevano le giovani api;<br>• conservano il <strong>miele</strong>;<br>• conservano il <strong>polline</strong>, che può trasformarsi nel <strong>Pane delle Api</strong>.<br><br>In pratica il favo è un po’ come la <strong>dispensa, la nursery e il magazzino dell’alveare</strong>, tutto insieme.';
+  }
+
+  if(has('regina')){
+    return 'L’<strong>ape regina</strong> è la femmina fertile della colonia. Il suo compito principale è deporre le uova. Produce inoltre segnali chimici, chiamati feromoni, che aiutano a mantenere la coesione della colonia. Non “comanda” le api come una regina umana: la colonia funziona grazie al comportamento collettivo di migliaia di individui.';
+  }
+
+  if(has('fuco','fuchi')){
+    return 'I <strong>fuchi</strong> sono i maschi della colonia. Il loro ruolo principale è riproduttivo: possono accoppiarsi con una regina vergine durante il volo nuziale. Non raccolgono nettare o polline e sono presenti soprattutto nella bella stagione.';
+  }
+
+  if(has('operaia','operaie')){
+    return 'Le <strong>api operaie</strong> sono femmine che svolgono quasi tutti i lavori della colonia. Da giovani si occupano soprattutto dell’interno dell’alveare; crescendo possono diventare guardiane e poi bottinatrici, cioè uscire a raccogliere nettare, polline, acqua e resine.';
+  }
+
+  if(has('bottinatrice','bottinatrici')){
+    return 'Le <strong>bottinatrici</strong> sono le api operaie che escono dall’alveare per raccogliere ciò che serve alla colonia: nettare, polline, acqua e resine per la propoli. Sono loro a creare il collegamento continuo tra i fiori e l’alveare.';
+  }
+
+  if(has('impollin','pollinazione')){
+    return 'L’<strong>impollinazione</strong> avviene quando il polline passa da un fiore a un altro permettendo a molte piante di riprodursi. Le api, visitando tantissimi fiori per raccogliere nettare e polline, trasportano involontariamente granelli di polline da un fiore all’altro. È uno dei loro ruoli ecologici più importanti.';
+  }
+
+  if(has('sciam','sciame')){
+    return 'La <strong>sciamatura</strong> è un modo naturale con cui una colonia può riprodursi. Una parte delle api lascia l’alveare insieme alla vecchia regina e forma uno sciame, mentre nella colonia originaria nascerà una nuova regina. Vedere uno sciame non significa automaticamente che le api siano aggressive.';
+  }
+
+  if(has('puntura','punge','pungono','pungiglione')){
+    return 'Le api pungono soprattutto per <strong>difesa</strong>. L’ape mellifera ha un pungiglione che, nella pelle elastica dei mammiferi, può rimanere conficcato insieme al sacco velenifero. Per questo una puntura va trattata con attenzione, soprattutto se compaiono sintomi importanti o se la persona sa di essere allergica.';
+  }
+
+  if(has('quanto vive','vita di un ape','vita dell ape')){
+    return 'La durata della vita di un’ape cambia molto in base al ruolo e alla stagione. Le operaie estive possono vivere solo alcune settimane perché lavorano intensamente; quelle nate verso l’inverno possono vivere diversi mesi. La regina può vivere molto più a lungo, anche alcuni anni.';
+  }
+
+  if(has('perche sono importanti','perché sono importanti','importanza delle api','api importanti')){
+    return 'Le api sono importanti per due grandi motivi. <strong>Per l’ecosistema</strong>, perché visitando i fiori contribuiscono all’impollinazione di moltissime piante. <strong>Per l’uomo</strong>, perché dall’alveare arrivano miele, cera, propoli, polline, pappa reale e altri prodotti, oltre a una grande quantità di conoscenze sul rapporto tra natura, stagioni e biodiversità.';
+  }
+
+  if(has('mondo sociale','sociale','societa','società','nella societa','nella società')){
+    return '<strong>Le api hanno un’importanza enorme anche nel mondo sociale</strong>, non solo nella natura.<br><br><strong>Per il cibo:</strong> aiutano l’impollinazione di molte colture che arrivano sulle nostre tavole.<br><strong>Per l’agricoltura:</strong> sostengono produzioni e raccolti e quindi anche il lavoro di agricoltori e apicoltori.<br><strong>Per l’economia:</strong> intorno alle api esistono attività, prodotti, aziende, mercati e mestieri.<br><strong>Per l’ambiente:</strong> sono un indicatore prezioso della salute degli ecosistemi.<br><strong>Per la cultura:</strong> miele, cera, apicoltura e tradizioni legate alle api fanno parte della storia di molti territori.<br><strong>Per l’educazione:</strong> osservare un alveare aiuta a capire collaborazione, organizzazione, stagioni e biodiversità.<br><br>In pratica, le api collegano <strong>natura, cibo, lavoro, economia e cultura</strong>.';
+  }
+
+  if((has('api in italia','in italia')&&has('come sono messe','come stanno','situazione','stato','messe')) || has('situazione delle api in italia')){
+    return '<strong>In Italia la situazione delle api e degli altri impollinatori richiede attenzione.</strong><br><br>È importante distinguere tra <strong>api da miele allevate</strong>, seguite dagli apicoltori, e <strong>api selvatiche</strong>, che vivono senza essere gestite dall’uomo.<br><br>Per gli impollinatori selvatici il quadro è preoccupante: perdita e frammentazione degli habitat, agricoltura intensiva, pesticidi, cambiamenti climatici, parassiti e specie invasive possono ridurre popolazioni e biodiversità. ISPRA segnala che una parte significativa delle specie di api native valutate in Italia è minacciata.<br><br>Le api da miele possono invece essere aiutate dal lavoro degli apicoltori, ma anche loro devono affrontare problemi come parassiti, malattie, scarsità di fioriture e condizioni climatiche difficili.<br><br>Quindi la risposta più corretta è: <strong>le api ci sono, ma proteggerle è sempre più importante</strong>.';
+  }
+
+  // CONOSCENZA GENERALE DEL MONDO DELLE API: prima dell'aspetto commerciale.
+  if(has('come comunicano','comunicazione','danza delle api','danza dell ape','danza')){
+    return '<strong>Le api comunicano in diversi modi.</strong><br><br>Uno dei più famosi è la <strong>danza</strong>: una bottinatrice che ha trovato una buona fonte di cibo può tornare nell’alveare e, con movimenti precisi, indicare alle compagne <strong>direzione e distanza</strong> del luogo da raggiungere.<br><br>Usano anche <strong>odori e feromoni</strong>, vibrazioni e contatti tra loro. In pratica, dentro l’alveare c’è un continuo scambio di informazioni.';
+  }
+
+  if(has('come vedono','vista delle api','vedono i colori','colori vedono','ultravioletto')){
+    return 'Le api vedono il mondo in modo diverso da noi. Riconoscono bene molti colori e sono particolarmente sensibili alla luce <strong>ultravioletta</strong>, che noi non vediamo. Alcuni fiori hanno disegni ultravioletti che funzionano quasi come “segnali stradali” e guidano le api verso nettare e polline.';
+  }
+
+  if(has('come trovano i fiori','trovano i fiori','orientano','orientamento','ritrovano alveare','tornano all alveare')){
+    return 'Le api si orientano usando più segnali insieme: <strong>posizione del sole</strong>, punti di riferimento nel paesaggio, odori e memoria. Quando una bottinatrice trova una zona ricca di fiori, può poi comunicarne la posizione alle compagne con la danza. Questa combinazione permette loro di allontanarsi e ritrovare l’alveare con grande precisione.';
+  }
+
+  if(has('in inverno','inverno api','cosa fanno in inverno','api inverno')){
+    return 'In inverno le api non vanno in letargo come alcuni animali. La colonia si raccoglie in una specie di <strong>grappolo</strong> attorno alla regina. Le api si muovono e producono calore per mantenere una temperatura adatta all’interno. Vivono soprattutto grazie alle <strong>scorte di miele</strong> accumulate nei mesi precedenti.';
+  }
+
+  if(has('in estate','estate api','cosa fanno in estate','api estate')){
+    return 'In estate l’alveare è molto attivo. Le bottinatrici raccolgono nettare, polline, acqua e resine; all’interno altre operaie nutrono la covata, costruiscono favi, ventilano e trasformano il nettare in miele. Nelle giornate calde molte api ventilano con le ali per aiutare a controllare temperatura e umidità.';
+  }
+
+  if(has('stagioni','stagione delle api','cambia con le stagioni','alveare nelle stagioni')){
+    return 'La vita dell’alveare cambia molto con le stagioni.<br><br><strong>Primavera:</strong> la colonia cresce rapidamente e aumenta la covata.<br><strong>Estate:</strong> grande attività di raccolta e produzione di scorte.<br><strong>Autunno:</strong> la colonia riduce gradualmente l’attività e prepara le riserve.<br><strong>Inverno:</strong> le api restano più raccolte e consumano il miele conservato.<br><br>Per capire davvero un alveare bisogna quindi osservarlo nel tempo, non in un solo momento.';
+  }
+
+  if(has('ape mellifera','api selvatiche','ape selvatica','differenza api','mellifera e selvatica')){
+    return 'L’<strong>ape mellifera</strong> è la specie più conosciuta perché vive in colonie numerose e viene allevata dagli apicoltori. Ma esistono moltissime <strong>api selvatiche</strong>, spesso solitarie: una femmina costruisce il proprio nido senza vivere in una grande colonia.<br><br>Entrambe sono importanti per l’impollinazione, ma hanno comportamenti, nidi e cicli di vita molto diversi.';
+  }
+
+  if(has('apicoltore','apicoltori','apicoltura','lavoro dell apicoltore')){
+    return 'L’<strong>apicoltore</strong> non si limita a raccogliere miele. Controlla lo stato delle colonie, verifica che abbiano spazio e scorte, osserva la presenza della regina e della covata, gestisce la sciamatura, controlla parassiti e malattie e segue l’andamento delle fioriture.<br><br>È un lavoro molto legato alle stagioni e richiede osservazione continua: ogni alveare può reagire in modo diverso.';
+  }
+
+  if((has('quanti apicoltori','numero di apicoltori','apicoltori ci sono')&&has('italia')) || has('quanti apicultori')){
+    return 'In Italia ci sono <strong>circa 77.000 apicoltori</strong>. Il dato ufficiale disponibile per il <strong>2024</strong> ne registra <strong>76.961</strong>, con <strong>186.212 apiari</strong>.<br><br>Circa il <strong>74%</strong> produce soprattutto per autoconsumo, mentre circa il <strong>26%</strong> è orientato al mercato.<br><br>Questi numeri arrivano dalla Banca Dati Nazionale apistica e dai dati pubblicati da Ministero della Salute e CREA.';
+  }
+
+  if(has('problemi degli apicoltori','problemi apicoltori','difficolta apicoltori','difficoltà apicoltori')){
+    return 'Gli apicoltori oggi devono affrontare diversi problemi: <strong>varroa e altre malattie</strong>, cambiamenti climatici, periodi di siccità o piogge fuori stagione, riduzione delle fioriture, trattamenti agricoli, costi di gestione e in alcuni territori anche predatori o specie invasive.<br><br>Per questo l’apicoltura moderna richiede sempre più attenzione, conoscenza e capacità di adattarsi.';
+  }
+
+  if(has('varroa')){
+    return 'La <strong>Varroa destructor</strong> è un acaro parassita delle api da miele. Vive e si riproduce nella colonia, indebolisce le api e può favorire la diffusione di virus. È uno dei principali problemi sanitari dell’apicoltura moderna e gli apicoltori devono controllarne regolarmente la presenza.';
+  }
+
+  if(has('pesticidi','fitofarmaci','insetticidi')){
+    return 'Alcuni pesticidi possono essere un problema per api e altri impollinatori, soprattutto se l’esposizione avviene durante la fioritura o in condizioni non corrette. Il rischio dipende dalla sostanza, dalla dose, dal momento e dal modo in cui viene usata. Per questo agricoltura e tutela degli impollinatori devono essere gestite con molta attenzione.';
+  }
+
+  if(has('cambiamento climatico','cambiamenti climatici','clima api')){
+    return 'Il cambiamento climatico può influenzare le api modificando <strong>tempi delle fioriture, disponibilità di acqua e nettare, temperature e durata delle stagioni</strong>. Se una fioritura arriva troppo presto o dura poco, la colonia può trovarsi fuori sincronizzazione con le risorse disponibili. Anche eventi estremi, siccità e piogge prolungate possono creare difficoltà.';
+  }
+
+  if(has('biodiversita','biodiversità')){
+    return 'La <strong>biodiversità</strong> significa varietà di specie, ambienti e relazioni tra organismi. Le api ne fanno parte e allo stesso tempo la sostengono grazie all’impollinazione. Un ambiente ricco di piante diverse offre cibo agli impollinatori per periodi più lunghi e rende l’ecosistema più resistente ai cambiamenti.';
+  }
+
+  if(has('quante specie di api','specie di api','tipi di api')){
+    return 'Quando diciamo “ape” spesso pensiamo solo all’ape da miele, ma nel mondo esistono <strong>migliaia di specie di api</strong>. Molte non vivono in alveari organizzati come l’ape mellifera: sono solitarie e nidificano nel terreno, nel legno o in piccole cavità. Questa diversità è fondamentale per l’impollinazione di moltissime piante.';
+  }
+
+  // PROGETTO FABBRICA DELLE API
+  if(has('alveoter')){
+    return '<strong>Alveoterapia Integrata</strong> è il cuore del progetto. In primavera ed estate l’esperienza si svolge all’aperto all’<strong>Oasi del Busatello</strong>, vicino alle arnie vere. In autunno e inverno continua nella <strong>Galena delle Api</strong> di Castel d’Ario attraverso ambienti e diffusori dedicati. L’idea è mantenere il contatto con il mondo dell’alveare durante tutto l’anno, senza presentare l’esperienza come sostituto di cure mediche.';
+  }
+
+  if(has('busatello','oasi')){
+    return 'L’<strong>Oasi del Busatello</strong> rappresenta la parte all’aperto del progetto: natura, stagioni, fioriture e arnie vere. È il luogo in cui il visitatore può avvicinarsi al mondo delle api nel loro ambiente e comprendere meglio anche i prodotti legati a quel territorio.';
+  }
+
+  if(has('galena')){
+    return 'La <strong>Galena delle Api</strong> è lo spazio di Castel d’Ario dedicato alla conoscenza del mondo dell’alveare e alla parte autunno/inverno dell’Alveoterapia Integrata. Qui l’esperienza continua in ambiente interno con diffusori dedicati e con un percorso che collega conoscenza, prodotti e cultura delle api.';
+  }
+
+  if(has('punt')&&has('ape')){
+    return '<strong>Punti Ape 🐝</strong>: i punti si accumulano acquistando i prodotti che li prevedono. I Mieli del Busatello valgono <strong>2 Punti Ape ciascuno</strong>. Raggiunti <strong>100 punti</strong>, il programma prevede un cesto omaggio con <strong>5 prodotti a scelta</strong>.';
+  }
+
+  if(has('sped','consegn','ordine')){
+    return 'L’ordine passa da cestino, dati, consegna, riepilogo e conferma. La consegna locale entro 50 km da Castel d’Ario è gratuita; anche gli ordini da €200 o più hanno spedizione gratuita. Negli altri casi il costo viene mostrato chiaramente prima della conferma.';
+  }
+
+  // PRODOTTI PRESENTI ORA NELLA V2
+  const asksMillefiori=has('millefiori');
+  const asksMelone=has('melone');
+  const asksFragola=has('fragola');
+  const asksPesca=has('pesca');
+  const asksArancia=has('arancia');
+
+  if(asksMillefiori){
+    return '<strong>Miele Millefiori dell’Oasi del Busatello · 250 g · €4,90</strong><br>Nasce dalla varietà delle fioriture spontanee presenti nell’oasi. Ha un profilo armonico, una dolcezza equilibrata e profumi che possono cambiare naturalmente da raccolto a raccolto. È piacevole al cucchiaio, sul pane, nello yogurt oppure per dolcificare bevande e preparazioni.<br><br>🐝 Vale <strong>2 Punti Ape</strong>.';
+  }
+  if(asksMelone){
+    return '<strong>Miele al Melone · 250 g · €4,90</strong><br>Ha un gusto dolce e fruttato, con una nota di melone piacevole e immediata. È adatto al cucchiaio, sul pane, nello yogurt e con dessert o preparazioni fresche.<br><br>🐝 Vale <strong>2 Punti Ape</strong>.';
+  }
+  if(asksFragola){
+    return '<strong>Miele alla Fragola · 250 g · €4,90</strong><br>Ha un gusto morbido e fruttato, con una nota di fragola ben riconoscibile. È facile da usare a colazione, nello yogurt o nei dolci semplici.<br><br>🐝 Vale <strong>2 Punti Ape</strong>.';
+  }
+  if(asksPesca){
+    return '<strong>Miele alla Pesca · 250 g · €4,90</strong><br>Ha un profilo delicato e fruttato. Si abbina facilmente a pane, fette biscottate, yogurt, ricotta, formaggi freschi e dessert.<br><br>🐝 Vale <strong>2 Punti Ape</strong>.';
+  }
+  if(asksArancia){
+    return '<strong>Miele all’Arancia · 250 g · €4,90</strong><br>Ha un carattere fresco e agrumato. È piacevole a colazione, nello yogurt, sul pane, con biscotti, dolci e formaggi freschi.<br><br>🐝 Vale <strong>2 Punti Ape</strong>.';
+  }
+
+  if(has('sos dol','massagg')){
+    return '<strong>SOS DOL</strong> viene presentato nella nostra Linea Veleni come prodotto per il massaggio, pensato per accompagnare un gesto mirato e una sensazione di comfort. Non viene presentato come cura o trattamento del dolore.';
+  }
+
+  if(has('prezzo','quanto costa')){
+    return 'Posso controllare i prezzi dei <strong>40 prodotti presenti nella Bottega</strong>. Dimmi il nome del prodotto che vuoi verificare e ti indico il prezzo mostrato nel catalogo, senza inventare dati.';
+  }
+
+  // CONSIGLI CONTESTUALI
+  const asksProductAdvice=
+    has('prodotto','prodotti','consigli','scegli','scelgo','prendo') &&
+    has('lavoro','ufficio','pausa','giornata');
+  if(asksProductAdvice){
+    return '<strong>Certo 🐝</strong><br><br>Se cerchi qualcosa da accompagnare durante la giornata di lavoro, tra i prodotti della Bottega partirei dai <strong>Mieli del Busatello</strong>: il Millefiori è la scelta più semplice e versatile; Fragola, Pesca, Melone o Arancia sono alternative più fruttate.<br><br>Se mi dici se lavori soprattutto in ufficio, all’aperto o fai un lavoro fisico, posso orientarti meglio.';
+  }
+
+  const explicitOutsideWords=['cravatta','vestito','abito','scarpe','giacca','pantaloni','camicia','libro','romanzo','film','serie tv','automobile','macchina','smartphone','computer','borsa','orologio','colore di'];
+  if(explicitOutsideWords.some(w=>q.includes(w))){
+    return 'Questa richiesta è chiaramente fuori dal mondo della Fabbrica delle Api 🐝. Io sono qui per guidarti tra api, alveari, prodotti dell’alveare, Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, Linea Veleni, Punti Ape, ordini e spedizioni.';
+  }
+
+  const genericChoiceWords=['cosa scelgo','che scelgo','cosa prendo','che prendo','cosa mi consigli','che mi consigli','cosa scegliere','che cosa scegliere'];
+  if(genericChoiceWords.some(w=>q.includes(w))){
+    if(has('mezzanotte','notte')){
+      return '<strong>Se parliamo del mondo della Fabbrica delle Api, a quell’ora penserei a qualcosa di semplice e tranquillo 🐝</strong><br><br>Tra i prodotti già presenti, il <strong>Millefiori</strong> è il più versatile; se preferisci un gusto più fruttato puoi orientarti su <strong>Pesca</strong> o <strong>Arancia</strong>. Se mi dici se vuoi qualcosa da gustare, regalare o usare in un momento particolare, restringo subito la scelta.';
+    }
+    return 'Interpreto la tua domanda nel contesto della <strong>Fabbrica delle Api</strong> 🐝. Quindi quando mi chiedi semplicemente “cosa scelgo?”, penso prima a prodotti ed esperienze del nostro mondo. Dimmi il momento o l’occasione e ti aiuto a restringere la scelta.';
+  }
+
+  if(has('ciao','buongiorno','salve')){
+    return 'Ciao! 🐝 Sono Ape Pelù. Puoi chiedermi liberamente di api, alveari, miele, polline, propoli, pappa reale, cera, favi, Alveoterapia, Oasi, Galena, prodotti, Punti Ape, ordini e spedizioni.';
+  }
+
+  const beeWorldWords=['ape','api','alveare','arnia','miele','mieli','apicolt','favo','cera','nettare','melata','fiore','fioritura','regina','fuco','operaia','propoli','polline','pappa reale','pane delle api','veleno','sciame','impollin'];
+  if(beeWorldWords.some(w=>q.includes(w))){
+    return 'La domanda riguarda il mondo delle api e quindi è nel mio campo 🐝. Non voglio però inventare una risposta incompleta. Prova a formulare la domanda con qualche dettaglio in più e ti spiego quello che so in modo semplice.';
+  }
+
+  return 'Questa domanda è fuori dal mondo di cui mi occupo. Io sono Ape Pelù 🐝 e posso aiutarti con api, alveari, miele e altri prodotti dell’alveare, Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, Linea Veleni, Punti Ape, ordini e spedizioni.';
+}
+function apeKeepConversation(question,reply){
+  const q=apeNormalize(question);
+  let follow='';
+
+  if(q.includes('favo')){
+    follow='Sai quanto può diventare grande un favo e quante celle può contenere? Se vuoi te lo racconto.';
+  }else if(q.includes('arnia')){
+    follow='Vuoi che ti faccia anche un piccolo “giro guidato” dell’arnia, dal fondo fino al tetto?';
+  }else if(q.includes('alveare')){
+    follow='Vuoi sapere chi fa cosa dentro l’alveare durante una giornata normale?';
+  }else if(q.includes('polline')){
+    follow='Vuoi che ti spieghi anche come fanno le api a raccoglierlo e trasportarlo sulle zampe?';
+  }else if(q.includes('pappa')){
+    follow='Vuoi sapere perché proprio la regina viene nutrita con pappa reale per tutta la vita?';
+  }else if(q.includes('propoli')){
+    follow='Vuoi che ti spieghi anche come fanno le api a raccogliere e usare la propoli dentro l’alveare?';
+  }else if(q.includes('velen')){
+    if(q.includes('dolor')||q.includes('ginoc')||q.includes('farmac')||q.includes('antinfiamm')||q.includes('artrosi')||q.includes('rughe')){
+      follow='Se vuoi, posso spiegarti in modo semplice quali usi cosmetici e da massaggio hanno i prodotti della Linea Veleni, senza entrare in ambito medico.';
+    }else{
+      follow='Vuoi che ti spieghi anche come funziona il pungiglione dell’ape e perché il veleno è legato alla difesa della colonia?';
+    }
+  }else if(q.includes('cosmesi')||q.includes('cosmetica')||q.includes('cosmetici')){
+    follow='Vuoi che ti faccia un esempio semplice di come cambiano i cosmetici quando contengono miele, cera d’api, propoli o veleno d’api?';
+  }else if(q.includes('miele')||q.includes('mieli')){
+    follow='Vuoi che ti aiuti a scegliere un miele in base al gusto oppure vuoi sapere come fanno le api a produrlo?';
+  }else if(q.includes('regina')){
+    follow='Vuoi sapere come nasce una nuova regina e perché è diversa dalle api operaie?';
+  }else if(q.includes('fuco')||q.includes('fuchi')){
+    follow='Vuoi sapere cosa succede ai fuchi quando finisce la stagione favorevole?';
+  }else if(q.includes('operaia')||q.includes('operaie')){
+    follow='Vuoi sapere come cambia il lavoro di un’ape operaia man mano che cresce?';
+  }else if((q.includes('apicoltori')||q.includes('apicultori'))&&q.includes('italia')){
+    follow='Vuoi sapere in quali regioni italiane ci sono più apicoltori e alveari?';
+  }else if(q.includes('sociale')||q.includes('societa')||q.includes('società')){
+    follow='Vuoi che ti faccia un esempio concreto di come le api influenzano ogni giorno cibo, lavoro ed economia senza che ce ne accorgiamo?';
+  }else if((q.includes('italia')&&q.includes('api')) || q.includes('situazione delle api')){
+    follow='Vuoi che ti spieghi anche quali sono oggi le principali minacce per le api in Italia e cosa possiamo fare per aiutarle?';
+  }else if(q.includes('impollin')){
+    follow='Vuoi un esempio semplice di come una sola visita di un’ape può aiutare un fiore a produrre frutti o semi?';
+  }else if(q.includes('sciame')||q.includes('sciam')){
+    follow='Vuoi sapere cosa bisogna fare se si vede uno sciame fermo su un ramo o vicino a casa?';
+  }else if(q.includes('oasi')||q.includes('busatello')){
+    follow='Vuoi che ti racconti cosa può osservare una persona durante l’esperienza all’Oasi del Busatello?';
+  }else if(q.includes('galena')){
+    follow='Vuoi che ti spieghi come cambia l’esperienza nella Galena delle Api rispetto a quella all’aperto?';
+  }else if(q.includes('alveoter')){
+    follow='Vuoi che ti spieghi in modo semplice la differenza tra l’esperienza estiva all’Oasi e quella autunno/inverno nella Galena?';
+  }else if(q.includes('punt')&&q.includes('ape')){
+    follow='Vuoi che facciamo un esempio pratico di quanti Punti Ape accumuli con alcuni prodotti?';
+  }else if(q.includes('sped')||q.includes('ordine')||q.includes('consegn')){
+    follow='Vuoi che facciamo un esempio con un ordine concreto e vediamo insieme quanto sarebbe la spedizione?';
+  }else if(q.includes('cravatta')||q.includes('vestito')||q.includes('libro')){
+    follow='Se vuoi, però, possiamo tornare al mio mondo: chiedimi pure qualcosa su api, alveari o prodotti dell’alveare.';
+  }else if(q.includes('cura')||q.includes('diagnosi')||q.includes('dosaggio')){
+    follow='Se vuoi, posso invece spiegarti il ruolo naturale di quella sostanza nell’alveare o come viene presentata nei nostri prodotti.';
+  }else{
+    follow='Se vuoi, fammi un’altra domanda: posso continuare ad accompagnarti nel mondo delle api senza dare per scontato che tu lo conosca già.';
+  }
+
+  return reply+'<br><br><strong>'+follow+'</strong>';
+}
+
+const APE_UI_I18N={
+  it:{
+    subtitle:'La tua guida nella Fabbrica delle Api',
+    greeting:'<strong>Ciao, sono Ape Pelù 🐝</strong><br>Posso accompagnarti tra Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, Mieli, Linea Veleni, Punti Ape, ordini e spedizioni. Cosa ti incuriosisce?',
+    placeholder:'Scrivi la tua domanda...',send:'Invia',
+    note:'Ape Pelù informa e orienta. Non sostituisce un medico o un professionista sanitario.',
+    quick:[['Alveoterapia',"Cos'è l'Alveoterapia Integrata?"],['Oasi',"Parlami dell'Oasi del Busatello"],['Galena',"Cos'è la Galena delle Api?"],['Mieli',"Come scelgo un miele?"],['Linea Veleni',"Parlami della Linea Veleni"],['Punti Ape',"Come funzionano i Punti Ape?"],['Ordini e spedizioni',"Come funzionano spedizioni e ordini?"]]
+  },
+  en:{
+    subtitle:'Your guide to La Fabbrica delle Api',
+    greeting:'<strong>Hi, I’m Ape Pelù 🐝</strong><br>I can guide you through Integrated Alveotherapy, Busatello Oasis, Galena delle Api, honeys, the Bee Venom Line, Bee Points, orders and shipping. What are you curious about?',
+    placeholder:'Write your question...',send:'Send',
+    note:'Ape Pelù informs and guides. It does not replace a doctor or healthcare professional.',
+    quick:[['Alveotherapy','What is Integrated Alveotherapy?'],['Oasis','Tell me about Busatello Oasis'],['Galena','What is Galena delle Api?'],['Honeys','How do I choose a honey?'],['Bee Venom Line','Tell me about the Bee Venom Line'],['Bee Points','How do Bee Points work?'],['Orders & shipping','How do orders and shipping work?']]
+  },
+  de:{
+    subtitle:'Deine Begleiterin in der Fabbrica delle Api',
+    greeting:'<strong>Hallo, ich bin Ape Pelù 🐝</strong><br>Ich begleite dich durch Integrierte Alveotherapie, die Oase Busatello, Galena delle Api, Honige, die Bienengift-Linie, Bienenpunkte sowie Bestellungen und Versand. Was möchtest du wissen?',
+    placeholder:'Schreibe deine Frage...',send:'Senden',
+    note:'Ape Pelù informiert und orientiert. Sie ersetzt keinen Arzt oder medizinisches Fachpersonal.',
+    quick:[['Alveotherapie','Was ist Integrierte Alveotherapie?'],['Oase','Erzähl mir von der Oase Busatello'],['Galena','Was ist Galena delle Api?'],['Honige','Wie wähle ich einen Honig aus?'],['Bienengift-Linie','Erzähl mir von der Bienengift-Linie'],['Bienenpunkte','Wie funktionieren die Bienenpunkte?'],['Bestellung & Versand','Wie funktionieren Bestellung und Versand?']]
+  },
+  fr:{
+    subtitle:'Votre guide dans La Fabbrica delle Api',
+    greeting:'<strong>Bonjour, je suis Ape Pelù 🐝</strong><br>Je peux vous accompagner à travers l’Alvéothérapie Intégrée, l’Oasis du Busatello, Galena delle Api, les miels, la Ligne Venin d’Abeille, les Points Abeille, les commandes et les livraisons. Qu’est-ce qui vous intrigue ?',
+    placeholder:'Écrivez votre question...',send:'Envoyer',
+    note:'Ape Pelù informe et oriente. Elle ne remplace pas un médecin ni un professionnel de santé.',
+    quick:[['Alvéothérapie',"Qu’est-ce que l’Alvéothérapie Intégrée ?"],['Oasis',"Parle-moi de l’Oasis du Busatello"],['Galena',"Qu’est-ce que Galena delle Api ?"],['Miels',"Comment choisir un miel ?"],['Ligne Venin d’Abeille',"Parle-moi de la Ligne Venin d’Abeille"],['Points Abeille',"Comment fonctionnent les Points Abeille ?"],['Commandes et livraisons',"Comment fonctionnent les commandes et les livraisons ?"]]
+  },
+  es:{
+    subtitle:'Tu guía en La Fabbrica delle Api',
+    greeting:'<strong>Hola, soy Ape Pelù 🐝</strong><br>Puedo acompañarte por la Alveoterapia Integrada, el Oasis del Busatello, Galena delle Api, las mieles, la Línea Veneno de Abeja, los Puntos Abeja, los pedidos y los envíos. ¿Qué te da curiosidad?',
+    placeholder:'Escribe tu pregunta...',send:'Enviar',
+    note:'Ape Pelù informa y orienta. No sustituye a un médico ni a un profesional sanitario.',
+    quick:[['Alveoterapia','¿Qué es la Alveoterapia Integrada?'],['Oasis','Háblame del Oasis del Busatello'],['Galena','¿Qué es Galena delle Api?'],['Mieles','¿Cómo elijo una miel?'],['Línea Veneno de Abeja','Háblame de la Línea Veneno de Abeja'],['Puntos Abeja','¿Cómo funcionan los Puntos Abeja?'],['Pedidos y envíos','¿Cómo funcionan los pedidos y los envíos?']]
+  }
+};
+
+function apeCurrentLanguage(){
+  try{
+    const saved=localStorage.getItem('fda-site-language');
+    if(['it','en','de','fr','es'].includes(saved))return saved;
+  }catch(_){}
+  const html=(document.documentElement.lang||'it').toLowerCase().slice(0,2);
+  return ['it','en','de','fr','es'].includes(html)?html:'it';
+}
+
+function apeApplyLanguage(){
+  const l=apeCurrentLanguage(), t=APE_UI_I18N[l]||APE_UI_I18N.it;
+  const panel=document.getElementById('apeChatPanel');
+  if(!panel)return;
+  const subtitle=panel.querySelector('.ape-chat-head small');
+  if(subtitle)subtitle.textContent=t.subtitle;
+  const messages=document.getElementById('apeChatMessages');
+  if(messages && messages.children.length===1)messages.children[0].innerHTML=t.greeting;
+  const input=document.getElementById('apeChatInput');
+  if(input)input.placeholder=t.placeholder;
+  const send=document.getElementById('apeChatSend');
+  if(send)send.textContent=t.send;
+  const note=panel.querySelector('.ape-note');
+  if(note)note.textContent=t.note;
+  document.querySelectorAll('#apeQuick [data-ape-q]').forEach((btn,i)=>{
+    const q=t.quick[i];
+    if(!q)return;
+    btn.textContent=q[0];
+    btn.dataset.apeQ=q[1];
+  });
+}
+
+const apeChatHistory=[];
+
+function apeRenderAi(text){
+  const safe=apeEscape(String(text||''));
+  return safe
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n\n+/g,'<br><br>')
+    .replace(/\n/g,'<br>');
+}
+
+async function apeAsk(text){
+  const value=String(text||'').trim();
+  if(!value)return;
+
+  apeAddMessage(value,'user');
+  apeChatInput.value='';
+
+  const historyToSend=apeChatHistory.slice(-10);
+  apeChatHistory.push({role:'user',content:value});
+
+  try{
+    const res=await fetch('/api/ape-pelu-chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:value,history:historyToSend,language:(()=>{try{return localStorage.getItem('fda-site-language')||document.documentElement.lang||'it';}catch(_){return document.documentElement.lang||'it';}})()})
+    });
+    const data=await res.json().catch(()=>null);
+
+    if(res.ok && data?.ok && data?.reply){
+      apeChatHistory.push({role:'assistant',content:data.reply});
+      apeAddMessage(apeRenderAi(data.reply),'bot');
+      const contextualAction=data.suppressAction?null:(data.action||apeContextActionFromText(value,data.reply));
+      if(contextualAction)apeAddContextLink(contextualAction);
+      return;
+    }
+  }catch(_){}
+
+  // Rete di sicurezza: se l'AI non è configurata o non risponde,
+  // Ape Pelù continua a funzionare con la base di conoscenza locale.
+  const fallback=apeKeepConversation(value,apePelùReply(value,historyToSend));
+  const fallbackPlain=String(fallback).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+  apeChatHistory.push({
+    role:'assistant',
+    content:fallbackPlain
+  });
+  apeAddMessage(fallback,'bot');
+  const fallbackAction=apeContextActionFromText(value,fallbackPlain);
+  if(fallbackAction)apeAddContextLink(fallbackAction);
+}
+document.getElementById('apeChatLaunch').addEventListener('click',()=>{apeChatPanel.classList.add('open');setTimeout(()=>apeChatInput.focus(),50);});
+document.getElementById('apeChatClose').addEventListener('click',()=>apeChatPanel.classList.remove('open'));
+document.getElementById('apeChatSend').addEventListener('click',()=>apeAsk(apeChatInput.value));
+apeChatInput.addEventListener('keydown',e=>{if(e.key==='Enter')apeAsk(apeChatInput.value);});
+document.querySelectorAll('[data-ape-q]').forEach(btn=>btn.addEventListener('click',()=>apeAsk(btn.dataset.apeQ)));
+
+apeApplyLanguage();
+['coAddress','coCap','coCity','coProvince','coCountry','coPhonePrefix','coPhone'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',()=>{
+    if(id==='coPhonePrefix'||id==='coPhone')document.getElementById('coPhone').dataset.e164='';
+    if(id==='coCountry'){invalidateAddressValidation();purchaseApplyCountryFields(true);}
+    else if(['coAddress','coCap','coCity','coProvince'].includes(id))invalidateAddressValidation();
+  });
+});
+
+applyPurchaseLanguage();
+purchaseApplyCountryFields();
+renderV2Cart();
+</script>
+
+<script src="/render-language-de-test.js?v=20260922-5"></script>
+</body>
+</html>
