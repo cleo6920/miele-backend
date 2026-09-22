@@ -1,0 +1,113 @@
+/* Navigazione principale condivisa - La Fabbrica delle Api */
+.site-header{
+  position:sticky!important;
+  top:0!important;
+  z-index:100!important;
+  background:#082d22!important;
+  color:#fff!important;
+  border-bottom:1px solid rgba(255,255,255,.14)!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+.site-header .nav{
+  width:min(1280px,calc(100% - 28px))!important;
+  min-height:68px!important;
+  margin:0 auto!important;
+  padding:8px 0!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:18px!important;
+  flex-wrap:nowrap!important;
+}
+.site-header .brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  flex:0 0 auto!important;
+  color:#fff!important;
+  font:900 15px/1.1 Arial,Helvetica,sans-serif!important;
+  letter-spacing:.01em!important;
+  white-space:nowrap!important;
+  text-decoration:none!important;
+}
+.site-header .brand-mark{
+  width:38px!important;
+  height:38px!important;
+  border-radius:13px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:#dfa82d!important;
+  color:#09291f!important;
+  font-size:20px!important;
+  line-height:1!important;
+  flex:0 0 38px!important;
+}
+.site-header .nav-links{
+  display:flex!important;
+  align-items:center!important;
+  gap:16px!important;
+  margin-left:auto!important;
+  min-width:0!important;
+  overflow-x:auto!important;
+  scrollbar-width:none!important;
+  white-space:nowrap!important;
+  font:800 12.5px/1 Arial,Helvetica,sans-serif!important;
+}
+.site-header .nav-links::-webkit-scrollbar{display:none!important}
+.site-header .nav-links a{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:38px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:#fff!important;
+  border-radius:0!important;
+  text-decoration:none!important;
+  opacity:.94!important;
+}
+.site-header .nav-links a:hover,
+.site-header .nav-links a[aria-current="page"]{
+  color:#f4c75d!important;
+  opacity:1!important;
+}
+.site-header .nav-links .shop{
+  color:#f4c75d!important;
+}
+.site-header .nav-links .talk{
+  padding:0 16px!important;
+  border:1px solid rgba(255,255,255,.55)!important;
+  border-radius:999px!important;
+}
+.site-header #fda-language-test{
+  flex:0 0 auto!important;
+  margin:0!important;
+}
+@media(max-width:1080px){
+  .site-header .nav{gap:12px!important}
+  .site-header .nav-links{gap:13px!important}
+}
+@media(max-width:900px){
+  .site-header .nav{
+    min-height:auto!important;
+    flex-wrap:wrap!important;
+    gap:7px 10px!important;
+    padding:8px 0!important;
+  }
+  .site-header .brand{font-size:13px!important}
+  .site-header .nav-links{
+    order:3!important;
+    width:100%!important;
+    flex:1 1 100%!important;
+    margin-left:0!important;
+    padding:2px 0 4px!important;
+  }
+  .site-header #fda-language-test{
+    margin-left:auto!important;
+  }
+}
+@media(max-width:560px){
+  .site-header .nav{width:calc(100% - 18px)!important}
+  .site-header .brand span:last-child{font-size:12px!important;max-width:150px!important;white-space:normal!important}
+  .site-header .brand-mark{width:34px!important;height:34px!important;flex-basis:34px!important}
+  .site-header .nav-links{font-size:12px!important;gap:14px!important}
+}
