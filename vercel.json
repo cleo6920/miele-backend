@@ -1,4 +1,35 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/", "destination": "/home.html" },
+    { "source": "/index.html", "destination": "/home.html" },
+    { "source": "/shop", "destination": "/shop-v2.html" },
+    { "source": "/shop/", "destination": "/shop-v2.html" },
+
+    { "source": "/alveoterapia", "destination": "https://miele-shop-experience-v2.onrender.com/alveoterapia" },
+    { "source": "/centro", "destination": "https://miele-shop-experience-v2.onrender.com/centro" },
+    { "source": "/bacheca", "destination": "https://miele-shop-experience-v2.onrender.com/bacheca" },
+    { "source": "/chi-siamo", "destination": "https://miele-shop-experience-v2.onrender.com/chi-siamo" },
+    { "source": "/contatti", "destination": "https://miele-shop-experience-v2.onrender.com/contatti" },
+    { "source": "/condizioni-vendita", "destination": "https://miele-shop-experience-v2.onrender.com/condizioni-vendita" },
+    { "source": "/alveo-digitale", "destination": "https://miele-shop-experience-v2.onrender.com/alveo-digitale" },
+    { "source": "/privacy.html", "destination": "https://miele-shop-experience-v2.onrender.com/privacy.html" },
+
+    { "source": "/images/:path*", "destination": "https://miele-shop-experience-v2.onrender.com/images/:path*" },
+    { "source": "/downloads/:path*", "destination": "https://miele-shop-experience-v2.onrender.com/downloads/:path*" },
+
+    { "source": "/api/local-delivery-check", "destination": "https://miele-shop-experience-v2.onrender.com/api/local-delivery-check" },
+    { "source": "/api/shipping-estimate", "destination": "https://miele-shop-experience-v2.onrender.com/api/shipping-estimate" },
+    { "source": "/api/phone-normalize", "destination": "https://miele-shop-experience-v2.onrender.com/api/phone-normalize" },
+    { "source": "/api/order-notification", "destination": "https://miele-shop-experience-v2.onrender.com/api/order-notification" },
+    { "source": "/api/ape-pelu-chat", "destination": "https://miele-shop-experience-v2.onrender.com/api/ape-pelu-chat" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    }
+  ]
 }
