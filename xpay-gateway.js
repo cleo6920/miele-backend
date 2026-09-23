@@ -96,6 +96,7 @@ function compactPurchase(purchase, codTrans, importo) {
     g: Number(purchase && purchase.goodsTotal),
     s: Number(purchase && purchase.shipping),
     t: Number(purchase && purchase.total),
+    l: ['it','en','de','fr','es'].includes(clean(purchase && purchase.language, 5).toLowerCase()) ? clean(purchase && purchase.language, 5).toLowerCase() : 'it',
     u: {
       n: clean(customer.name, 100),
       e: clean(customer.email, 254).toLowerCase(),
@@ -299,6 +300,57 @@ async function persistPaidPurchase(fields) {
   throw new Error(result && result.error ? result.error : 'Impossibile registrare il pagamento nel Saldo Api.');
 }
 
+function xpaySuccessToken(fields) {
+  const { secret } = config();
+  const codTrans = clean(fields && fields.codTrans, 30);
+  if (!secret || !codTrans) throw new Error('Dati XPay mancanti per conferma ordine.');
+  const payload = decodePurchase(fields && fields[PURCHASE_PARAM], secret);
+  if (payload.c !== codTrans || String(payload.a) !== clean(fields && fields.importo, 20)) {
+    throw new Error('Dati ordine XPay non corrispondenti alla transazione.');
+  }
+  const items = Array.isArray(payload.i) ? payload.i : [];
+  const digital = items.some((item) => clean(item && item.i, 180) === 'alveo-digitale-10-colazioni');
+  const lang = ['it','en','de','fr','es'].includes(clean(payload.l, 5).toLowerCase()) ? clean(payload.l, 5).toLowerCase() : 'it';
+  const beePoints = items.map((item) => ({
+    productId: clean(item && item.i, 180),
+    productName: clean(item && item.n, 180),
+    name: clean(item && item.n, 180),
+    amount: Number(item && item.a),
+    quantity: Number(item && item.q)
+  })).map(pointsForItem).reduce((sum, line) => sum + Number(line.totalPoints || 0), 0);
+  return signToken({
+    type: 'xpay-success',
+    exp: Date.now() + (24 * 60 * 60 * 1000),
+    c: codTrans,
+    total: Number(payload.t || 0),
+    points: beePoints,
+    digital,
+    lang
+  }, secret);
+}
+
+function successStatusHandler(req, res) {
+  try {
+    const { secret } = config();
+    if (!secret) return res.status(503).json({ ok: false, error: 'Configurazione non disponibile.' });
+    const payload = readToken(req.query && req.query.t, secret);
+    if (!payload || payload.type !== 'xpay-success') {
+      return res.status(400).json({ ok: false, error: 'Conferma pagamento non valida.' });
+    }
+    return res.status(200).json({
+      ok: true,
+      provider: 'Nexi XPay',
+      codTrans: clean(payload.c, 30),
+      total: Number(payload.total || 0),
+      points: Number(payload.points || 0),
+      digital: payload.digital === true,
+      language: ['it','en','de','fr','es'].includes(clean(payload.lang,5).toLowerCase()) ? clean(payload.lang,5).toLowerCase() : 'it'
+    });
+  } catch (error) {
+    return res.status(400).json({ ok: false, error: 'Conferma pagamento non valida o scaduta.' });
+  }
+}
+
 async function returnHandler(req, res) {
   const fields = req.query || {};
   const base = siteUrl();
@@ -314,16 +366,23 @@ async function returnHandler(req, res) {
   }
 
   if (esito === 'OK') {
+    let successToken = '';
+    try {
+      successToken = xpaySuccessToken(fields);
+    } catch (tokenError) {
+      console.error('[XPay] Impossibile creare conferma sicura del pagamento:', tokenError && tokenError.message ? tokenError.message : tokenError);
+    }
+    const successQuery = successToken ? '&st=' + encodeURIComponent(successToken) : '';
     try {
       await persistPaidPurchase(fields);
       console.log(`[XPay] Pagamento confermato e Saldo Api registrato: ${codTrans}.`);
       res.statusCode = 302;
-      res.setHeader('Location', `${base}/success.html?xpay=ok&codTrans=${encodeURIComponent(codTrans)}`);
+      res.setHeader('Location', `${base}/success.html?xpay=ok&codTrans=${encodeURIComponent(codTrans)}${successQuery}`);
       return res.end();
     } catch (error) {
       console.error(`[XPay] Pagamento ${codTrans} riuscito ma Saldo Api non registrato al ritorno:`, error && error.message ? error.message : error);
       res.statusCode = 302;
-      res.setHeader('Location', `${base}/success.html?xpay=ok&wallet=pending&codTrans=${encodeURIComponent(codTrans)}`);
+      res.setHeader('Location', `${base}/success.html?xpay=ok&wallet=pending&codTrans=${encodeURIComponent(codTrans)}${successQuery}`);
       return res.end();
     }
   }
@@ -381,5 +440,6 @@ module.exports = {
   returnHandler,
   notifyHandler,
   cancelHandler,
-  statusHandler
+  statusHandler,
+  successStatusHandler
 };
