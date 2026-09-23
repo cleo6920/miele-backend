@@ -212,7 +212,9 @@ function redirectHandler(req, res) {
       .join('\n');
 
     res.setHeader('Cache-Control', 'no-store');
-    return res.type('html').send(`<!doctype html>
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.statusCode = 200;
+    return res.end(`<!doctype html>
 <html lang="it"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Pagamento Nexi XPay</title></head>
 <body><p>Reindirizzamento al pagamento sicuro Nexi…</p>
 <form id="xpay-form" method="post" action="${escapeHtml(endpoint)}" accept-charset="ISO-8859-1">
@@ -306,22 +308,30 @@ async function returnHandler(req, res) {
 
   if (!valid) {
     console.error(`[XPay] MAC di ritorno non valido per ${codTrans || 'transazione sconosciuta'}.`);
-    return res.redirect(302, `${base}/cancel.html?xpay=mac_invalid`);
+    res.statusCode = 302;
+    res.setHeader('Location', `${base}/cancel.html?xpay=mac_invalid`);
+    return res.end();
   }
 
   if (esito === 'OK') {
     try {
       await persistPaidPurchase(fields);
       console.log(`[XPay] Pagamento confermato e Saldo Api registrato: ${codTrans}.`);
-      return res.redirect(302, `${base}/success.html?xpay=ok&codTrans=${encodeURIComponent(codTrans)}`);
+      res.statusCode = 302;
+      res.setHeader('Location', `${base}/success.html?xpay=ok&codTrans=${encodeURIComponent(codTrans)}`);
+      return res.end();
     } catch (error) {
       console.error(`[XPay] Pagamento ${codTrans} riuscito ma Saldo Api non registrato al ritorno:`, error && error.message ? error.message : error);
-      return res.redirect(302, `${base}/success.html?xpay=ok&wallet=pending&codTrans=${encodeURIComponent(codTrans)}`);
+      res.statusCode = 302;
+      res.setHeader('Location', `${base}/success.html?xpay=ok&wallet=pending&codTrans=${encodeURIComponent(codTrans)}`);
+      return res.end();
     }
   }
 
   console.log(`[XPay] Pagamento non completato: ${codTrans}, esito ${esito || 'KO'}.`);
-  return res.redirect(302, `${base}/cancel.html?xpay=${encodeURIComponent(esito || 'ko')}`);
+  res.statusCode = 302;
+  res.setHeader('Location', `${base}/cancel.html?xpay=${encodeURIComponent(esito || 'ko')}`);
+  return res.end();
 }
 
 async function notifyHandler(req, res) {
@@ -349,7 +359,9 @@ async function notifyHandler(req, res) {
 function cancelHandler(req, res) {
   const base = siteUrl();
   const esito = clean(req.query && req.query.esito, 20) || 'annullo';
-  return res.redirect(302, `${base}/cancel.html?xpay=${encodeURIComponent(esito)}`);
+  res.statusCode = 302;
+  res.setHeader('Location', `${base}/cancel.html?xpay=${encodeURIComponent(esito)}`);
+  return res.end();
 }
 
 function statusHandler(_req, res) {
