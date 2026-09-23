@@ -1,0 +1,53 @@
+name: Build Api Oggi multilingual PDFs
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build_api_oggi_multilang.py'
+      - 'downloads/il-mondo-delle-api-oggi-01.pdf'
+      - '.github/workflows/build-api-oggi-multilang.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow requests
+      - name: Build translated PDFs and previews
+        run: python scripts/build_api_oggi_multilang.py
+      - name: Validate outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for lang in it en de fr es; do
+            test -s "downloads/il-mondo-delle-api-oggi-01-$lang.pdf"
+            count=$(python - <<PY
+          import fitz
+          print(fitz.open('downloads/il-mondo-delle-api-oggi-01-$lang.pdf').page_count)
+          PY
+          )
+            test "$count" = "30"
+            for name in copertina premessa api-da-vicino territorio galena; do
+              test -s "images/api-oggi-01-preview-$lang-$name.webp"
+            done
+          done
+      - name: Commit generated files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add downloads/il-mondo-delle-api-oggi-01-*.pdf images/api-oggi-01-preview-*.webp
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m 'Aggiunge Il mondo delle api oggi in cinque lingue'
+          git pull --rebase origin main
+          git push origin main
