@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 
-const BEE_DATABASE_URL = String(process.env.BEE_DATABASE_URL || '').trim();
+const BEE_DATABASE_URL = String(process.env.BEE_DATABASE_URL || process.env.DATABASE_URL || '').trim();
 const BEE_DATA_API_URL = String(
   process.env.BEE_DATA_API_URL ||
   'https://ep-quiet-night-b241wmyg.apirest.c-6.eu-central-1.aws.neon.tech/neondb/rest/v1'
