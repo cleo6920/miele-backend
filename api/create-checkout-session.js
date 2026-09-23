@@ -23,6 +23,8 @@ module.exports = async (req, res) => {
     }
 
     const body = req.body || {};
+    const requestedLanguage = cleanText(body.language, 5).toLowerCase();
+    const orderLanguage = ['it','en','de','fr','es'].includes(requestedLanguage) ? requestedLanguage : 'it';
     const items = Array.isArray(body.items) ? body.items : [];
     const sanitizedItems = items.map((item) => {
       const name = cleanText(item && item.name, 120);
@@ -113,6 +115,7 @@ module.exports = async (req, res) => {
         shipping: shippingCents / 100,
         total: totalCents / 100,
         customer: safeCustomer,
+        language: orderLanguage,
         notes: cleanText(body.notes, 500)
       }
     });
