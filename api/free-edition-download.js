@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { callBeeDataApi } = require('../bee-wallet-client');
+const { ensureWalletCodeForOrder, lookupWallet } = require('../bee-wallet-public');
 
 const EDITION_ID='api-oggi-01';
 const PRODUCT_ID='alveo-digitale-api-oggi-01';
@@ -30,6 +31,8 @@ module.exports=async(req,res)=>{
     let pointsAwarded=false;
     let pointsPending=false;
     let pointsError='';
+    let walletCode='';
+    let walletBalance=null;
 
     try{
       const existing=await callBeeDataApi('get_purchase',{orderId});
@@ -66,6 +69,21 @@ module.exports=async(req,res)=>{
       pointsError=clean(error&&error.message,250);
     }
 
+    if(pointsAwarded){
+      try{
+        if(contact.email||contact.phone){
+          const wallet=await lookupWallet({email:contact.email,phone:contact.phone});
+          if(wallet?.found) walletBalance=wallet.balance;
+        }else{
+          walletCode=await ensureWalletCodeForOrder(orderId);
+          const wallet=walletCode?await lookupWallet({code:walletCode}):null;
+          if(wallet?.found) walletBalance=wallet.balance;
+        }
+      }catch(error){
+        console.warn('[Edizioni Aperte] wallet helper',error?.message||error);
+      }
+    }
+
     if(contact.name||contact.email||contact.phone){
       try{
         await fetch('https://miele-shop-experience-v2.onrender.com/api/free-edition-notification',{
@@ -86,7 +104,12 @@ module.exports=async(req,res)=>{
       pointsAwarded,
       pointsPending,
       pointsError:pointsPending?'Il punto è stato registrato come da sincronizzare.':'',
-      orderId
+      orderId,
+      walletCode,
+      walletBalance,
+      walletLookupUrl:'/punti-ape',
+      walletCardUrl:walletCode?('/api/bee-wallet-card?code='+encodeURIComponent(walletCode)):''
+      
     });
   }catch(error){
     console.error('[Edizioni Aperte] download error',error);
