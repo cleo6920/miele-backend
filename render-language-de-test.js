@@ -187,8 +187,8 @@ async function remoteTranslateBatch(texts){
   const unresolved=unique.filter(text=>!(CORE[lang]||{})[text]&&!cache[text]);
   if(!unresolved.length)return unique.map(text=>(CORE[lang]||{})[text]||cache[text]||text);
 
-  for(let start=0;start<unresolved.length;start+=50){
-    const chunk=unresolved.slice(start,start+50);
+  for(let start=0;start<unresolved.length;start+=20){
+    const chunk=unresolved.slice(start,start+20);
     try{
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),12000);
@@ -200,6 +200,14 @@ async function remoteTranslateBatch(texts){
           body:JSON.stringify({target:lang,texts:chunk}),
           signal:controller.signal
         });
+        if(!res.ok){
+          const q=encodeURIComponent(JSON.stringify(chunk));
+          res=await fetch('/api/site-translate-get?target='+encodeURIComponent(lang)+'&q='+q,{
+            method:'GET',
+            signal:controller.signal,
+            cache:'no-store'
+          });
+        }
       }finally{clearTimeout(timer);}
       const data=await res.json().catch(()=>null);
       if(res.ok&&data?.ok&&Array.isArray(data.translations)){
