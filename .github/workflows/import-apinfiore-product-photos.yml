@@ -1,0 +1,40 @@
+name: Import official Apinfiore product photos
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-apinfiore-product-photos.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official Apinfiore product images
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p images/apinfiore-official
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2023/03/Polline-Italiano_125g_web-18.jpg' -o images/apinfiore-official/polline-italiano-125g.jpg
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2023/03/Pappa-Reale_web-21.jpg' -o images/apinfiore-official/pappa-reale-10g.jpg
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2023/03/Propolis-Spray_20ml_web-6.jpg' -o images/apinfiore-official/propoli-30-spray-20ml.jpg
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2026/06/05_Gruppo-14.jpg' -o images/apinfiore-official/kit-viaggio-4x50ml.jpg
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2025/11/Veleno-doro-Bagnodoccia_web-2.jpg' -o images/apinfiore-official/apis7-bagnodoccia-250ml.jpg
+          file images/apinfiore-official/*
+          test -s images/apinfiore-official/polline-italiano-125g.jpg
+          test -s images/apinfiore-official/pappa-reale-10g.jpg
+          test -s images/apinfiore-official/propoli-30-spray-20ml.jpg
+          test -s images/apinfiore-official/kit-viaggio-4x50ml.jpg
+          test -s images/apinfiore-official/apis7-bagnodoccia-250ml.jpg
+      - name: Commit official images
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add images/apinfiore-official/*
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Aggiunge foto ufficiali Apinfiore ai prodotti'
+          git pull --rebase origin main
+          git push origin main
