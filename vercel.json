@@ -8,6 +8,10 @@
       "destination": "/api/xpay-status"
     },
     {
+      "source": "/api/xpay/success-status",
+      "destination": "/api/xpay-success-status"
+    },
+    {
       "source": "/api/xpay/redirect",
       "destination": "/api/xpay-redirect"
     },
