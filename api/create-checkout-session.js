@@ -1,11 +1,4 @@
 const Stripe = require('stripe');
-const {
-  isTestPurchaseMode,
-  createTestPurchase,
-  getTestPurchase,
-  redeemTestCoupon
-} = require('../test-purchase-store');
-
 const DEFAULT_SITE_URL = 'https://lafabbricadelleapi.it';
 
 function cleanText(value, maxLength = 200) {
@@ -27,25 +20,6 @@ module.exports = async (req, res) => {
 
   try {
     const body = req.body || {};
-
-    if (body.testAction) {
-      if (!isTestPurchaseMode()) {
-        return res.status(404).json({ error: 'Modalità acquisto simulato non attiva.' });
-      }
-
-      if (body.testAction === 'status') {
-        const order = await getTestPurchase(body.orderId);
-        if (!order) return res.status(404).json({ error: 'Ordine TEST non trovato.' });
-        return res.status(200).json(order);
-      }
-
-      if (body.testAction === 'redeem') {
-        const result = await redeemTestCoupon(body.couponCode, body.giftProducts);
-        return res.status(result.status || (result.ok === false ? 400 : 200)).json(result);
-      }
-
-      return res.status(400).json({ error: 'Azione TEST non valida.' });
-    }
 
     const items = Array.isArray(body.items) ? body.items : [];
     const sanitizedItems = items.map((item) => {
@@ -109,23 +83,6 @@ module.exports = async (req, res) => {
       safeCustomer.state
     ].filter(Boolean).join(' | ').slice(0, 500);
 
-    if (isTestPurchaseMode()) {
-      const testPurchase = await createTestPurchase({
-        items: sanitizedItems,
-        testCart: Array.isArray(body.testCart) ? body.testCart : [],
-        shippingEuro,
-        customer: safeCustomer,
-        notes: cleanText(body.notes, 500)
-      });
-
-      console.log(`[TEST PURCHASE] Ordine ${testPurchase.orderId} salvato permanentemente: €${Number(testPurchase.total).toFixed(2)}, ${testPurchase.beePoints} Api, coupon ${testPurchase.coupon && testPurchase.coupon.code}.`);
-      return res.status(200).json({
-        id: testPurchase.orderId,
-        url: `/test-purchase-success.html?order_id=${encodeURIComponent(testPurchase.orderId)}`,
-        testMode: true
-      });
-    }
-
     if (!process.env.STRIPE_SECRET_KEY) {
       console.error('[Stripe] Variabile STRIPE_SECRET_KEY non configurata.');
       return res.status(500).json({
@@ -170,8 +127,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({ id: session.id, url: session.url });
   } catch (error) {
-    const prefix = isTestPurchaseMode() ? '[TEST PURCHASE]' : '[Stripe]';
-    console.error(`${prefix} Errore creazione Checkout Session:`, error);
+    console.error('[Stripe] Errore creazione Checkout Session:', error);
     return res.status(error && error.status ? error.status : 500).json({
       error: error && error.message
         ? error.message
