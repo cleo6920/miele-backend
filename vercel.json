@@ -96,6 +96,10 @@
       "destination": "https://miele-shop-experience-v2.onrender.com/api/site-translate-get"
     },
     {
+      "source": "/api/magazine-translate-get",
+      "destination": "https://miele-shop-experience-v2.onrender.com/api/magazine-translate-get"
+    },
+    {
       "source": "/api/ape-pelu-status",
       "destination": "https://miele-shop-experience-v2.onrender.com/api/ape-pelu-status"
     },
