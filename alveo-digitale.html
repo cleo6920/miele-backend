@@ -76,14 +76,16 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
 <div id="alveo-preview-overlay" aria-hidden="true">
   <div id="alveo-preview-modal" role="dialog" aria-modal="true" aria-label="Anteprima 10 Colazioni dell’Alveare">
     <div id="alveo-preview-head"><strong>10 Colazioni dell’Alveare · Anteprima</strong><button id="alveo-preview-close" type="button">Chiudi ✕</button></div>
-    <div id="alveo-preview-intro">Sfoglia tre pagine reali dell’edizione Premium prima di acquistare.</div>
+    <div id="alveo-preview-intro">Sfoglia cinque pagine reali: copertina, indice, introduzione e la Colazione 1 completa.</div>
     <div id="alveo-preview-pages">
-      <div class="alveo-preview-page active"><img src="/images/alveo-preview-it-presentazione.webp?v=multi-preview-1" alt="Presentazione della raccolta"><span>Presentazione</span></div>
-      <div class="alveo-preview-page"><img src="/images/alveo-preview-it-ricetta.webp?v=multi-preview-1" alt="Ricetta completa di esempio"><span>Una ricetta completa</span></div>
-      <div class="alveo-preview-page"><img src="/images/alveo-preview-it-extra.webp?v=multi-preview-1" alt="Pagina extra di esempio"><span>Una pagina extra</span></div>
+      <div class="alveo-preview-page active"><img src="/images/alveo-preview-it-copertina.webp?v=preview5-1" alt="Copertina"><span>Copertina</span></div>
+      <div class="alveo-preview-page"><img src="/images/alveo-preview-it-indice.webp?v=preview5-1" alt="Indice"><span>Indice</span></div>
+      <div class="alveo-preview-page"><img src="/images/alveo-preview-it-introduzione.webp?v=preview5-1" alt="Introduzione"><span>Introduzione</span></div>
+      <div class="alveo-preview-page"><img src="/images/alveo-preview-it-colazione1-ricetta.webp?v=preview5-1" alt="Colazione 1 ricetta"><span>Colazione 1 · Ricetta</span></div>
+      <div class="alveo-preview-page"><img src="/images/alveo-preview-it-colazione1-varianti.webp?v=preview5-1" alt="Colazione 1 varianti e idee"><span>Colazione 1 · Varianti e idee</span></div>
     </div>
     <div id="alveo-preview-nav"><button type="button" id="alveo-preview-prev">← Indietro</button><div id="alveo-preview-counter">1 / 3</div><button type="button" id="alveo-preview-next">Avanti →</button></div>
-    <div id="alveo-preview-note">Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.</div>
+    <div id="alveo-preview-note">Anteprima parziale · 5 pagine reali. Il PDF completo da 37 pagine è disponibile dopo l’acquisto.</div>
   </div>
 </div>
 <script>
@@ -104,8 +106,8 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
   function applyPreviewLanguage(){
     const l=previewLanguage();
     const imgs=document.querySelectorAll('#alveo-preview-pages img');
-    const names=['presentazione','ricetta','extra'];
-    imgs.forEach((img,i)=>{if(names[i])img.src='/images/alveo-preview-'+l+'-'+names[i]+'.webp?v=multi-preview-1';});
+    const names=['copertina','indice','introduzione','colazione1-ricetta','colazione1-varianti'];
+    imgs.forEach((img,i)=>{if(names[i])img.src='/images/alveo-preview-'+l+'-'+names[i]+'.webp?v=preview5-1';});
   }
   function open(){applyPreviewLanguage();pageIndex=0;showPage(0);overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');}
   function close(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');}
