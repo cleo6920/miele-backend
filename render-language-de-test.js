@@ -181,6 +181,19 @@ function shouldTranslate(x){
   return /[A-Za-zÀ-ÿ]/.test(x);
 }
 
+async function directGoogleTranslate(text,target){
+  const clean=cleanText(text);
+  if(!clean||target==='it')return clean;
+  try{
+    const url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl='+encodeURIComponent(target)+'&dt=t&q='+encodeURIComponent(clean);
+    const res=await fetch(url,{credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store'});
+    if(!res.ok)return clean;
+    const data=await res.json();
+    const out=Array.isArray(data?.[0])?data[0].map(v=>Array.isArray(v)?(v[0]||''):'').join(''):clean;
+    return String(out||clean).trim()||clean;
+  }catch(_){return clean;}
+}
+
 async function remoteTranslateBatch(texts){
   if(lang==='it')return texts;
   const unique=[...new Set((texts||[]).map(cleanText).filter(shouldTranslate))];
@@ -212,11 +225,23 @@ async function remoteTranslateBatch(texts){
       const data=await res.json().catch(()=>null);
       if(res.ok&&data?.ok&&Array.isArray(data.translations)){
         chunk.forEach((text,i)=>{
-          const out=String(data.translations[i]||text);
+          const out=String(data.translations[i]||text).trim();
           if(out&&out!==text)cache[text]=out;
         });
-        saveCache();
       }
+      const stillMissing=chunk.filter(text=>!cache[text]&&!(CORE[lang]||{})[text]);
+      if(stillMissing.length){
+        let cursor=0;
+        const workers=Array.from({length:4},async()=>{
+          while(cursor<stillMissing.length){
+            const text=stillMissing[cursor++];
+            const out=await directGoogleTranslate(text,lang);
+            if(out&&out!==text)cache[text]=out;
+          }
+        });
+        await Promise.all(workers);
+      }
+      saveCache();
     }catch(_){}
   }
   return unique.map(text=>(CORE[lang]||{})[text]||cache[text]||text);
