@@ -139,6 +139,11 @@ const CORE={
 
 const ALVEO_CORE_TRANSLATIONS={
   en:{
+    "Colazione 1 · Varianti e idee":"Breakfast 1 · Variations and ideas",
+    "Colazione 1 · Ricetta":"Breakfast 1 · Recipe",
+    "Introduzione":"Introduction",
+    "Indice":"Contents",
+    "Copertina":"Cover",
     "Alveo Digitale":"Alveo Digitale",
     "L’alveare continua anche fuori dal Centro.":"The hive experience continues beyond the Centre.",
     "Ricette, idee e contenuti digitali legati al mondo della Fabbrica delle Api. Nessun pacco da aspettare: scegli il contenuto e portalo con te.":"Recipes, ideas and digital content inspired by the world of La Fabbrica delle Api. No parcel to wait for: choose your content and take it with you.",
@@ -173,6 +178,11 @@ const ALVEO_CORE_TRANSLATIONS={
     "Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Partial preview · the complete 37-page PDF is available after purchase."
   },
   de:{
+    "Colazione 1 · Varianti e idee":"Frühstück 1 · Varianten und Ideen",
+    "Colazione 1 · Ricetta":"Frühstück 1 · Rezept",
+    "Introduzione":"Einführung",
+    "Indice":"Inhalt",
+    "Copertina":"Titelseite",
     "Alveo Digitale":"Alveo Digitale",
     "L’alveare continua anche fuori dal Centro.":"Das Erlebnis des Bienenstocks geht auch außerhalb des Zentrums weiter.",
     "Ricette, idee e contenuti digitali legati al mondo della Fabbrica delle Api. Nessun pacco da aspettare: scegli il contenuto e portalo con te.":"Rezepte, Ideen und digitale Inhalte rund um die Welt von La Fabbrica delle Api. Kein Paket, auf das Sie warten müssen: Inhalt auswählen und direkt mitnehmen.",
@@ -207,6 +217,10 @@ const ALVEO_CORE_TRANSLATIONS={
     "Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Teilvorschau · das vollständige 37-seitige PDF ist nach dem Kauf verfügbar."
   },
   fr:{
+    "Colazione 1 · Varianti e idee":"Petit-déjeuner 1 · Variantes et idées",
+    "Colazione 1 · Ricetta":"Petit-déjeuner 1 · Recette",
+    "Indice":"Sommaire",
+    "Copertina":"Couverture",
     "Alveo Digitale":"Alveo Digitale",
     "L’alveare continua anche fuori dal Centro.":"L’expérience de la ruche continue aussi hors du Centre.",
     "Ricette, idee e contenuti digitali legati al mondo della Fabbrica delle Api. Nessun pacco da aspettare: scegli il contenuto e portalo con te.":"Recettes, idées et contenus numériques liés à l’univers de La Fabbrica delle Api. Aucun colis à attendre : choisissez votre contenu et emportez-le avec vous.",
@@ -241,6 +255,11 @@ const ALVEO_CORE_TRANSLATIONS={
     "Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Aperçu partiel · le PDF complet de 37 pages est disponible après l’achat."
   },
   es:{
+    "Colazione 1 · Varianti e idee":"Desayuno 1 · Variantes e ideas",
+    "Colazione 1 · Ricetta":"Desayuno 1 · Receta",
+    "Introduzione":"Introducción",
+    "Indice":"Índice",
+    "Copertina":"Portada",
     "Alveo Digitale":"Alveo Digitale",
     "L’alveare continua anche fuori dal Centro.":"La experiencia de la colmena continúa también fuera del Centro.",
     "Ricette, idee e contenuti digitali legati al mondo della Fabbrica delle Api. Nessun pacco da aspettare: scegli il contenuto e portalo con te.":"Recetas, ideas y contenidos digitales vinculados al mundo de La Fabbrica delle Api. No hay que esperar ningún paquete: elige el contenido y llévalo contigo.",
