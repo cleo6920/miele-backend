@@ -96,6 +96,10 @@
       "destination": "https://miele-shop-experience-v2.onrender.com/api/order-notification"
     },
     {
+      "source": "/api/site-translate",
+      "destination": "https://miele-shop-experience-v2.onrender.com/api/site-translate"
+    },
+    {
       "source": "/api/site-translate-get",
       "destination": "https://miele-shop-experience-v2.onrender.com/api/site-translate-get"
     },
