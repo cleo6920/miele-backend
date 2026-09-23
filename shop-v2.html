@@ -1029,6 +1029,7 @@ async function completeOrderDraft(){
         state:order.customer.province
       },
       email:order.customer.email,
+      language:order.language,
       notes:'ORDER:'+order.id+(order.notes?' | '+order.notes:'')
     };
 
