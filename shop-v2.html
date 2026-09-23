@@ -1017,7 +1017,7 @@ function renderV2Cart(){
   if(!shopV2Cart.length){box.innerHTML='<div class="cart-empty">'+purchaseT('cartEmpty')+'</div>';return;}
   box.innerHTML=shopV2Cart.map(x=>{
     const name=purchaseProductName(x.id,x.name),size=purchaseProductSize(x.id,x.size);
-    return '<div class="cart-item"><div><strong>'+officialCatalogEsc(name)+'</strong><small>'+officialCatalogEsc(size)+' · '+purchaseT('quantity')+' '+x.qty+' · '+(x.points*x.qty)+' '+purchaseT('points')+'</small></div><div><strong>'+euro(x.price*x.qty)+'</strong><button type="button" onclick="removeV2Product(\''+x.id+'\')">'+purchaseT('remove')+'</button></div></div>';
+    return '<div class="cart-item"><div><strong>'+officialCatalogEsc(name)+'</strong><small>'+officialCatalogEsc(size)+' · '+purchaseT('quantity')+' '+x.qty+(isFreeEditionId(x.id)?' · 🐝 +1 Punto Ape al download':' · '+(x.points*x.qty)+' '+purchaseT('points'))+'</small></div><div><strong>'+(isFreeEditionId(x.id)?'GRATIS':euro(x.price*x.qty))+'</strong><button type="button" onclick="removeV2Product(\''+x.id+'\')">'+purchaseT('remove')+'</button></div></div>';
   }).join('');
 }
 
@@ -1231,11 +1231,29 @@ function officialCatalogCategory(section){
     'alveo-digitale':'Alveo Digitale'
   })[section]||'Bottega';
 }
+const FREE_EDITION_ID='alveo-digitale-api-oggi-01';
+function isFreeEditionId(id){return String(id||'')===FREE_EDITION_ID;}
+function officialCatalogPointsMarkup(p){
+  return isFreeEditionId(p.id)
+    ? '<div class="catalog-points">🐝 +1 Punto Ape al download</div>'
+    : '<div class="catalog-points">🐝 +'+defaultPointsFor(p.id)+' Punti Ape</div>';
+}
+function officialCatalogPreviewMarkup(p){
+  if(p.id==='alveo-digitale-10-colazioni')return '<button class="alveo-shop-preview-btn" type="button" data-alveo-shop-preview>👁 Sfoglia anteprima</button>';
+  if(isFreeEditionId(p.id))return '<button class="alveo-shop-preview-btn" type="button" data-api-oggi-preview>👁 Guarda 5 pagine prima di scaricare</button>';
+  return '';
+}
+function officialCatalogPriceMarkup(p){
+  return isFreeEditionId(p.id)?'<strong>GRATIS</strong>':'<strong>'+euro(p.price)+'</strong>';
+}
 function renderOfficialCatalog(){
   document.querySelectorAll('[data-official-section]').forEach(box=>{
     const section=box.dataset.officialSection;
     const items=SHOP_OFFICIAL_PRODUCTS.filter(p=>p.section===section);
-    box.innerHTML=items.map(p=>'<article class="catalog-card product-openable" id="prodotto-'+officialCatalogEsc(p.id)+'" data-product-id="'+officialCatalogEsc(p.id)+'" tabindex="0" role="button" aria-label="Apri la scheda completa di '+officialCatalogEsc(p.name)+'"><div class="catalog-card-media"><img src="'+officialCatalogEsc(p.image)+'" alt="'+officialCatalogEsc(p.name)+'" loading="lazy"></div><div class="catalog-card-body"><small>'+officialCatalogEsc(officialCatalogCategory(p.section))+'</small><h3>'+officialCatalogEsc(p.name)+'</h3><p>'+officialCatalogEsc(p.desc)+'</p><div class="catalog-points">🐝 +'+defaultPointsFor(p.id)+' Punti Ape</div><button class="product-detail-link" type="button" data-open-product="'+officialCatalogEsc(p.id)+'">Apri la scheda completa →</button>'+(p.id==='alveo-digitale-10-colazioni'?'<button class="alveo-shop-preview-btn" type="button" data-alveo-shop-preview>👁 Sfoglia anteprima</button>':'')+'<div class="catalog-buy-row"><div class="catalog-price"><strong>'+euro(p.price)+'</strong><span>'+officialCatalogEsc(p.size)+'</span></div><button class="add-btn official-add" data-id="'+officialCatalogEsc(p.id)+'" data-name="'+officialCatalogEsc(p.name)+'" data-price="'+p.price+'" data-size="'+officialCatalogEsc(p.size)+'" data-points="'+defaultPointsFor(p.id)+'">Aggiungi</button></div></div></article>').join('');
+    box.innerHTML=items.map(p=>{
+      const free=isFreeEditionId(p.id);
+      return '<article class="catalog-card product-openable'+(free?' free-open-card':'')+'" id="prodotto-'+officialCatalogEsc(p.id)+'" data-product-id="'+officialCatalogEsc(p.id)+'" tabindex="0" role="button" aria-label="Apri la scheda completa di '+officialCatalogEsc(p.name)+'"><div class="catalog-card-media"><img src="'+officialCatalogEsc(p.image)+'" alt="'+officialCatalogEsc(p.name)+'" loading="lazy"></div><div class="catalog-card-body"><small>'+officialCatalogEsc(free?'Alveo Digitale · Edizioni Aperte':officialCatalogCategory(p.section))+'</small><h3>'+officialCatalogEsc(p.name)+'</h3><p>'+officialCatalogEsc(p.desc)+'</p>'+officialCatalogPointsMarkup(p)+'<button class="product-detail-link" type="button" data-open-product="'+officialCatalogEsc(p.id)+'">Apri la scheda completa →</button>'+officialCatalogPreviewMarkup(p)+'<div class="catalog-buy-row"><div class="catalog-price">'+officialCatalogPriceMarkup(p)+'<span>'+officialCatalogEsc(p.size)+'</span></div><button class="add-btn official-add" data-id="'+officialCatalogEsc(p.id)+'" data-name="'+officialCatalogEsc(p.name)+'" data-price="'+p.price+'" data-size="'+officialCatalogEsc(p.size)+'" data-points="0">'+(free?'Aggiungi gratis':'Aggiungi')+'</button></div></div></article>';
+    }).join('');
   });
 }
 renderOfficialCatalog();
@@ -1303,13 +1321,16 @@ function openProductDetail(id){
   warningBox.classList.toggle('show',Boolean(warningText));
   const alveoPreviewBtn=document.getElementById('productDetailAlveoPreview');
   if(alveoPreviewBtn)alveoPreviewBtn.hidden=p.id!=='alveo-digitale-10-colazioni';
-  document.getElementById('productDetailPrice').textContent=euro(p.price);
-  document.getElementById('productDetailSize').textContent=p.size+(p.points?' · 🐝 '+p.points+' Punti Ape':'');
+  const apiOggiPreviewBtn=document.getElementById('productDetailApiOggiPreview');
+  if(apiOggiPreviewBtn)apiOggiPreviewBtn.hidden=!isFreeEditionId(p.id);
+  document.getElementById('productDetailPrice').textContent=isFreeEditionId(p.id)?'GRATIS':euro(p.price);
+  document.getElementById('productDetailSize').textContent=isFreeEditionId(p.id)?(p.size+' · 🐝 +1 Punto Ape al download'):(p.size+(p.points?' · 🐝 '+p.points+' Punti Ape':''));
   productDetailAdd.dataset.id=p.id;
   productDetailAdd.dataset.name=p.name;
   productDetailAdd.dataset.price=String(p.price);
   productDetailAdd.dataset.size=p.size;
-  productDetailAdd.dataset.points=String(p.points||0);
+  productDetailAdd.dataset.points=String(isFreeEditionId(p.id)?0:(p.points||0));
+  productDetailAdd.textContent=isFreeEditionId(p.id)?'Aggiungi gratis al carrello':'Aggiungi al carrello';
   productDetailOverlay.classList.add('open');
   productDetailOverlay.setAttribute('aria-hidden','false');
   document.body.style.overflow='hidden';
