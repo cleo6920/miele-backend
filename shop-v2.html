@@ -398,10 +398,19 @@ img{display:block;max-width:100%}
 #freeEditionModal h2{font-family:Georgia,serif;font-size:clamp(36px,7vw,54px);line-height:1;margin:10px 45px 14px 0}
 .free-edition-lead{font-size:17px;line-height:1.55}
 .free-edition-info{background:#f5ecd9;border:1px solid #dfcfad;border-radius:18px;padding:15px 16px;line-height:1.55;margin:18px 0}
+.free-language-box{margin:18px 0;padding:16px;border:1px solid #dfcfad;border-radius:18px;background:#fff4d8}
+.free-language-box h3{margin:0 0 6px;font-size:18px}
+.free-language-box p{margin:0 0 12px;color:#5f6a64;line-height:1.45;font-size:14px}
+.free-language-chips{display:flex;gap:8px;flex-wrap:wrap}
+.free-language-chip{border:1px solid #cbb98f;background:#fff;color:#17241e;border-radius:999px;padding:9px 12px;font-weight:900;cursor:pointer}
+.free-language-chip.active{background:#10392c;color:#fff;border-color:#10392c}
+.free-language-note{margin-top:10px;font-size:12px;color:#6e776f;font-weight:700}
 .free-edition-form{display:grid;gap:12px}
+.free-edition-form:before{content:"Dati di contatto facoltativi";font-weight:950;font-size:15px;color:#17241e}
+.free-edition-form:after{content:"Lasciali vuoti se non vuoi ricevere aggiornamenti.";order:-1;font-size:12px;color:#6f7a73}
 .free-edition-form label{font-weight:900;font-size:13px}
 .free-edition-form label span{font-weight:700;color:#79827c}
-.free-edition-form input,.free-edition-form select{display:block;width:100%;margin-top:6px;border:1px solid #d7cdbb;border-radius:13px;padding:12px 13px;font:inherit;background:#fff;color:#17241e}
+.free-edition-form input{display:block;width:100%;margin-top:6px;border:1px solid #d7cdbb;border-radius:13px;padding:12px 13px;font:inherit;background:#fff;color:#17241e}
 .free-edition-points{margin:18px 0;background:#fff0ae;color:#654c08;border-radius:16px;padding:13px 15px}
 #freeEditionStatus{min-height:22px;margin:8px 0;color:#7a3c16;font-weight:800}
 #freeEditionDownload{width:100%;border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:14px 18px;font-weight:950;font-size:15px;cursor:pointer}
@@ -741,17 +750,21 @@ img{display:block;max-width:100%}
     <h2>Scarica gratuitamente</h2>
     <p class="free-edition-lead"><strong>Il mondo delle api oggi · Numero 01</strong> è gratuito. Non serve alcun pagamento.</p>
     <div class="free-edition-info">Se vuoi, puoi lasciare uno o più contatti per ricevere aggiornamenti sulle prossime uscite, nuove esperienze e novità della Fabbrica delle Api. <strong>I campi sono facoltativi:</strong> puoi lasciarli vuoti e scaricare comunque il PDF.</div>
+    <div class="free-language-box">
+      <h3>Scegli la lingua del PDF</h3>
+      <p>Se non scegli nulla, useremo automaticamente la lingua attuale del sito.</p>
+      <div class="free-language-chips" id="freeLanguageChips" role="radiogroup" aria-label="Lingua del PDF">
+        <button type="button" class="free-language-chip active" data-lang="">Automatico</button>
+        <button type="button" class="free-language-chip" data-lang="it">🇮🇹 Italiano</button>
+        <button type="button" class="free-language-chip" data-lang="en">🇬🇧 English</button>
+        <button type="button" class="free-language-chip" data-lang="de">🇩🇪 Deutsch</button>
+        <button type="button" class="free-language-chip" data-lang="fr">🇫🇷 Français</button>
+        <button type="button" class="free-language-chip" data-lang="es">🇪🇸 Español</button>
+      </div>
+      <div class="free-language-note">La scelta riguarda solo il PDF e non cambia la lingua del sito.</div>
+      <input type="hidden" id="freeLanguage" value="">
+    </div>
     <div class="free-edition-form">
-      <label>Lingua del PDF <span>facoltativa · se non scegli nulla usa la lingua del sito</span>
-        <select id="freeLanguage">
-          <option value="">Automatico · lingua del sito</option>
-          <option value="it">🇮🇹 Italiano</option>
-          <option value="en">🇬🇧 English</option>
-          <option value="de">🇩🇪 Deutsch</option>
-          <option value="fr">🇫🇷 Français</option>
-          <option value="es">🇪🇸 Español</option>
-        </select>
-      </label>
       <label>Nome e cognome <span>facoltativo</span><input id="freeName" autocomplete="name"></label>
       <label>Email <span>facoltativa</span><input id="freeEmail" type="email" autocomplete="email"></label>
       <label>Telefono <span>facoltativo</span><input id="freePhone" inputmode="tel" autocomplete="tel"></label>
@@ -1566,8 +1579,11 @@ function openFreeEditionModal(){
   const select=document.getElementById('freeLanguage');
   if(select){
     select.value='';
+    document.querySelectorAll('.free-language-chip').forEach(b=>b.classList.toggle('active',b.dataset.lang===''));
     const l=purchaseLanguage();
-    select.options[0].textContent='Automatico · lingua del sito ('+({it:'Italiano',en:'English',de:'Deutsch',fr:'Français',es:'Español'}[l]||'Italiano')+')';
+    const siteName=({it:'Italiano',en:'English',de:'Deutsch',fr:'Français',es:'Español'}[l]||'Italiano');
+    const auto=document.querySelector('.free-language-chip[data-lang=""]');
+    if(auto)auto.textContent='Automatico · '+siteName;
   }
   o.classList.add('open');
   o.setAttribute('aria-hidden','false');
@@ -1635,6 +1651,12 @@ async function startFreeEditionDownload(){
   btn.disabled=false;
   btn.textContent=old;
 }
+document.querySelectorAll('.free-language-chip').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.free-language-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const hidden=document.getElementById('freeLanguage');
+  if(hidden)hidden.value=btn.dataset.lang||'';
+}));
 document.getElementById('freeEditionClose')?.addEventListener('click',closeFreeEditionModal);
 document.getElementById('freeEditionOverlay')?.addEventListener('click',e=>{if(e.target.id==='freeEditionOverlay')closeFreeEditionModal();});
 document.getElementById('freeEditionDownload')?.addEventListener('click',startFreeEditionDownload);
