@@ -139,6 +139,9 @@ const CORE={
 
 const ALVEO_CORE_TRANSLATIONS={
   en:{
+    "Anteprima parziale · 5 pagine reali. Il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Partial preview · 5 real pages. The complete 37-page PDF is available after purchase.",
+    "Sfoglia cinque pagine reali: copertina, indice, introduzione e la Colazione 1 completa.":"Browse five real pages: cover, contents, introduction and the complete Breakfast 1.",
+    "LA FABBRICA DELLE API · ALVEO DIGITALE":"LA FABBRICA DELLE API · ALVEO DIGITALE",
     "Colazione 1 · Varianti e idee":"Breakfast 1 · Variations and ideas",
     "Colazione 1 · Ricetta":"Breakfast 1 · Recipe",
     "Introduzione":"Introduction",
@@ -178,6 +181,8 @@ const ALVEO_CORE_TRANSLATIONS={
     "Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Partial preview · the complete 37-page PDF is available after purchase."
   },
   de:{
+    "Anteprima parziale · 5 pagine reali. Il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Teilvorschau · 5 echte Seiten. Das vollständige 37-seitige PDF ist nach dem Kauf verfügbar.",
+    "Sfoglia cinque pagine reali: copertina, indice, introduzione e la Colazione 1 completa.":"Sehen Sie fünf echte Seiten: Titelseite, Inhalt, Einführung und das vollständige Frühstück 1.",
     "Colazione 1 · Varianti e idee":"Frühstück 1 · Varianten und Ideen",
     "Colazione 1 · Ricetta":"Frühstück 1 · Rezept",
     "Introduzione":"Einführung",
@@ -217,6 +222,8 @@ const ALVEO_CORE_TRANSLATIONS={
     "Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Teilvorschau · das vollständige 37-seitige PDF ist nach dem Kauf verfügbar."
   },
   fr:{
+    "Anteprima parziale · 5 pagine reali. Il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Aperçu partiel · 5 vraies pages. Le PDF complet de 37 pages est disponible après l’achat.",
+    "Sfoglia cinque pagine reali: copertina, indice, introduzione e la Colazione 1 completa.":"Feuilletez cinq vraies pages : couverture, sommaire, introduction et le Petit-déjeuner 1 complet.",
     "Colazione 1 · Varianti e idee":"Petit-déjeuner 1 · Variantes et idées",
     "Colazione 1 · Ricetta":"Petit-déjeuner 1 · Recette",
     "Indice":"Sommaire",
@@ -255,6 +262,8 @@ const ALVEO_CORE_TRANSLATIONS={
     "Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Aperçu partiel · le PDF complet de 37 pages est disponible après l’achat."
   },
   es:{
+    "Anteprima parziale · 5 pagine reali. Il PDF completo da 37 pagine è disponibile dopo l’acquisto.":"Vista previa parcial · 5 páginas reales. El PDF completo de 37 páginas está disponible después de la compra.",
+    "Sfoglia cinque pagine reali: copertina, indice, introduzione e la Colazione 1 completa.":"Explora cinco páginas reales: portada, índice, introducción y el Desayuno 1 completo.",
     "Colazione 1 · Varianti e idee":"Desayuno 1 · Variantes e ideas",
     "Colazione 1 · Ricetta":"Desayuno 1 · Receta",
     "Introduzione":"Introducción",
