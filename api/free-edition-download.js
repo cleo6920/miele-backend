@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { callBeeDataApi } = require('../bee-wallet-client');
-const { ensureWalletCodeForOrder, lookupWallet } = require('../bee-wallet-public');
+const { ensureWalletCodeForOrder, attachContactToOrder, lookupWallet } = require('../bee-wallet-public');
 
 const EDITION_ID='api-oggi-01';
 const PRODUCT_ID='alveo-digitale-api-oggi-01';
@@ -72,6 +72,7 @@ module.exports=async(req,res)=>{
     if(pointsAwarded){
       try{
         if(contact.email||contact.phone){
+          await attachContactToOrder(orderId,{email:contact.email,phone:contact.phone});
           const wallet=await lookupWallet({email:contact.email,phone:contact.phone});
           if(wallet?.found) walletBalance=wallet.balance;
         }else{
