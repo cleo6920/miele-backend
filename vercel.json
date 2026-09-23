@@ -92,6 +92,10 @@
       "destination": "https://miele-shop-experience-v2.onrender.com/api/order-notification"
     },
     {
+      "source": "/api/ape-pelu-status",
+      "destination": "https://miele-shop-experience-v2.onrender.com/api/ape-pelu-status"
+    },
+    {
       "source": "/api/ape-pelu-chat",
       "destination": "https://miele-shop-experience-v2.onrender.com/api/ape-pelu-chat"
     }
