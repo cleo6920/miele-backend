@@ -61,7 +61,9 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
 .api-direct-download-form:before{content:"Dati di contatto facoltativi";font-weight:950;font-size:15px;color:#17241e}
 .api-direct-download-form:after{content:"Lasciali vuoti se non vuoi ricevere aggiornamenti.";order:-1;font-size:12px;color:#6f7a73}
 .api-direct-download-form label{font-weight:900;font-size:13px}.api-direct-download-form label span{font-weight:700;color:#77817b}.api-direct-download-form input{width:100%;margin-top:6px;border:1px solid #d7cebf;border-radius:12px;padding:12px;font:inherit;background:#fff;color:#17241e}
+.api-wallet-guide{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.api-wallet-option{border-radius:16px;padding:14px;line-height:1.4}.api-wallet-option.easy{background:#e9f5ee;border:1px solid #bfdcca}.api-wallet-option.code{background:#fff0bd;border:1px solid #e4c35d}.api-wallet-option strong{display:block;margin-bottom:4px}.api-wallet-result{margin-top:12px;padding:14px;border-radius:16px;background:#edf5f0;border:1px solid #c6ddce}.api-wallet-result a{display:inline-block;margin-top:9px;margin-right:7px;padding:9px 12px;border-radius:999px;text-decoration:none;font-weight:900;background:#10392c;color:#fff}.api-wallet-result a.alt{background:#fff;color:#654c08;border:1px solid #d2b661}
 #api-direct-download-status{min-height:22px;color:#7a3c16;font-weight:850;margin:8px 0}
+@media(max-width:620px){.api-wallet-guide{grid-template-columns:1fr}}
 #api-direct-download-start{width:100%;border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:14px 18px;font-weight:950;font-size:15px;cursor:pointer}
 @media(max-width:800px){.hero,.product{grid-template-columns:1fr}.hero-copy{padding:30px}.hero img{min-height:260px}.steps{grid-template-columns:1fr}.product{padding:16px}.product img{height:240px}}
 </style>
@@ -139,7 +141,7 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
     <div class="eyebrow">ALVEO DIGITALE · EDIZIONI APERTE</div>
     <h2>Scarica gratuitamente</h2>
     <p><strong>Il mondo delle api oggi · Numero 01</strong> è gratuito. Non serve alcun pagamento.</p>
-    <div class="api-direct-download-info">Se vuoi puoi lasciare uno o più contatti per ricevere aggiornamenti sulle prossime uscite. <strong>Tutti i campi sono facoltativi:</strong> puoi lasciarli vuoti e scaricare comunque il PDF.</div>
+    <div class="api-direct-download-info"><strong>Il download resta gratuito.</strong> Per ritrovare in futuro il Punto Ape hai due possibilità semplici.</div>
     <div class="api-direct-language-box">
       <h3>Scegli la lingua del PDF</h3>
       <p>Se non scegli nulla, useremo automaticamente la lingua attuale del sito.</p>
@@ -153,6 +155,10 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
       </div>
       <div class="api-direct-language-note" id="apiDirectLanguageNote">La scelta riguarda solo il PDF e non cambia la lingua del sito.</div>
       <input type="hidden" id="apiDirectLanguage" value="">
+    </div>
+    <div class="api-wallet-guide">
+      <div class="api-wallet-option easy"><strong>📧📱 Più semplice</strong>Lascia <b>email oppure telefono</b>: potrai controllare il saldo usando quel contatto.</div>
+      <div class="api-wallet-option code"><strong>🔐 Senza contatti</strong>Lascia email e telefono vuoti: dopo il download riceverai un <b>Codice Punti Ape personale</b> e un PDF promemoria.</div>
     </div>
     <div class="api-direct-download-form">
       <label>Nome e cognome <span>facoltativo</span><input id="apiDirectName" autocomplete="name"></label>
@@ -271,7 +277,12 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
       const data=await response.json().catch(()=>null);
       if(!response.ok||!data?.downloadUrl)throw new Error(data?.error||'Download non disponibile.');
       const a=document.createElement('a');a.href=data.downloadUrl+'?download='+Date.now();a.download=data.fileName||'Il_mondo_delle_api_oggi_Numero_01.pdf';document.body.appendChild(a);a.click();a.remove();
-      status.textContent=data.pointsAwarded?'Download avviato · +1 Punto Ape accreditato.':'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
+      const base=data.pointsAwarded?'Download avviato · +1 Punto Ape accreditato.':'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
+      if(data.walletCode){
+        status.innerHTML='<div class="api-wallet-result"><strong>'+base+'</strong><br><br>🔐 Il tuo Codice Punti Ape è:<br><strong style="font-size:20px">'+data.walletCode+'</strong><br>Conservalo: ti servirà per controllare il saldo senza email o telefono.<br><a href="'+data.walletCardUrl+'">Scarica promemoria PDF</a><a class="alt" href="/punti-ape">Controlla il saldo</a></div>';
+      }else{
+        status.innerHTML='<div class="api-wallet-result"><strong>'+base+'</strong><br>Potrai ritrovare il saldo con l’email o il telefono che hai indicato.<br><a href="/punti-ape">Vedi il mio Saldo Punti Ape</a></div>';
+      }
       btn.textContent='Scarica di nuovo';
     }catch(err){status.textContent=err?.message||'Non è stato possibile avviare il download.';btn.textContent=old;}
     btn.disabled=false;
