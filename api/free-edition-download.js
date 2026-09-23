@@ -109,7 +109,7 @@ module.exports=async(req,res)=>{
       walletCode,
       walletBalance,
       walletLookupUrl:'/punti-ape',
-      walletCardUrl:walletCode?('/api/bee-wallet-card?code='+encodeURIComponent(walletCode)):''
+      walletCardUrl:walletCode?('/api/bee-balance?card=1&code='+encodeURIComponent(walletCode)):''
       
     });
   }catch(error){
