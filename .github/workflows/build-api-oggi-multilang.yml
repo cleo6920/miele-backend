@@ -1,5 +1,5 @@
 name: Build Api Oggi multilingual PDFs
-# retry-after-validation-fix
+# retry-after-validation-fix-3
 on:
   push:
     branches: [main]
@@ -28,11 +28,7 @@ jobs:
           set -euo pipefail
           for lang in it en de fr es; do
             test -s "downloads/il-mondo-delle-api-oggi-01-$lang.pdf"
-            count=$(python - <<PY
-          import fitz
-          print(fitz.open('downloads/il-mondo-delle-api-oggi-01-$lang.pdf').page_count)
-          PY
-          )
+            count=$(python -c "import pymupdf; print(pymupdf.open('downloads/il-mondo-delle-api-oggi-01-$lang.pdf').page_count)")
             test "$count" = "30"
             for name in copertina premessa api-da-vicino territorio galena; do
               test -s "images/api-oggi-01-preview-$lang-$name.webp"
