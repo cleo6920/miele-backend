@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Il mio Saldo Punti Ape · La Fabbrica delle Api</title>
+<meta name="description" content="Controlla il tuo Saldo Punti Ape con email, telefono o Codice Punti Ape.">
+<style>
+:root{--g:#10392c;--g2:#174c3b;--gold:#e3aa2d;--cream:#fff9ee;--ink:#17241e;--muted:#66746d;--line:#e1d5c1}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7f1e6;color:var(--ink)}
+.top{background:var(--g);color:#fff}.topin{max-width:1040px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}.top a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.3);padding:9px 14px;border-radius:999px;font-weight:850}
+.wrap{max-width:1040px;margin:auto;padding:30px 18px 64px}.hero{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;border-radius:30px;padding:38px;box-shadow:0 18px 45px rgba(0,0,0,.12)}
+.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:950;color:#f3ca69}.hero h1{font:700 clamp(42px,7vw,68px)/.96 Georgia,serif;margin:10px 0}.hero p{font-size:18px;line-height:1.55;max-width:760px;color:#e5f0eb}
+.guide{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 8px 24px rgba(30,32,28,.05)}.card .icon{font-size:30px}.card h3{margin:8px 0 5px}.card p{margin:0;color:var(--muted);line-height:1.45}
+.lookup{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:26px;padding:26px;box-shadow:0 12px 32px rgba(0,0,0,.06)}.lookup h2{font:700 34px/1 Georgia,serif;margin:0 0 8px}.lookup>p{color:var(--muted);margin:0 0 18px}
+.tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}.tab{border:1px solid #c8b891;background:#fff7e5;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer}.tab.active{background:var(--g);color:#fff;border-color:var(--g)}
+.method{display:none}.method.active{display:block}.method label{display:block;font-weight:900;margin-bottom:7px}.method input{width:100%;border:1px solid #d7ccba;border-radius:14px;padding:14px;font:inherit;font-size:16px;background:#fff}.hint{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.4}
+.check{margin-top:16px;width:100%;border:0;border-radius:999px;background:var(--gold);color:#17241e;padding:14px 18px;font-weight:950;font-size:16px;cursor:pointer}
+#status{min-height:24px;margin:12px 0;font-weight:800;color:#7a3c16}.result{display:none;margin-top:18px;background:#edf5f0;border:1px solid #c8dfd0;border-radius:22px;padding:20px}.result.show{display:block}.balance{font:700 52px/1 Georgia,serif;color:var(--g)}.progress{height:16px;background:#dbe7df;border-radius:999px;overflow:hidden;margin:15px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#d49b21,#f0c85a);transition:width .35s}.goal{font-weight:900;color:#496158}
+.privacy{margin-top:22px;padding:16px;border-radius:18px;background:#fff3c9;color:#624d0f;line-height:1.45}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions a{text-decoration:none;border-radius:999px;padding:11px 15px;font-weight:900}.primary{background:var(--g);color:#fff}.secondary{border:1px solid #bea66e;color:#60480c;background:#fff}
+@media(max-width:760px){.guide{grid-template-columns:1fr}.hero{padding:28px}.lookup{padding:20px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin"><strong>LA FABBRICA DELLE API · PUNTI APE</strong><div><a href="/">Home</a> <a href="/shop">Bottega</a></div></div></header>
+<main class="wrap">
+<section class="hero">
+<div class="eyebrow">Il tuo Saldo Api</div>
+<h1>Quanti Punti Ape hai?</h1>
+<p>Puoi ritrovare il tuo saldo in tre modi. Usa quello che hai lasciato quando hai acquistato o scaricato un contenuto.</p>
+</section>
+
+<section class="guide">
+<div class="card"><div class="icon">📧</div><h3>Email</h3><p>Se hai lasciato la tua email, è il modo più semplice per ritrovare i punti.</p></div>
+<div class="card"><div class="icon">📱</div><h3>Telefono</h3><p>Puoi usare il numero di telefono indicato nei tuoi acquisti o download.</p></div>
+<div class="card"><div class="icon">🔐</div><h3>Codice Punti Ape</h3><p>Se non hai lasciato contatti, usa il codice personale che hai ricevuto con il download.</p></div>
+</section>
+
+<section class="lookup">
+<h2>Controlla il saldo</h2>
+<p>Scegli come vuoi identificarti. Serve solo uno dei tre dati.</p>
+<div class="tabs">
+<button type="button" class="tab active" data-kind="email">📧 Email</button>
+<button type="button" class="tab" data-kind="phone">📱 Telefono</button>
+<button type="button" class="tab" data-kind="code">🔐 Codice personale</button>
+</div>
+<div class="method active" data-method="email"><label for="email">La tua email</label><input id="email" type="email" autocomplete="email" placeholder="esempio@email.it"><div class="hint">Usa la stessa email lasciata sul sito.</div></div>
+<div class="method" data-method="phone"><label for="phone">Il tuo telefono</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="+39 ..."><div class="hint">Puoi scriverlo anche con spazi o prefisso internazionale.</div></div>
+<div class="method" data-method="code"><label for="code">Codice Punti Ape</label><input id="code" autocomplete="off" placeholder="APE-XXXX-XXXX-XX" style="text-transform:uppercase"><div class="hint">Lo trovi nel promemoria ricevuto se hai scelto di non lasciare contatti.</div></div>
+<button class="check" id="check" type="button">🐝 Vedi il mio saldo</button>
+<div id="status"></div>
+<div class="result" id="result">
+<div>Il tuo Saldo Punti Ape</div>
+<div class="balance"><span id="balance">0</span> 🐝</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="goal" id="goal"></div>
+<div class="actions"><a class="primary" href="/shop">Continua nella Bottega →</a><a class="secondary" href="/alveo-digitale">Scopri Alveo Digitale</a></div>
+</div>
+<div class="privacy"><strong>Come funziona?</strong> Il sistema usa il dato inserito solo per trovare il tuo Saldo Punti Ape. Se hai scelto di non lasciare email o telefono, puoi usare il tuo Codice Punti Ape personale.</div>
+</section>
+</main>
+<script>
+let kind='email';
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
+  kind=btn.dataset.kind;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));
+  document.querySelectorAll('.method').forEach(x=>x.classList.toggle('active',x.dataset.method===kind));
+  document.getElementById('status').textContent='';
+  document.getElementById('result').classList.remove('show');
+}));
+async function checkBalance(){
+  const status=document.getElementById('status'),button=document.getElementById('check');
+  const value=document.getElementById(kind).value.trim();
+  if(!value){status.textContent='Inserisci il dato scelto per controllare il saldo.';return;}
+  button.disabled=true;const old=button.textContent;button.textContent='Controllo in corso…';status.textContent='';
+  document.getElementById('result').classList.remove('show');
+  try{
+    const body={};body[kind]=value;
+    const r=await fetch('/api/bee-balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await r.json().catch(()=>null);
+    if(!r.ok||!data?.ok)throw new Error(data?.error||'Saldo non disponibile.');
+    const b=Math.max(0,Number(data.balance||0));
+    document.getElementById('balance').textContent=b;
+    document.getElementById('bar').style.width=Math.min(100,b)+'%';
+    document.getElementById('goal').textContent=b>=100?'Hai raggiunto almeno 100 punti: puoi richiedere il cesto omaggio.':'Ti mancano '+Math.max(0,100-b)+' punti per arrivare al cesto omaggio da 100 punti.';
+    document.getElementById('result').classList.add('show');
+  }catch(e){status.textContent=e?.message||'Non è stato possibile controllare il saldo.';}
+  button.disabled=false;button.textContent=old;
+}
+document.getElementById('check').addEventListener('click',checkBalance);
+['email','phone','code'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')checkBalance();}));
+</script>
+</body>
+</html>
