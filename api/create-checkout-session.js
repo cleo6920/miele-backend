@@ -1,26 +1,28 @@
-const Stripe = require('stripe');
-const DEFAULT_SITE_URL = 'https://lafabbricadelleapi.it';
+const xpayGateway = require('../xpay-gateway');
 
 function cleanText(value, maxLength = 200) {
   return String(value || '').trim().slice(0, maxLength);
 }
 
-function getSiteUrl() {
-  return String(process.env.APP_URL || DEFAULT_SITE_URL)
-    .trim()
-    .replace(/\/+$/, '');
-}
-
 module.exports = async (req, res) => {
   res.setHeader('Allow', 'POST');
+  res.setHeader('Cache-Control', 'no-store');
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Metodo non consentito.' });
   }
 
   try {
-    const body = req.body || {};
+    if (!xpayGateway.isConfigured()) {
+      console.error('[XPay] Configurazione Nexi incompleta.');
+      return res.status(503).json({ error: 'Pagamento Nexi non ancora configurato.' });
+    }
+    if (!xpayGateway.isLiveEnabled()) {
+      console.error('[XPay] XPAY_LIVE_ENABLED non attivo.');
+      return res.status(503).json({ error: 'Pagamento Nexi non ancora abilitato.' });
+    }
 
+    const body = req.body || {};
     const items = Array.isArray(body.items) ? body.items : [];
     const sanitizedItems = items.map((item) => {
       const name = cleanText(item && item.name, 120);
@@ -33,11 +35,7 @@ module.exports = async (req, res) => {
         throw new Error('Dati di uno o più prodotti non validi.');
       }
 
-      return {
-        name,
-        amount: unitAmount / 100,
-        quantity
-      };
+      return { name, amount: unitAmount / 100, quantity };
     });
 
     if (sanitizedItems.length === 0) {
@@ -54,8 +52,6 @@ module.exports = async (req, res) => {
         /10 Colazioni dell[’']Alveare\s*-\s*PDF digitale/i.test(sanitizedItems[0].name)
       );
 
-    // I contenuti digitali non hanno costi di spedizione, indipendentemente
-    // da eventuali override/intercettori del carrello fisico.
     const shippingEuro = isAlveoDigitalOrder ? 0 : Number(body.shippingCostOverride || 0);
     const shippingCents = Math.round(shippingEuro * 100);
     if (!Number.isFinite(shippingCents) || shippingCents < 0) {
@@ -83,55 +79,50 @@ module.exports = async (req, res) => {
       safeCustomer.state
     ].filter(Boolean).join(' | ').slice(0, 500);
 
-    if (!process.env.STRIPE_SECRET_KEY) {
-      console.error('[Stripe] Variabile STRIPE_SECRET_KEY non configurata.');
-      return res.status(500).json({
-        error: 'Configurazione Stripe mancante (STRIPE_SECRET_KEY).'
-      });
-    }
+    const goodsCents = sanitizedItems.reduce(
+      (sum, item) => sum + (Math.round(item.amount * 100) * item.quantity),
+      0
+    );
+    const totalCents = goodsCents + shippingCents;
+    const itemSummary = sanitizedItems
+      .map((item) => item.quantity + 'x ' + item.name)
+      .join(' | ')
+      .slice(0, 200);
 
-    const lineItems = sanitizedItems.map((item) => ({
-      price_data: {
-        currency: 'eur',
-        product_data: { name: item.name },
-        unit_amount: Math.round(item.amount * 100)
-      },
+    const purchaseItems = sanitizedItems.map((item, index) => ({
+      productId: cleanText(cartMeta[index] && cartMeta[index].productId, 180),
+      productName: cleanText(
+        (cartMeta[index] && (cartMeta[index].productName || cartMeta[index].name)) || item.name,
+        180
+      ),
+      name: item.name,
+      amount: item.amount,
       quantity: item.quantity
     }));
 
-    if (shippingCents > 0) {
-      lineItems.push({
-        price_data: {
-          currency: 'eur',
-          product_data: { name: 'Spedizione' },
-          unit_amount: shippingCents
-        },
-        quantity: 1
-      });
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-    const siteUrl = getSiteUrl();
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      success_url: `${siteUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/cancel.html`,
-      customer_email: email || undefined,
-      metadata: {
-        customer: orderReference || 'Cliente sito',
+    const payment = xpayGateway.createPaymentRedirectUrl({
+      amountCents: totalCents,
+      email,
+      description: 'Ordine La Fabbrica delle Api',
+      note1: orderReference,
+      note2: itemSummary,
+      note3: cleanText(body.notes, 200),
+      purchase: {
+        items: purchaseItems,
+        goodsTotal: goodsCents / 100,
+        shipping: shippingCents / 100,
+        total: totalCents / 100,
+        customer: safeCustomer,
         notes: cleanText(body.notes, 500)
       }
     });
 
-    return res.status(200).json({ id: session.id, url: session.url });
+    console.log('[XPay] Avvio pagamento ' + payment.id + ' per ' + (totalCents / 100).toFixed(2) + ' EUR.');
+    return res.status(200).json(payment);
   } catch (error) {
-    console.error('[Stripe] Errore creazione Checkout Session:', error);
+    console.error('[XPay] Errore avvio pagamento:', error);
     return res.status(error && error.status ? error.status : 500).json({
-      error: error && error.message
-        ? error.message
-        : 'Impossibile avviare il pagamento.'
+      error: error && error.message ? error.message : 'Impossibile avviare il pagamento Nexi.'
     });
   }
 };
