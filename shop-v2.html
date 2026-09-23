@@ -316,6 +316,25 @@ img{display:block;max-width:100%}
  .chapter{padding:68px 0}.section-head{gap:18px}.today-grid,.path-grid{grid-template-columns:1fr}.today-card:first-child{grid-column:auto}
  .feature-copy{padding:52px 24px}.story-flow-grid{gap:8px}.footer-grid{grid-template-columns:1fr}
 }
+
+.alveo-shop-preview-btn{border:1px solid #b67d0e;background:#fff7df;color:#6b4b09;border-radius:999px;padding:10px 14px;font-weight:950;cursor:pointer;margin-top:10px;width:100%}
+#alveoShopPreviewOverlay{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:8px}
+#alveoShopPreviewOverlay.open{display:flex}
+#alveoShopPreviewModal{width:min(1050px,98vw);height:min(94vh,980px);background:#111;color:#fff;border:2px solid #d99a12;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 26px 80px rgba(0,0,0,.58)}
+#alveoShopPreviewHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px;background:#0b2f24;border-bottom:1px solid rgba(217,154,18,.45)}
+#alveoShopPreviewClose{border:1px solid rgba(255,255,255,.35);border-radius:10px;background:#fff;color:#18231d;padding:8px 12px;font-weight:900;cursor:pointer}
+#alveoShopPreviewIntro{padding:10px 15px 6px;color:#f8e5ad;font-size:14px;font-weight:800}
+#alveoShopPreviewPages{flex:1;min-height:0;overflow:auto;padding:8px 12px;background:#171717}
+.alveo-shop-preview-page{display:none;width:min(900px,100%);margin:0 auto;padding:8px;background:#f6f0e5;border-radius:14px;text-align:center;color:#1d251f}
+.alveo-shop-preview-page.active{display:block}
+.alveo-shop-preview-page img{display:block;width:100%;height:auto;border-radius:8px;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.alveo-shop-preview-page span{display:block;margin-top:7px;font-size:13px;font-weight:900}
+#alveoShopPreviewNav{display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 14px;background:#111}
+#alveoShopPreviewNav button{border:1px solid #d99a12;border-radius:10px;background:#f0ad22;color:#151515;padding:10px 16px;font-weight:950;cursor:pointer;min-width:120px}
+#alveoShopPreviewNav button:disabled{opacity:.35;cursor:default}
+#alveoShopPreviewCounter{min-width:64px;text-align:center;color:#f8e5ad;font-weight:900}
+#alveoShopPreviewNote{padding:3px 14px 10px;text-align:center;color:#ddd;font-size:12px;font-weight:700;background:#111}
+
 </style>
 <link rel="stylesheet" href="/global-nav-v2.css?v=20260922-1">
 </head>
@@ -581,6 +600,7 @@ img{display:block;max-width:100%}
         <div class="product-detail-format" id="productDetailFormat"></div>
         <div class="product-detail-description" id="productDetailDescription"></div>
         <div class="product-detail-warning" id="productDetailWarning"><strong>Avvertenze</strong><span id="productDetailWarningText"></span></div>
+        <button class="alveo-shop-preview-btn" id="productDetailAlveoPreview" type="button" hidden>👁 Sfoglia anteprima</button>
         <div class="product-detail-buy">
           <div class="product-detail-price"><strong id="productDetailPrice"></strong><span id="productDetailSize"></span></div>
           <button class="product-detail-add" id="productDetailAdd" type="button">Aggiungi al carrello</button>
@@ -588,6 +608,21 @@ img{display:block;max-width:100%}
         <div class="product-detail-source-note">Informazioni prodotto e descrizione completa della selezione.</div>
       </div>
     </div>
+  </div>
+</section>
+
+
+<section id="alveoShopPreviewOverlay" aria-hidden="true">
+  <div id="alveoShopPreviewModal" role="dialog" aria-modal="true" aria-label="Anteprima 10 Colazioni dell’Alveare">
+    <div id="alveoShopPreviewHead"><strong>10 Colazioni dell’Alveare · Anteprima</strong><button id="alveoShopPreviewClose" type="button">Chiudi ✕</button></div>
+    <div id="alveoShopPreviewIntro">Sfoglia tre pagine reali dell’edizione Premium prima di acquistare.</div>
+    <div id="alveoShopPreviewPages">
+      <div class="alveo-shop-preview-page active"><img src="/images/alveo-preview-presentazione.webp?v=shop-preview-1" alt="Presentazione della raccolta"><span>Presentazione</span></div>
+      <div class="alveo-shop-preview-page"><img src="/images/alveo-preview-ricetta.webp?v=shop-preview-1" alt="Ricetta completa di esempio"><span>Una ricetta completa</span></div>
+      <div class="alveo-shop-preview-page"><img src="/images/alveo-preview-extra.webp?v=shop-preview-1" alt="Pagina extra di esempio"><span>Una pagina extra</span></div>
+    </div>
+    <div id="alveoShopPreviewNav"><button type="button" id="alveoShopPreviewPrev">← Indietro</button><div id="alveoShopPreviewCounter">1 / 3</div><button type="button" id="alveoShopPreviewNext">Avanti →</button></div>
+    <div id="alveoShopPreviewNote">Anteprima parziale · il PDF completo da 37 pagine è disponibile dopo l’acquisto.</div>
   </div>
 </section>
 
@@ -1102,7 +1137,7 @@ function renderOfficialCatalog(){
   document.querySelectorAll('[data-official-section]').forEach(box=>{
     const section=box.dataset.officialSection;
     const items=SHOP_OFFICIAL_PRODUCTS.filter(p=>p.section===section);
-    box.innerHTML=items.map(p=>'<article class="catalog-card product-openable" id="prodotto-'+officialCatalogEsc(p.id)+'" data-product-id="'+officialCatalogEsc(p.id)+'" tabindex="0" role="button" aria-label="Apri la scheda completa di '+officialCatalogEsc(p.name)+'"><div class="catalog-card-media"><img src="'+officialCatalogEsc(p.image)+'" alt="'+officialCatalogEsc(p.name)+'" loading="lazy"></div><div class="catalog-card-body"><small>'+officialCatalogEsc(officialCatalogCategory(p.section))+'</small><h3>'+officialCatalogEsc(p.name)+'</h3><p>'+officialCatalogEsc(p.desc)+'</p><div class="catalog-points">🐝 +'+defaultPointsFor(p.id)+' Punti Ape</div><button class="product-detail-link" type="button" data-open-product="'+officialCatalogEsc(p.id)+'">Apri la scheda completa →</button><div class="catalog-buy-row"><div class="catalog-price"><strong>'+euro(p.price)+'</strong><span>'+officialCatalogEsc(p.size)+'</span></div><button class="add-btn official-add" data-id="'+officialCatalogEsc(p.id)+'" data-name="'+officialCatalogEsc(p.name)+'" data-price="'+p.price+'" data-size="'+officialCatalogEsc(p.size)+'" data-points="'+defaultPointsFor(p.id)+'">Aggiungi</button></div></div></article>').join('');
+    box.innerHTML=items.map(p=>'<article class="catalog-card product-openable" id="prodotto-'+officialCatalogEsc(p.id)+'" data-product-id="'+officialCatalogEsc(p.id)+'" tabindex="0" role="button" aria-label="Apri la scheda completa di '+officialCatalogEsc(p.name)+'"><div class="catalog-card-media"><img src="'+officialCatalogEsc(p.image)+'" alt="'+officialCatalogEsc(p.name)+'" loading="lazy"></div><div class="catalog-card-body"><small>'+officialCatalogEsc(officialCatalogCategory(p.section))+'</small><h3>'+officialCatalogEsc(p.name)+'</h3><p>'+officialCatalogEsc(p.desc)+'</p><div class="catalog-points">🐝 +'+defaultPointsFor(p.id)+' Punti Ape</div><button class="product-detail-link" type="button" data-open-product="'+officialCatalogEsc(p.id)+'">Apri la scheda completa →</button>'+(p.id==='alveo-digitale-10-colazioni'?'<button class="alveo-shop-preview-btn" type="button" data-alveo-shop-preview>👁 Sfoglia anteprima</button>':'')+'<div class="catalog-buy-row"><div class="catalog-price"><strong>'+euro(p.price)+'</strong><span>'+officialCatalogEsc(p.size)+'</span></div><button class="add-btn official-add" data-id="'+officialCatalogEsc(p.id)+'" data-name="'+officialCatalogEsc(p.name)+'" data-price="'+p.price+'" data-size="'+officialCatalogEsc(p.size)+'" data-points="'+defaultPointsFor(p.id)+'">Aggiungi</button></div></div></article>').join('');
   });
 }
 renderOfficialCatalog();
@@ -1168,6 +1203,8 @@ function openProductDetail(id){
   const warningText=SHOP_PRODUCT_WARNINGS[p.id]||'';
   document.getElementById('productDetailWarningText').textContent=warningText;
   warningBox.classList.toggle('show',Boolean(warningText));
+  const alveoPreviewBtn=document.getElementById('productDetailAlveoPreview');
+  if(alveoPreviewBtn)alveoPreviewBtn.hidden=p.id!=='alveo-digitale-10-colazioni';
   document.getElementById('productDetailPrice').textContent=euro(p.price);
   document.getElementById('productDetailSize').textContent=p.size+(p.points?' · 🐝 '+p.points+' Punti Ape':'');
   productDetailAdd.dataset.id=p.id;
@@ -1239,6 +1276,50 @@ productDetailAdd.addEventListener('click',e=>{
   closeProductDetail();
 });
 
+
+
+let alveoShopPreviewIndex=0;
+function alveoShopPreviewPages(){return Array.from(document.querySelectorAll('.alveo-shop-preview-page'));}
+function showAlveoShopPreviewPage(index){
+  const all=alveoShopPreviewPages();
+  if(!all.length)return;
+  alveoShopPreviewIndex=Math.max(0,Math.min(index,all.length-1));
+  all.forEach((p,i)=>p.classList.toggle('active',i===alveoShopPreviewIndex));
+  document.getElementById('alveoShopPreviewCounter').textContent=(alveoShopPreviewIndex+1)+' / '+all.length;
+  document.getElementById('alveoShopPreviewPrev').disabled=alveoShopPreviewIndex===0;
+  document.getElementById('alveoShopPreviewNext').disabled=alveoShopPreviewIndex===all.length-1;
+  document.getElementById('alveoShopPreviewPages').scrollTop=0;
+}
+function openAlveoShopPreview(){
+  const o=document.getElementById('alveoShopPreviewOverlay');
+  if(!o)return;
+  showAlveoShopPreviewPage(0);
+  o.classList.add('open');
+  o.setAttribute('aria-hidden','false');
+}
+function closeAlveoShopPreview(){
+  const o=document.getElementById('alveoShopPreviewOverlay');
+  if(!o)return;
+  o.classList.remove('open');
+  o.setAttribute('aria-hidden','true');
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-alveo-shop-preview]');
+  if(b){e.preventDefault();e.stopPropagation();openAlveoShopPreview();}
+},true);
+document.getElementById('productDetailAlveoPreview')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openAlveoShopPreview();});
+document.getElementById('alveoShopPreviewClose')?.addEventListener('click',closeAlveoShopPreview);
+document.getElementById('alveoShopPreviewPrev')?.addEventListener('click',()=>showAlveoShopPreviewPage(alveoShopPreviewIndex-1));
+document.getElementById('alveoShopPreviewNext')?.addEventListener('click',()=>showAlveoShopPreviewPage(alveoShopPreviewIndex+1));
+document.getElementById('alveoShopPreviewOverlay')?.addEventListener('click',e=>{if(e.target.id==='alveoShopPreviewOverlay')closeAlveoShopPreview();});
+document.addEventListener('keydown',e=>{
+  const o=document.getElementById('alveoShopPreviewOverlay');
+  if(!o?.classList.contains('open'))return;
+  if(e.key==='Escape')closeAlveoShopPreview();
+  if(e.key==='ArrowLeft')showAlveoShopPreviewPage(alveoShopPreviewIndex-1);
+  if(e.key==='ArrowRight')showAlveoShopPreviewPage(alveoShopPreviewIndex+1);
+});
+showAlveoShopPreviewPage(0);
 
 function siteSearchNormalize(value){
   return String(value||'')
