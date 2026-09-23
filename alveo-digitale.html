@@ -50,7 +50,7 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
 #api-direct-download-close{position:absolute;right:16px;top:16px;background:#eee5d7}
 #api-direct-download-modal h2{font:700 38px/1 Georgia,serif;margin:8px 42px 12px 0}
 .api-direct-download-info{background:#edf3ef;border-radius:16px;padding:14px 16px;line-height:1.5;margin:14px 0}
-.api-direct-download-form{display:grid;gap:12px;margin:18px 0}.api-direct-download-form label{font-weight:900;font-size:13px}.api-direct-download-form label span{font-weight:700;color:#77817b}.api-direct-download-form input{width:100%;margin-top:6px;border:1px solid #d7cebf;border-radius:12px;padding:12px;font:inherit;background:#fff}
+.api-direct-download-form{display:grid;gap:12px;margin:18px 0}.api-direct-download-form label{font-weight:900;font-size:13px}.api-direct-download-form label span{font-weight:700;color:#77817b}.api-direct-download-form input,.api-direct-download-form select{width:100%;margin-top:6px;border:1px solid #d7cebf;border-radius:12px;padding:12px;font:inherit;background:#fff;color:#17241e}
 #api-direct-download-status{min-height:22px;color:#7a3c16;font-weight:850;margin:8px 0}
 #api-direct-download-start{width:100%;border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:14px 18px;font-weight:950;font-size:15px;cursor:pointer}
 @media(max-width:800px){.hero,.product{grid-template-columns:1fr}.hero-copy{padding:30px}.hero img{min-height:260px}.steps{grid-template-columns:1fr}.product{padding:16px}.product img{height:240px}}
@@ -131,6 +131,16 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
     <p><strong>Il mondo delle api oggi · Numero 01</strong> è gratuito. Non serve alcun pagamento.</p>
     <div class="api-direct-download-info">Se vuoi puoi lasciare uno o più contatti per ricevere aggiornamenti sulle prossime uscite. <strong>Tutti i campi sono facoltativi:</strong> puoi lasciarli vuoti e scaricare comunque il PDF.</div>
     <div class="api-direct-download-form">
+      <label>Lingua del PDF <span>facoltativa · se non scegli nulla usa la lingua del sito</span>
+        <select id="apiDirectLanguage">
+          <option value="">Automatico · lingua del sito</option>
+          <option value="it">🇮🇹 Italiano</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="es">🇪🇸 Español</option>
+        </select>
+      </label>
       <label>Nome e cognome <span>facoltativo</span><input id="apiDirectName" autocomplete="name"></label>
       <label>Email <span>facoltativa</span><input id="apiDirectEmail" type="email" autocomplete="email"></label>
       <label>Telefono <span>facoltativo</span><input id="apiDirectPhone" inputmode="tel" autocomplete="tel"></label>
@@ -213,7 +223,13 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
   }
   function openPreview(){applyLang();show(0);preview.classList.add('open');preview.setAttribute('aria-hidden','false');}
   function closePreview(){preview.classList.remove('open');preview.setAttribute('aria-hidden','true');}
-  function openDownload(){document.getElementById('api-direct-download-status').textContent='';download.classList.add('open');download.setAttribute('aria-hidden','false');}
+  function openDownload(){
+      document.getElementById('api-direct-download-status').textContent='';
+      const select=document.getElementById('apiDirectLanguage');
+      if(select){select.value='';select.options[0].textContent='Automatico · lingua del sito ('+({it:'Italiano',en:'English',de:'Deutsch',fr:'Français',es:'Español'}[lang()]||'Italiano')+')';}
+      download.classList.add('open');
+      download.setAttribute('aria-hidden','false');
+    }
   function closeDownload(){download.classList.remove('open');download.setAttribute('aria-hidden','true');}
   function claimId(){
     const key='fda-free-edition-claim-api-oggi-01';
@@ -226,10 +242,12 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
     const name=document.getElementById('apiDirectName').value.trim();
     const email=document.getElementById('apiDirectEmail').value.trim();
     const phone=document.getElementById('apiDirectPhone').value.trim();
+    const selectedLanguage=String(document.getElementById('apiDirectLanguage')?.value||'').toLowerCase();
+    const downloadLanguage=supported.includes(selectedLanguage)?selectedLanguage:lang();
     if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){status.textContent='Controlla l’indirizzo email oppure lascialo vuoto.';return;}
     btn.disabled=true;const old=btn.textContent;btn.textContent='Preparazione download…';status.textContent='';
     try{
-      const response=await fetch('/api/free-edition-download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({editionId:'api-oggi-01',language:lang(),claimId:claimId(),customer:{name,email,phone}})});
+      const response=await fetch('/api/free-edition-download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({editionId:'api-oggi-01',language:downloadLanguage,claimId:claimId(),customer:{name,email,phone}})});
       const data=await response.json().catch(()=>null);
       if(!response.ok||!data?.downloadUrl)throw new Error(data?.error||'Download non disponibile.');
       const a=document.createElement('a');a.href=data.downloadUrl+'?download='+Date.now();a.download=data.fileName||'Il_mondo_delle_api_oggi_Numero_01.pdf';document.body.appendChild(a);a.click();a.remove();
