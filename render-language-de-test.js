@@ -138,7 +138,7 @@ const CORE={
 
 const ATTRS=['title','aria-label','placeholder','alt'];
 
-function cacheKeyFor(l){return 'fda-translation-cache-v2-'+l;}
+function cacheKeyFor(l){return 'fda-translation-cache-v3-'+l;}
 function loadCache(l){
   try{return JSON.parse(localStorage.getItem(cacheKeyFor(l))||'{}')||{};}catch(_){return {};}
 }
