@@ -104,6 +104,10 @@
       "destination": "https://miele-shop-experience-v2.onrender.com/api/magazine-translate-pages"
     },
     {
+      "source": "/api/magazine-translate-all",
+      "destination": "https://miele-shop-experience-v2.onrender.com/api/magazine-translate-all"
+    },
+    {
       "source": "/api/ape-pelu-status",
       "destination": "https://miele-shop-experience-v2.onrender.com/api/ape-pelu-status"
     },
