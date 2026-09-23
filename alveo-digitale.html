@@ -1,85 +1,58 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Alveo Digitale - La Fabbrica delle Api</title>
-  <style>
-    :root{--green:#07372b;--green2:#0b4b3a;--gold:#e9b949;--gold2:#f7d77c;--cream:#fffaf0;--ink:#17211c;--muted:#5f6b64}
-    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#fffdf7,#f6f1e7);color:var(--ink)}
-    a{text-decoration:none}.top{background:var(--green);color:#fff;padding:12px 18px}.topin{max-width:1120px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:900;letter-spacing:.03em}.back{color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:9px 14px;font-weight:800;font-size:14px}
-    .wrap{max-width:1120px;margin:auto;padding:22px 16px 50px}.hero{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border-radius:22px;padding:30px;box-shadow:0 14px 34px rgba(0,0,0,.14)}
-    .kicker{font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2)}h1{margin:8px 0 8px;font-family:Georgia,'Times New Roman',serif;font-size:clamp(38px,7vw,68px);line-height:.95} .lead{font-size:clamp(18px,2.5vw,24px);font-weight:800;max-width:760px;margin:0}.sub{margin:12px 0 0;max-width:780px;color:#edf7f1;font-size:16px;line-height:1.5}
-    .simple{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.step{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:14px}.step b{display:block;color:var(--gold2);margin-bottom:4px}.notice{margin:18px 0 0;background:#fff4ce;color:#5f4300;border:1px solid #efd27b;border-radius:13px;padding:12px 14px;font-size:14px;font-weight:800}
-    .section-title{margin:28px 0 12px}.section-title h2{font-family:Georgia,'Times New Roman',serif;font-size:30px;margin:0 0 6px}.section-title p{margin:0;color:var(--muted);font-weight:700}
-    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:#fff;border:1px solid #eadfca;border-radius:18px;padding:18px;box-shadow:0 8px 22px rgba(0,0,0,.07);display:flex;flex-direction:column;min-height:315px}.icon{font-size:44px}.tag{display:inline-flex;width:max-content;margin:12px 0 7px;border-radius:999px;background:#eef7f2;color:var(--green);padding:6px 9px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.card h3{font-size:22px;line-height:1.12;margin:0 0 8px}.card p{margin:0;color:var(--muted);line-height:1.45;font-weight:600}.price{margin-top:auto;padding-top:18px;font-size:25px;font-weight:950;color:#9a6710}.demo{margin-top:10px;border:0;border-radius:11px;background:var(--gold);color:#1f260f;padding:11px 14px;font-size:14px;font-weight:950;cursor:pointer}.demo:hover{background:#f1c965}
-    .preview{margin-top:18px;background:#fff;border:2px solid #e9c568;border-radius:18px;padding:18px;display:none}.preview.open{display:block}.preview h3{margin:0 0 8px}.preview p{margin:5px 0;color:#4d5a53;line-height:1.45}.close{margin-top:10px;background:#173d32;color:#fff;border:0;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}
-    .footnote{margin-top:26px;background:#edf7f2;border-radius:16px;padding:17px;color:#26453a;font-weight:700;line-height:1.45}
-    @media(max-width:800px){.cards,.simple{grid-template-columns:1fr}.hero{padding:23px 18px}.topin{align-items:flex-start;flex-direction:column}.back{display:inline-flex}.card{min-height:0}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alveo Digitale · La Fabbrica delle Api</title>
+<meta name="description" content="Alveo Digitale: contenuti della Fabbrica delle Api da leggere, vivere e portare con te.">
+<style>
+:root{--green:#10392c;--green2:#174c3b;--gold:#e6b33c;--cream:#fff9ee;--ink:#17241e;--muted:#65726b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f8f3e9;color:var(--ink)}
+a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:950}.top a{color:#fff;border:1px solid rgba(255,255,255,.3);padding:9px 14px;border-radius:999px;font-weight:800}
+.wrap{max-width:1180px;margin:auto;padding:26px 18px 60px}.hero{border-radius:30px;overflow:hidden;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;display:grid;grid-template-columns:1.1fr .9fr;box-shadow:0 18px 45px rgba(0,0,0,.14)}
+.hero-copy{padding:46px}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:950;color:#f3ca69}.hero h1{font:700 clamp(44px,7vw,78px)/.94 Georgia,serif;margin:10px 0}.hero p{font-size:19px;line-height:1.55;color:#e6f0eb;max-width:680px}.hero img{width:100%;height:100%;min-height:430px;object-fit:cover}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn{display:inline-flex;padding:13px 18px;border-radius:999px;font-weight:950}.gold{background:var(--gold);color:#1c2c23}.glass{border:1px solid rgba(255,255,255,.4);color:#fff}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}.step,.product{background:#fff;border:1px solid #e2d8c6;border-radius:22px;padding:22px;box-shadow:0 9px 24px rgba(30,32,28,.05)}.step b{display:block;color:#94630d;margin-bottom:7px}
+.section-head{margin:52px 0 18px}.section-head h2{font:700 clamp(34px,5vw,54px)/1 Georgia,serif;margin:6px 0}.section-head p{color:var(--muted);font-size:17px}
+.product{display:grid;grid-template-columns:320px 1fr;gap:26px;align-items:center}.product img{width:100%;height:280px;object-fit:contain;background:#f5ecdc;border-radius:18px}.tag{font-weight:950;color:#9a6811;text-transform:uppercase;letter-spacing:.09em;font-size:12px}.product h3{font:700 34px/1.06 Georgia,serif;margin:9px 0}.product p{color:var(--muted);font-size:17px;line-height:1.55}.meta{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}.meta span{background:#fff1c8;border-radius:999px;padding:8px 11px;font-weight:900;color:#674b08}.price{font-size:32px;font-weight:950;margin:14px 0}.note{margin-top:40px;padding:22px;border-radius:20px;background:#e9f1ed;color:#244137;line-height:1.5}
+@media(max-width:800px){.hero,.product{grid-template-columns:1fr}.hero-copy{padding:30px}.hero img{min-height:260px}.steps{grid-template-columns:1fr}.product{padding:16px}.product img{height:240px}}
+</style>
 </head>
 <body>
-  <div class="top"><div class="topin"><div class="brand">🐝 LA FABBRICA DELLE API</div><a class="back" href="/shop">← Torna allo Shop</a></div></div>
-  <main class="wrap">
-    <section class="hero">
-      <div class="kicker">Nuova linea in prova su Render</div>
-      <h1>ALVEO DIGITALE</h1>
-      <p class="lead">Ricette, video e idee regalo da usare subito.</p>
-      <p class="sub">La regola è semplice: scegli quello che ti interessa, guarda cosa riceverai e, quando la vendita sarà attiva, lo ottieni subito dopo il pagamento. Nessuna spedizione.</p>
-      <div class="simple">
-        <div class="step"><b>1. Scegli</b>Un contenuto chiaro e semplice.</div>
-        <div class="step"><b>2. Acquista</b>Come un normale prodotto dello shop.</div>
-        <div class="step"><b>3. Apri subito</b>Niente pacchi e niente attese.</div>
-      </div>
-      <div class="notice">Questa è una prima prova grafica su Render. I pulsanti di acquisto non sono ancora attivi.</div>
-    </section>
+<header class="top"><div class="topin"><div class="brand">LA FABBRICA DELLE API · ALVEO DIGITALE</div><div><a href="/">Home</a> <a href="/shop">Bottega</a></div></div></header>
+<main class="wrap">
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">Alveo Digitale</div>
+    <h1>L’alveare continua anche fuori dal Centro.</h1>
+    <p>Ricette, idee e contenuti digitali legati al mondo della Fabbrica delle Api. Nessun pacco da aspettare: scegli il contenuto e portalo con te.</p>
+    <div class="actions"><a class="btn gold" href="#contenuti">Scopri i contenuti →</a><a class="btn glass" href="/shop#alveo-digitale-prodotti">Vai direttamente allo shop</a></div>
+  </div>
+  <img src="/images/alveo-digitale-card-render.webp" alt="Alveo Digitale">
+</section>
 
-    <div class="section-title"><h2>Tre esempi per iniziare</h2><p>Pochi prodotti, facili da capire al primo sguardo.</p></div>
+<div class="steps">
+  <div class="step"><b>01 · Scegli</b>Trova il contenuto che vuoi portare con te.</div>
+  <div class="step"><b>02 · Acquista</b>Lo aggiungi al carrello come un normale prodotto.</div>
+  <div class="step"><b>03 · Nessuna spedizione</b>Il contenuto è digitale: non vengono applicati costi di spedizione.</div>
+</div>
 
-    <section class="cards">
-      <article class="card">
-        <div class="icon">📖🍯</div>
-        <span class="tag">Ricette & Guide</span>
-        <h3>10 Colazioni dell’Alveare</h3>
-        <p>Dieci idee semplici con il miele, spiegate passo passo e collegate ai mieli dello shop.</p>
-        <div class="price">€ 2,90</div>
-        <button class="demo" onclick="showPreview('colazioni')">Guarda esempio</button>
-      </article>
+<section id="contenuti">
+  <div class="section-head"><div class="eyebrow">Disponibile ora</div><h2>10 Colazioni dell’Alveare</h2><p>La prima uscita Premium di Alveo Digitale.</p></div>
+  <article class="product">
+    <img src="/images/alveo-digitale-card-render.webp" alt="10 Colazioni dell'Alveare Edizione Premium">
+    <div>
+      <div class="tag">Ricette & idee · Edizione Premium</div>
+      <h3>10 Colazioni dell’Alveare – Edizione Premium</h3>
+      <p>Un magazine digitale illustrato da consultare e riutilizzare: 10 ricette complete, 20 idee lampo, planner, lista della spesa, quiz e una piccola esperienza di degustazione dei mieli.</p>
+      <div class="meta"><span>🐝 2 Punti Ape</span><span>Digitale</span><span>Spedizione €0</span></div>
+      <div class="price">€ 5,90</div>
+      <div class="actions"><a class="btn gold" href="/shop#prodotto-alveo-digitale-10-colazioni">Apri la scheda e acquista →</a></div>
+    </div>
+  </article>
+</section>
 
-      <article class="card">
-        <div class="icon">🎬🐝</div>
-        <span class="tag">Video narrato</span>
-        <h3>Un Momento nell’Alveare</h3>
-        <p>Un breve video narrato, indicativamente 20–30 secondi, per raccontare una piccola storia dell’alveare.</p>
-        <div class="price">€ 2,90</div>
-        <button class="demo" onclick="showPreview('video')">Guarda esempio</button>
-      </article>
-
-      <article class="card">
-        <div class="icon">🎁📱</div>
-        <span class="tag">Regalo digitale</span>
-        <h3>Regala l’Alveare</h3>
-        <p>Una dedica digitale semplice da inviare, con una piccola esperienza video collegata al regalo.</p>
-        <div class="price">€ 2,90</div>
-        <button class="demo" onclick="showPreview('regalo')">Guarda esempio</button>
-      </article>
-    </section>
-
-    <section id="preview" class="preview" aria-live="polite">
-      <h3 id="preview-title"></h3>
-      <p id="preview-text"></p>
-      <button class="close" onclick="closePreview()">Chiudi anteprima</button>
-    </section>
-
-    <div class="footnote"><strong>Obiettivo della prova:</strong> verificare se questa struttura si capisce immediatamente. Prima approviamo la pagina e il modo di presentare i prodotti; solo dopo colleghiamo acquisto, pagamento e consegna digitale.</div>
-  </main>
-  <script>
-    const previews={
-      colazioni:{title:'Anteprima — 10 Colazioni dell’Alveare',text:'Esempio: yogurt, frutta e miele. Una scheda molto breve con ingredienti, preparazione e il miele consigliato. L’obiettivo è arrivare alla ricetta senza leggere pagine di spiegazioni.'},
-      video:{title:'Anteprima — Un Momento nell’Alveare',text:'Esempio: 20–30 secondi con immagini di fiori, api e favo, accompagnate da una breve voce narrante. Il formato definitivo potrà essere più corto o più lungo in base al contenuto.'},
-      regalo:{title:'Anteprima — Regala l’Alveare',text:'Esempio: scegli una dedica, abbinala a una breve cartolina video e inviala alla persona che vuoi. Nella versione definitiva il passaggio dovrà essere molto semplice: scegli, scrivi il nome, acquista, invia.'}
-    };
-    function showPreview(key){const data=previews[key];if(!data)return;document.getElementById('preview-title').textContent=data.title;document.getElementById('preview-text').textContent=data.text;const box=document.getElementById('preview');box.classList.add('open');box.scrollIntoView({behavior:'smooth',block:'center'});}function closePreview(){document.getElementById('preview').classList.remove('open');}
-  </script>
+<div class="note"><strong>Alveo Digitale è una categoria viva.</strong> Questo è il primo contenuto disponibile; nuovi prodotti digitali potranno essere aggiunti senza trasformare la Bottega in una semplice raccolta di file.</div>
+</main>
 </body>
 </html>
