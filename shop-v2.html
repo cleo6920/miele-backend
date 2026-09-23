@@ -1014,6 +1014,8 @@ function renderV2Cart(){
   document.getElementById('cartCount').textContent=count;
   document.getElementById('cartTotal').textContent=euro(cartTotal());
   document.getElementById('cartPoints').textContent=cartPoints();
+  const checkoutBtn=document.getElementById('startCheckout');
+  if(checkoutBtn)checkoutBtn.textContent=shopV2Cart.some(x=>isFreeEditionId(x.id))?'Continua con il download gratuito →':'Continua con l\'ordine →';
   if(!shopV2Cart.length){box.innerHTML='<div class="cart-empty">'+purchaseT('cartEmpty')+'</div>';return;}
   box.innerHTML=shopV2Cart.map(x=>{
     const name=purchaseProductName(x.id,x.name),size=purchaseProductSize(x.id,x.size);
@@ -1448,6 +1450,148 @@ document.addEventListener('keydown',e=>{
 });
 showAlveoShopPreviewPage(0);
 
+
+let apiOggiPreviewIndex=0;
+function apiOggiPreviewPages(){return Array.from(document.querySelectorAll('.api-oggi-preview-page'));}
+function showApiOggiPreviewPage(index){
+  const all=apiOggiPreviewPages();
+  if(!all.length)return;
+  apiOggiPreviewIndex=Math.max(0,Math.min(index,all.length-1));
+  all.forEach((p,i)=>p.classList.toggle('active',i===apiOggiPreviewIndex));
+  document.getElementById('apiOggiPreviewCounter').textContent=(apiOggiPreviewIndex+1)+' / '+all.length;
+  document.getElementById('apiOggiPreviewPrev').disabled=apiOggiPreviewIndex===0;
+  document.getElementById('apiOggiPreviewNext').disabled=apiOggiPreviewIndex===all.length-1;
+  document.getElementById('apiOggiPreviewPages').scrollTop=0;
+}
+function apiOggiPreviewLanguage(){
+  try{
+    const v=String(localStorage.getItem('fda-site-language')||'it').toLowerCase();
+    return ['it','en','de','fr','es'].includes(v)?v:'it';
+  }catch(_){return 'it';}
+}
+function applyApiOggiPreviewLanguage(){
+  const l=apiOggiPreviewLanguage();
+  const names=['copertina','premessa','api-da-vicino','territorio','galena'];
+  document.querySelectorAll('#apiOggiPreviewPages img').forEach((img,i)=>{
+    if(names[i])img.src='/images/api-oggi-01-preview-'+l+'-'+names[i]+'.webp?v=1';
+  });
+}
+function openApiOggiPreview(){
+  const o=document.getElementById('apiOggiPreviewOverlay');
+  if(!o)return;
+  applyApiOggiPreviewLanguage();
+  showApiOggiPreviewPage(0);
+  o.classList.add('open');
+  o.setAttribute('aria-hidden','false');
+  if(window.fdaTranslateNow)window.fdaTranslateNow(o);
+}
+function closeApiOggiPreview(){
+  const o=document.getElementById('apiOggiPreviewOverlay');
+  if(!o)return;
+  o.classList.remove('open');
+  o.setAttribute('aria-hidden','true');
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-api-oggi-preview]');
+  if(b){e.preventDefault();e.stopPropagation();openApiOggiPreview();}
+},true);
+document.getElementById('productDetailApiOggiPreview')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openApiOggiPreview();});
+document.getElementById('apiOggiPreviewClose')?.addEventListener('click',closeApiOggiPreview);
+document.getElementById('apiOggiPreviewPrev')?.addEventListener('click',()=>showApiOggiPreviewPage(apiOggiPreviewIndex-1));
+document.getElementById('apiOggiPreviewNext')?.addEventListener('click',()=>showApiOggiPreviewPage(apiOggiPreviewIndex+1));
+document.getElementById('apiOggiPreviewOverlay')?.addEventListener('click',e=>{if(e.target.id==='apiOggiPreviewOverlay')closeApiOggiPreview();});
+document.addEventListener('keydown',e=>{
+  const o=document.getElementById('apiOggiPreviewOverlay');
+  if(!o?.classList.contains('open'))return;
+  if(e.key==='Escape')closeApiOggiPreview();
+  if(e.key==='ArrowLeft')showApiOggiPreviewPage(apiOggiPreviewIndex-1);
+  if(e.key==='ArrowRight')showApiOggiPreviewPage(apiOggiPreviewIndex+1);
+});
+showApiOggiPreviewPage(0);
+
+const FREE_EDITION_CLAIM_KEY='fda-free-edition-claim-api-oggi-01';
+function freeEditionClaimId(){
+  try{
+    let id=localStorage.getItem(FREE_EDITION_CLAIM_KEY);
+    if(!id){
+      id=(crypto?.randomUUID?.()||('free-'+Date.now()+'-'+Math.random().toString(36).slice(2)));
+      localStorage.setItem(FREE_EDITION_CLAIM_KEY,id);
+    }
+    return id;
+  }catch(_){return 'free-'+Date.now()+'-'+Math.random().toString(36).slice(2);}
+}
+function openFreeEditionModal(){
+  const o=document.getElementById('freeEditionOverlay');
+  if(!o)return;
+  document.getElementById('freeEditionStatus').textContent='';
+  o.classList.add('open');
+  o.setAttribute('aria-hidden','false');
+  if(window.fdaTranslateNow)window.fdaTranslateNow(o);
+}
+function closeFreeEditionModal(){
+  const o=document.getElementById('freeEditionOverlay');
+  if(!o)return;
+  o.classList.remove('open');
+  o.setAttribute('aria-hidden','true');
+}
+async function startFreeEditionDownload(){
+  const btn=document.getElementById('freeEditionDownload');
+  const status=document.getElementById('freeEditionStatus');
+  const name=document.getElementById('freeName').value.trim();
+  const email=document.getElementById('freeEmail').value.trim();
+  const phone=document.getElementById('freePhone').value.trim();
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    status.textContent='Controlla l’indirizzo email oppure lascialo vuoto.';
+    return;
+  }
+  btn.disabled=true;
+  const old=btn.textContent;
+  btn.textContent='Preparazione download…';
+  status.textContent='';
+  try{
+    const response=await fetch('/api/free-edition-download',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        editionId:'api-oggi-01',
+        language:purchaseLanguage(),
+        claimId:freeEditionClaimId(),
+        customer:{name,email,phone}
+      })
+    });
+    const data=await response.json().catch(()=>null);
+    if(!response.ok||!data?.downloadUrl)throw new Error(data?.error||'Download non disponibile.');
+    const a=document.createElement('a');
+    a.href=data.downloadUrl+'?download='+Date.now();
+    a.download=data.fileName||'Il_mondo_delle_api_oggi_Numero_01.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    try{localStorage.setItem('fda-free-edition-downloaded-api-oggi-01',new Date().toISOString());}catch(_){}
+    shopV2Cart=shopV2Cart.filter(x=>!isFreeEditionId(x.id));
+    saveV2Cart();
+    status.textContent=data.pointsAwarded
+      ? 'Download avviato · +1 Punto Ape accreditato.'
+      : 'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
+    btn.textContent='Scarica di nuovo';
+    btn.disabled=false;
+    setTimeout(()=>{
+      if(shopV2Cart.length){
+        closeFreeEditionModal();
+        document.getElementById('cartDrawer').classList.add('open');
+      }
+    },1600);
+    return;
+  }catch(error){
+    status.textContent=error?.message||'Non è stato possibile avviare il download.';
+  }
+  btn.disabled=false;
+  btn.textContent=old;
+}
+document.getElementById('freeEditionClose')?.addEventListener('click',closeFreeEditionModal);
+document.getElementById('freeEditionOverlay')?.addEventListener('click',e=>{if(e.target.id==='freeEditionOverlay')closeFreeEditionModal();});
+document.getElementById('freeEditionDownload')?.addEventListener('click',startFreeEditionDownload);
+
 function siteSearchNormalize(value){
   return String(value||'')
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
@@ -1641,6 +1785,11 @@ document.getElementById('cartFab').addEventListener('click',()=>document.getElem
 document.getElementById('cartClose').addEventListener('click',()=>document.getElementById('cartDrawer').classList.remove('open'));
 document.getElementById('startCheckout').addEventListener('click',()=>{
   if(!shopV2Cart.length){alert(purchaseT('addFirst'));return;}
+  if(shopV2Cart.some(x=>isFreeEditionId(x.id))){
+    document.getElementById('cartDrawer').classList.remove('open');
+    openFreeEditionModal();
+    return;
+  }
   document.getElementById('cartDrawer').classList.remove('open');
   document.getElementById('checkoutOverlay').classList.add('open');
   document.getElementById('checkoutOverlay').setAttribute('aria-hidden','false');
