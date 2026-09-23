@@ -6,6 +6,6 @@ module.exports = async (_req,res)=>{
     configured:xpayGateway.isConfigured(),
     liveEnabled:xpayGateway.isLiveEnabled(),
     mode:xpayGateway.isLiveEnabled()?'production':'prepared',
-    beeDatabaseConfigured:Boolean(String(process.env.BEE_DATABASE_URL||'').trim())
+    beeDatabaseConfigured:Boolean(String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim())
   });
 };
