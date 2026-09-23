@@ -1,0 +1,27 @@
+name: Correct Polline and Pappa product photos
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/correct-polline-pappa-photos.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download exact official Apinfiore packshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p images/apinfiore-official
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2023/03/Polline-Italiano_125g_web-2.jpg' -o images/apinfiore-official/polline-italiano-125g.jpg
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2024/08/Pappa-Reale-3_web-6-ok.jpg' -o images/apinfiore-official/pappa-reale-10g.jpg
+          file images/apinfiore-official/polline-italiano-125g.jpg images/apinfiore-official/pappa-reale-10g.jpg
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add images/apinfiore-official/polline-italiano-125g.jpg images/apinfiore-official/pappa-reale-10g.jpg
+          git commit -m 'Corregge foto ufficiali Polline 125g e Pappa Reale'
+          git pull --rebase origin main
+          git push origin main
