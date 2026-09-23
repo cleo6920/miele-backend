@@ -247,6 +247,11 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
   document.getElementById('api-direct-download-close').addEventListener('click',closeDownload);
   download.addEventListener('click',e=>{if(e.target===download)closeDownload();});
   document.getElementById('api-direct-download-start').addEventListener('click',startDownload);
+  try{
+    const directAction=new URLSearchParams(window.location.search).get('open');
+    if(directAction==='preview')setTimeout(openPreview,120);
+    if(directAction==='download')setTimeout(openDownload,120);
+  }catch(_){}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(preview.classList.contains('open'))closePreview();if(download.classList.contains('open'))closeDownload();}});
   show(0);
 })();
