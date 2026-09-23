@@ -400,7 +400,7 @@ img{display:block;max-width:100%}
 .free-edition-form{display:grid;gap:12px}
 .free-edition-form label{font-weight:900;font-size:13px}
 .free-edition-form label span{font-weight:700;color:#79827c}
-.free-edition-form input{display:block;width:100%;margin-top:6px;border:1px solid #d7cdbb;border-radius:13px;padding:12px 13px;font:inherit;background:#fff}
+.free-edition-form input,.free-edition-form select{display:block;width:100%;margin-top:6px;border:1px solid #d7cdbb;border-radius:13px;padding:12px 13px;font:inherit;background:#fff;color:#17241e}
 .free-edition-points{margin:18px 0;background:#fff0ae;color:#654c08;border-radius:16px;padding:13px 15px}
 #freeEditionStatus{min-height:22px;margin:8px 0;color:#7a3c16;font-weight:800}
 #freeEditionDownload{width:100%;border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:14px 18px;font-weight:950;font-size:15px;cursor:pointer}
@@ -741,6 +741,16 @@ img{display:block;max-width:100%}
     <p class="free-edition-lead"><strong>Il mondo delle api oggi · Numero 01</strong> è gratuito. Non serve alcun pagamento.</p>
     <div class="free-edition-info">Se vuoi, puoi lasciare uno o più contatti per ricevere aggiornamenti sulle prossime uscite, nuove esperienze e novità della Fabbrica delle Api. <strong>I campi sono facoltativi:</strong> puoi lasciarli vuoti e scaricare comunque il PDF.</div>
     <div class="free-edition-form">
+      <label>Lingua del PDF <span>facoltativa · se non scegli nulla usa la lingua del sito</span>
+        <select id="freeLanguage">
+          <option value="">Automatico · lingua del sito</option>
+          <option value="it">🇮🇹 Italiano</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="es">🇪🇸 Español</option>
+        </select>
+      </label>
       <label>Nome e cognome <span>facoltativo</span><input id="freeName" autocomplete="name"></label>
       <label>Email <span>facoltativa</span><input id="freeEmail" type="email" autocomplete="email"></label>
       <label>Telefono <span>facoltativo</span><input id="freePhone" inputmode="tel" autocomplete="tel"></label>
@@ -1552,6 +1562,12 @@ function openFreeEditionModal(){
   const o=document.getElementById('freeEditionOverlay');
   if(!o)return;
   document.getElementById('freeEditionStatus').textContent='';
+  const select=document.getElementById('freeLanguage');
+  if(select){
+    select.value='';
+    const l=purchaseLanguage();
+    select.options[0].textContent='Automatico · lingua del sito ('+({it:'Italiano',en:'English',de:'Deutsch',fr:'Français',es:'Español'}[l]||'Italiano')+')';
+  }
   o.classList.add('open');
   o.setAttribute('aria-hidden','false');
   if(window.fdaTranslateNow)window.fdaTranslateNow(o);
@@ -1568,6 +1584,8 @@ async function startFreeEditionDownload(){
   const name=document.getElementById('freeName').value.trim();
   const email=document.getElementById('freeEmail').value.trim();
   const phone=document.getElementById('freePhone').value.trim();
+  const selectedLanguage=String(document.getElementById('freeLanguage')?.value||'').toLowerCase();
+  const downloadLanguage=['it','en','de','fr','es'].includes(selectedLanguage)?selectedLanguage:purchaseLanguage();
   if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     status.textContent='Controlla l’indirizzo email oppure lascialo vuoto.';
     return;
@@ -1582,7 +1600,7 @@ async function startFreeEditionDownload(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         editionId:'api-oggi-01',
-        language:purchaseLanguage(),
+        language:downloadLanguage,
         claimId:freeEditionClaimId(),
         customer:{name,email,phone}
       })
