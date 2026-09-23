@@ -19,13 +19,13 @@ jobs:
           curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2023/03/Polline-Italiano_125g_web-18.jpg' -o images/apinfiore-official/polline-italiano-125g.jpg
           curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2023/03/Pappa-Reale_web-21.jpg' -o images/apinfiore-official/pappa-reale-10g.jpg
           curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2023/03/Propolis-Spray_20ml_web-6.jpg' -o images/apinfiore-official/propoli-30-spray-20ml.jpg
-          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2026/06/05_Gruppo-14.jpg' -o images/apinfiore-official/kit-viaggio-4x50ml.jpg
+          curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2026/06/Travel-Kit-3-scaled.avif' -o images/apinfiore-official/kit-viaggio-4x50ml.avif
           curl -fL --retry 3 'https://www.apinfiore.com/wp-content/uploads/2025/11/Veleno-doro-Bagnodoccia_web-2.jpg' -o images/apinfiore-official/apis7-bagnodoccia-250ml.jpg
           file images/apinfiore-official/*
           test -s images/apinfiore-official/polline-italiano-125g.jpg
           test -s images/apinfiore-official/pappa-reale-10g.jpg
           test -s images/apinfiore-official/propoli-30-spray-20ml.jpg
-          test -s images/apinfiore-official/kit-viaggio-4x50ml.jpg
+          test -s images/apinfiore-official/kit-viaggio-4x50ml.avif
           test -s images/apinfiore-official/apis7-bagnodoccia-250ml.jpg
       - name: Commit official images
         shell: bash
