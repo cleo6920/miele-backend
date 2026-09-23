@@ -2445,6 +2445,33 @@ apeApplyLanguage();
 applyPurchaseLanguage();
 purchaseApplyCountryFields();
 renderV2Cart();
+
+(function handleAlveoDirectAction(){
+  try{
+    const action=new URLSearchParams(window.location.search).get('alveo');
+    if(action==='preview-api-oggi-01'){
+      setTimeout(()=>openApiOggiPreview(),80);
+      return;
+    }
+    if(action==='download-api-oggi-01'){
+      if(!shopV2Cart.some(x=>isFreeEditionId(x.id))){
+        const p=SHOP_OFFICIAL_PRODUCTS.find(x=>isFreeEditionId(x.id));
+        if(p){
+          shopV2Cart.push({
+            id:p.id,
+            name:p.name,
+            price:Number(p.price||0),
+            size:p.size||'',
+            points:0,
+            qty:1
+          });
+          saveV2Cart();
+        }
+      }
+      setTimeout(()=>openFreeEditionModal(),80);
+    }
+  }catch(_){}
+})();
 </script>
 
 <script src="/render-language-de-test.js?v=20260923-10"></script>
