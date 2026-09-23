@@ -1,0 +1,29 @@
+name: Import Alveo preview images
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-alveo-preview-images.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import approved preview images
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p images
+          curl -fL 'https://raw.githubusercontent.com/cleo6920/Miele--render/shop-experience-v2/images/alveo-preview-presentazione.webp' -o images/alveo-preview-presentazione.webp
+          curl -fL 'https://raw.githubusercontent.com/cleo6920/Miele--render/shop-experience-v2/images/alveo-preview-ricetta.webp' -o images/alveo-preview-ricetta.webp
+          curl -fL 'https://raw.githubusercontent.com/cleo6920/Miele--render/shop-experience-v2/images/alveo-preview-extra.webp' -o images/alveo-preview-extra.webp
+          test -s images/alveo-preview-presentazione.webp
+          test -s images/alveo-preview-ricetta.webp
+          test -s images/alveo-preview-extra.webp
+          git config user.name 'Alveo Preview Import'
+          git config user.email 'actions@users.noreply.github.com'
+          git add images/alveo-preview-*.webp
+          git commit -m 'Ripristina immagini anteprima Alveo Digitale'
+          git push origin main
