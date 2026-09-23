@@ -412,7 +412,9 @@ img{display:block;max-width:100%}
 .free-edition-form label{font-weight:900;font-size:13px}
 .free-edition-form label span{font-weight:700;color:#79827c}
 .free-edition-form input{display:block;width:100%;margin-top:6px;border:1px solid #d7cdbb;border-radius:13px;padding:12px 13px;font:inherit;background:#fff;color:#17241e}
+.free-wallet-guide{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.free-wallet-option{border-radius:16px;padding:14px;line-height:1.4}.free-wallet-option.easy{background:#e9f5ee;border:1px solid #bfdcca}.free-wallet-option.code{background:#fff0bd;border:1px solid #e4c35d}.free-wallet-option strong{display:block;margin-bottom:4px}.free-wallet-result{margin-top:12px;padding:14px;border-radius:16px;background:#edf5f0;border:1px solid #c6ddce}.free-wallet-result a{display:inline-block;margin-top:9px;margin-right:7px;padding:9px 12px;border-radius:999px;text-decoration:none;font-weight:900;background:#10392c;color:#fff}.free-wallet-result a.alt{background:#fff;color:#654c08;border:1px solid #d2b661}
 .free-edition-points{margin:18px 0;background:#fff0ae;color:#654c08;border-radius:16px;padding:13px 15px}
+@media(max-width:620px){.free-wallet-guide{grid-template-columns:1fr}}
 #freeEditionStatus{min-height:22px;margin:8px 0;color:#7a3c16;font-weight:800}
 #freeEditionDownload{width:100%;border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:14px 18px;font-weight:950;font-size:15px;cursor:pointer}
 #freeEditionModal>small{display:block;text-align:center;margin-top:9px;color:#758079}
@@ -750,7 +752,7 @@ img{display:block;max-width:100%}
     <span class="eyebrow">ALVEO DIGITALE · EDIZIONI APERTE</span>
     <h2>Scarica gratuitamente</h2>
     <p class="free-edition-lead"><strong>Il mondo delle api oggi · Numero 01</strong> è gratuito. Non serve alcun pagamento.</p>
-    <div class="free-edition-info">Se vuoi, puoi lasciare uno o più contatti per ricevere aggiornamenti sulle prossime uscite, nuove esperienze e novità della Fabbrica delle Api. <strong>I campi sono facoltativi:</strong> puoi lasciarli vuoti e scaricare comunque il PDF.</div>
+    <div class="free-edition-info"><strong>Il download resta gratuito.</strong> Per ritrovare in futuro il Punto Ape hai due possibilità semplici.</div>
     <div class="free-language-box">
       <h3>Scegli la lingua del PDF</h3>
       <p>Se non scegli nulla, useremo automaticamente la lingua attuale del sito.</p>
@@ -764,6 +766,10 @@ img{display:block;max-width:100%}
       </div>
       <div class="free-language-note">La scelta riguarda solo il PDF e non cambia la lingua del sito.</div>
       <input type="hidden" id="freeLanguage" value="">
+    </div>
+    <div class="free-wallet-guide">
+      <div class="free-wallet-option easy"><strong>📧📱 Più semplice</strong>Lascia <b>email oppure telefono</b>: potrai controllare il saldo usando quel contatto.</div>
+      <div class="free-wallet-option code"><strong>🔐 Senza contatti</strong>Lascia email e telefono vuoti: riceverai un <b>Codice Punti Ape personale</b> e un PDF promemoria.</div>
     </div>
     <div class="free-edition-form">
       <label>Nome e cognome <span>facoltativo</span><input id="freeName" autocomplete="name"></label>
@@ -1634,9 +1640,12 @@ async function startFreeEditionDownload(){
     try{localStorage.setItem('fda-free-edition-downloaded-api-oggi-01',new Date().toISOString());}catch(_){}
     shopV2Cart=shopV2Cart.filter(x=>!isFreeEditionId(x.id));
     saveV2Cart();
-    status.textContent=data.pointsAwarded
-      ? 'Download avviato · +1 Punto Ape accreditato.'
-      : 'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
+    const base=data.pointsAwarded?'Download avviato · +1 Punto Ape accreditato.':'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
+    if(data.walletCode){
+      status.innerHTML='<div class="free-wallet-result"><strong>'+base+'</strong><br><br>🔐 Il tuo Codice Punti Ape è:<br><strong style="font-size:20px">'+data.walletCode+'</strong><br>Conservalo: ti servirà per controllare il saldo senza email o telefono.<br><a href="'+data.walletCardUrl+'">Scarica promemoria PDF</a><a class="alt" href="/punti-ape">Controlla il saldo</a></div>';
+    }else{
+      status.innerHTML='<div class="free-wallet-result"><strong>'+base+'</strong><br>Potrai ritrovare il saldo con l’email o il telefono che hai indicato.<br><a href="/punti-ape">Vedi il mio Saldo Punti Ape</a></div>';
+    }
     btn.textContent='Scarica di nuovo';
     btn.disabled=false;
     setTimeout(()=>{
