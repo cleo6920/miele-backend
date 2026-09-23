@@ -1,0 +1,45 @@
+name: Import Api Oggi Numero 01
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-api-oggi-01.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download PDF and build cover
+        shell: bash
+        env:
+          SOURCE_URL: 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-7564-820e-97d5-51fdc55e5501/raw?se=2026-09-23T13%3A41%3A30Z&sp=r&sv=2026-02-06&sr=b&scid=dcb34e00-4090-59dd-9058-c2c03b43f762&skoid=d294dba5-36f7-432b-aab8-935656489847&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-23T06%3A35%3A41Z&ske=2026-09-24T06%3A35%3A41Z&sks=b&skv=2026-02-06&sig=SPzwEShC5PuQUjrpu76QEgFzXhUDuKLl39Vs8cm3rs4%3D'
+        run: |
+          set -euo pipefail
+          mkdir -p downloads images
+          curl -fL --retry 3 "$SOURCE_URL" -o downloads/il-mondo-delle-api-oggi-01.pdf
+          test -s downloads/il-mondo-delle-api-oggi-01.pdf
+          python -m pip install --disable-pip-version-check pymupdf pillow
+          python - <<'PY'
+          import fitz
+          from PIL import Image
+          doc=fitz.open('downloads/il-mondo-delle-api-oggi-01.pdf')
+          assert doc.page_count==30, doc.page_count
+          pix=doc[0].get_pixmap(matrix=fitz.Matrix(2,2),alpha=False)
+          img=Image.frombytes('RGB',[pix.width,pix.height],pix.samples)
+          w=900
+          h=round(img.height*w/img.width)
+          img=img.resize((w,h),Image.Resampling.LANCZOS)
+          img.save('images/il-mondo-api-oggi-01-cover.jpg','JPEG',quality=88,optimize=True)
+          print('PDF pages',doc.page_count,'cover',img.size)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add downloads/il-mondo-delle-api-oggi-01.pdf images/il-mondo-api-oggi-01-cover.jpg
+          git commit -m 'Aggiunge Il mondo delle api oggi Numero 01'
+          git pull --rebase origin main
+          git push origin main
