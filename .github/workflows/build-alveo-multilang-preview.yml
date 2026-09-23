@@ -16,7 +16,7 @@ jobs:
           python-version: '3.12'
       - name: Install render dependencies
         run: python -m pip install --disable-pip-version-check pymupdf pillow
-      - name: Download approved Premium PDFs and render pages 2-4
+      - name: Download approved Premium PDFs and render preview pages 1-5
         shell: bash
         run: |
           set -euo pipefail
@@ -29,7 +29,7 @@ jobs:
           import fitz
           from PIL import Image
 
-          labels={2:'presentazione',3:'ricetta',4:'extra'}
+          labels={1:'copertina',2:'indice',3:'introduzione',4:'colazione1-ricetta',5:'colazione1-varianti'}
           outdir=Path('images')
           for lang in ['it','en','de','fr','es']:
               doc=fitz.open(f'/tmp/pdfs/{lang}.pdf')
@@ -55,5 +55,10 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add images/alveo-preview-??-*.webp
-          git commit -m 'Aggiunge anteprima completa Alveo in cinque lingue'
+          if git diff --cached --quiet; then
+            echo 'No preview changes to commit'
+            exit 0
+          fi
+          git commit -m 'Aggiunge preview completa Alveo in cinque lingue'
+          git pull --rebase origin main
           git push origin main
