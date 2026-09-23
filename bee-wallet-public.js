@@ -81,6 +81,23 @@ async function lookupWallet(identity){
   const b=await balanceForAccounts(accountIds);
   return {found:true,...b};
 }
+async function attachContactToOrder(orderId,{email='',phone=''}={}){
+  const p=getPool();
+  const r=await p.query("select account_id from bee_orders where order_id=$1 limit 1",[clean(orderId,220)]);
+  const accountId=r.rows[0]?.account_id;
+  if(!accountId) return false;
+  const e=normalizeEmail(email), ph=normalizePhone(phone);
+  const identifiers=[];
+  if(e) identifiers.push('email:'+e);
+  if(ph) identifiers.push('phone:'+ph);
+  for(const identifier of identifiers){
+    await p.query(
+      "insert into bee_identities(identifier,account_id,created_at) values($1,$2,now()) on conflict(identifier) do nothing",
+      [identifier,accountId]
+    );
+  }
+  return true;
+}
 async function ensureWalletCodeForOrder(orderId){
   const p=getPool();
   const r=await p.query("select account_id from bee_orders where order_id=$1 limit 1",[clean(orderId,220)]);
@@ -104,4 +121,4 @@ async function ensureWalletCodeForOrder(orderId){
   }
   throw new Error('Impossibile creare il Codice Punti Ape.');
 }
-module.exports={lookupWallet,ensureWalletCodeForOrder,normalizeEmail,normalizePhone,normalizeCode};
+module.exports={lookupWallet,ensureWalletCodeForOrder,attachContactToOrder,normalizeEmail,normalizePhone,normalizeCode};
