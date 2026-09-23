@@ -1,0 +1,59 @@
+name: Build multilingual Alveo preview images
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-alveo-multilang-preview.yml'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install render dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+      - name: Download approved Premium PDFs and render pages 2-4
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pdfs images
+          for lang in it en de fr es; do
+            curl -fL --retry 3 "https://raw.githubusercontent.com/cleo6920/Miele--render/shop-experience-v2/downloads/alveo-premium/10-colazioni-$lang.pdf" -o "/tmp/pdfs/$lang.pdf"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          import fitz
+          from PIL import Image
+
+          labels={2:'presentazione',3:'ricetta',4:'extra'}
+          outdir=Path('images')
+          for lang in ['it','en','de','fr','es']:
+              doc=fitz.open(f'/tmp/pdfs/{lang}.pdf')
+              if doc.page_count != 37:
+                  raise SystemExit(f'{lang}: expected 37 pages, got {doc.page_count}')
+              for page_no,label in labels.items():
+                  page=doc[page_no-1]
+                  pix=page.get_pixmap(matrix=fitz.Matrix(160/72,160/72),alpha=False)
+                  img=Image.frombytes('RGB',[pix.width,pix.height],pix.samples)
+                  h=round(img.height*900/img.width)
+                  img=img.resize((900,h),Image.Resampling.LANCZOS)
+                  target=outdir/f'alveo-preview-{lang}-{label}.webp'
+                  img.save(target,'WEBP',quality=82,method=6)
+                  check=Image.open(target)
+                  if check.size[0] != 900:
+                      raise SystemExit(f'{target}: bad size {check.size}')
+                  print(target,check.size,target.stat().st_size)
+          PY
+      - name: Commit multilingual previews
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add images/alveo-preview-??-*.webp
+          git commit -m 'Aggiunge anteprime Alveo nelle cinque lingue'
+          git push origin main
