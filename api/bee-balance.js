@@ -49,8 +49,85 @@ function validateTestCesto(body){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(shipping.email)) throw new Error('Email non valida.');
   return {gifts:unique,shipping};
 }
+async function validateShippingRemotely(shipping){
+  const email=cleanField(shipping.email,180).toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Email non valida.');
+  if(!/^\d{5}$/.test(cleanField(shipping.postalCode,20))) throw new Error('Il CAP deve essere composto da 5 cifre.');
+  if(!/^[A-Za-z]{2}$/.test(cleanField(shipping.state,10))) throw new Error('La Provincia deve essere indicata con la sigla di 2 lettere, ad esempio MN.');
+  let phoneRaw=cleanField(shipping.phone,60).replace(/[\s().-]/g,'');
+  let prefix='+39', national=phoneRaw;
+  if(phoneRaw.startsWith('0039')) national=phoneRaw.slice(4);
+  else if(phoneRaw.startsWith('+39')) national=phoneRaw.slice(3);
+  else if(phoneRaw.startsWith('+')) throw new Error('Per il test usa un numero italiano oppure il prefisso +39.');
+  const phoneRes=await fetch('https://miele-shop-experience-v2.onrender.com/api/phone-normalize?'+new URLSearchParams({prefix,phone:national}).toString(),{cache:'no-store'});
+  const phoneData=await phoneRes.json().catch(()=>null);
+  if(!phoneRes.ok||!phoneData?.ok||!phoneData?.e164) throw new Error(phoneData?.error||'Numero di telefono non valido.');
+  shipping.phone=phoneData.e164;
+
+  const addressRes=await fetch('https://miele-shop-experience-v2.onrender.com/api/local-delivery-check?'+new URLSearchParams({
+    address:shipping.address,
+    city:shipping.city,
+    cap:shipping.postalCode,
+    province:shipping.state,
+    country:'IT'
+  }).toString(),{cache:'no-store'});
+  const addressData=await addressRes.json().catch(()=>null);
+  if(!addressRes.ok||!addressData?.ok||addressData?.validFullAddress!==true){
+    throw new Error(addressData?.error||'Indirizzo non verificato. Controlla via, numero civico, Comune, CAP e Provincia.');
+  }
+  return shipping;
+}
+
+function receiptPdf(order){
+  const lines=[
+    'LA FABBRICA DELLE API',
+    'RICEVUTA ORDINE CESTO DELL\'ALVEARE',
+    '',
+    'Ordine: '+order.orderNumber,
+    'Stato: DA PREPARARE',
+    'Pagamento: 100 Punti Ape',
+    'Spedizione: GRATUITA',
+    'Totale da pagare: EUR 0,00',
+    '',
+    'Cliente: '+order.shipping.name,
+    'Email: '+order.shipping.email,
+    'Telefono: '+order.shipping.phone,
+    'Indirizzo: '+order.shipping.address,
+    order.shipping.postalCode+' '+order.shipping.city+' ('+order.shipping.state+')',
+    '',
+    'Prodotti:',
+    ...order.giftObjects.map((g,i)=>(i+1)+'. '+g.name),
+    '',
+    'Il Cesto verra preparato e spedito gratuitamente entro 5-7 giorni lavorativi.'
+  ];
+  const content=['BT','/F1 16 Tf','54 785 Td'];
+  lines.forEach((line,i)=>{
+    if(i===0)content.push('/F1 18 Tf');
+    else if(i===1)content.push('/F1 14 Tf');
+    else content.push('/F1 10 Tf');
+    content.push('('+escPdf(line)+') Tj');
+    content.push('0 -22 Td');
+  });
+  content.push('ET');
+  const stream=content.join('\n');
+  const objs=[];
+  objs[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objs[2]='<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
+  objs[3]='<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>';
+  objs[4]='<< /Length '+Buffer.byteLength(stream,'latin1')+' >>\nstream\n'+stream+'\nendstream';
+  objs[5]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  let out='%PDF-1.4\n', offsets=[0];
+  for(let i=1;i<=5;i++){offsets[i]=Buffer.byteLength(out,'latin1');out+=i+' 0 obj\n'+objs[i]+'\nendobj\n';}
+  const xref=Buffer.byteLength(out,'latin1');
+  out+='xref\n0 6\n0000000000 65535 f \n';
+  for(let i=1;i<=5;i++)out+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+  out+='trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+  return Buffer.from(out,'latin1');
+}
+
 async function createTestCestoOrder(code,permanent,body){
   const {gifts,shipping}=validateTestCesto(body);
+  await validateShippingRemotely(shipping);
   const p=getTestPool();
   const stamp=Date.now().toString().slice(-8);
   const orderNumber='CESTO-TEST-'+(permanent?'ALWAYS':'ONCE')+'-'+stamp;
@@ -144,6 +221,28 @@ module.exports=async(req,res)=>{
     res.setHeader('Cache-Control','private, no-store');
     return res.status(200).send(walletCardPdf(code));
   }
+  if(req.method==='GET' && String(req.query?.receipt||'')==='1'){
+    const orderNumber=cleanField(req.query?.order,120);
+    const code=normalizeCode(req.query?.code);
+    if(!orderNumber||!(code===TEST_ONCE||code===TEST_ALWAYS)) return res.status(400).send('Ricevuta non valida.');
+    try{
+      const p=getTestPool();
+      const r=await p.query("select payload from bee_test_state where id=$1 limit 1",['cesto-test:'+orderNumber]);
+      const payload=r.rows[0]?.payload;
+      if(!payload||payload.code!==code) return res.status(404).send('Ricevuta non trovata.');
+      const order={
+        orderNumber:payload.orderNumber,
+        shipping:payload.customer||{},
+        giftObjects:Array.isArray(payload.giftProducts)?payload.giftProducts:[]
+      };
+      res.setHeader('Content-Type','application/pdf');
+      res.setHeader('Content-Disposition','attachment; filename="Ricevuta_'+orderNumber.replace(/[^A-Z0-9-]/gi,'_')+'.pdf"');
+      res.setHeader('Cache-Control','private, no-store');
+      return res.status(200).send(receiptPdf(order));
+    }catch(e){
+      return res.status(500).send('Impossibile generare la ricevuta.');
+    }
+  }
   if(req.method!=='POST') return res.status(405).json({ok:false,error:'Metodo non consentito.'});
   try{
     const body=req.body||{};
@@ -159,6 +258,7 @@ module.exports=async(req,res)=>{
           ok:true,found:true,testMode:true,testKind:permanent?'always':'once',balance,earned:100,spent:permanent?0:100,
           goal:100,remainingToReward:Math.max(0,100-balance),
           testClaimed:true,cestoOrder:order,emailSent:true,
+          receiptUrl:'/api/bee-balance?receipt=1&order='+encodeURIComponent(order.orderNumber)+'&code='+encodeURIComponent(code),
           message:permanent
             ? 'Ordine Cesto TEST creato e email inviata. Il codice permanente resta a 100 Punti Ape.'
             : 'Ordine Cesto TEST creato e email inviata. Il saldo TEST è tornato a 0.'
