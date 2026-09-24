@@ -120,17 +120,77 @@ const TEST_GIFTS=[
 ['tesori-liquore-caffe','Liquore al Caffè'],
 ['tesori-castagne-rum','Castagne al Rum']
 ];
+const CESTO_UI={
+  it:{
+    gifts:Object.fromEntries(TEST_GIFTS),
+    title:'🎁 Componi il tuo Cesto dell’Alveare',
+    unlocked:'🎁 HAI SBLOCCATO IL CESTO OMAGGIO',
+    intro:'Scegli qui sotto esattamente 5 prodotti diversi. Poi inserisci i dati completi per la spedizione gratuita e conferma l’ordine a €0,00.',
+    count:n=>n+' / 5 prodotti scelti',
+    shippingTitle:'📦 Dati per la spedizione',
+    summaryTitle:'Cesto dell’Alveare',
+    summary:'5 prodotti a scelta · Pagamento con 100 Punti Ape',
+    free:'Spedizione gratuita · Totale da pagare €0,00',
+    confirm:'✅ Conferma ordine Cesto — €0,00',
+    verifying:'Verifica dati di spedizione…',
+    creating:'Creazione ordine Cesto…',
+    ready:'Tutto pronto: puoi confermare il Cesto.',
+    missing:n=>'Scegli ancora '+n+' '+(n===1?'prodotto':'prodotti')+'.',
+    acquired:'✅ Grazie, il tuo Cesto è stato acquisito!',
+    eta:'Il tuo Cesto dell’Alveare verrà preparato e spedito gratuitamente entro 5–7 giorni lavorativi. Non devi effettuare alcun pagamento.',
+    orderNo:'Numero ordine',mail:'Email di notifica',mailOk:'inviata correttamente',chosen:'5 prodotti scelti',shipTo:'Spedizione a',total:'Totale da pagare: €0,00',receipt:'📄 Scarica ricevuta PDF'
+  },
+  en:{
+    gifts:{
+      'favo-integrale-bio':'Organic Whole Honeycomb','polline-italiano':'Italian Bee Pollen','orsetti-gommosi':'Organic Gummy Bears','pappa-reale-italiana-bio':'Fresh Organic Italian Royal Jelly','bee-energy-bio':'Bee Energy – Organic Tonic','propol-active-bio':'Propol Active – Organic Tablets','propoli-30-spray-integratore':'Propolis 30% Spray','propoli-30-alcolica-integratore':'Propolis 30% Alcohol Drops','propoli-analcolica-integratore':'Alcohol-Free Propolis','cosmesi-crema-mani':'Hand Cream with Aloe, Beeswax and Propolis','cosmesi-burrocacao-propoli-aloe':'Lip Balm with Propolis + Aloe','cosmesi-burrocacao-miele-pappa-reale':'Lip Balm with Honey + Royal Jelly','cosmesi-shampoo-multivitaminico':'Propolis and Aloe Shampoo','cosmesi-saponetta-frutti-bosco':'Wild Berries Soap','cosmesi-saponetta-lavanda':'Lavender Soap','cosmesi-saponetta-aloe-vera':'Aloe Vera Soap','cosmesi-candela-alveare-cera-api':'Beehive Candle in Beeswax','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Coffee Liqueur','tesori-castagne-rum':'Chestnuts in Rum'
+    },
+    title:'🎁 Build your Hive Gift Basket',unlocked:'🎁 YOU UNLOCKED YOUR FREE GIFT BASKET',intro:'Choose exactly 5 different products below. Then enter your full shipping details and confirm the order at €0.00.',count:n=>n+' / 5 products selected',shippingTitle:'📦 Shipping details',summaryTitle:'Hive Gift Basket',summary:'5 products of your choice · Payment with 100 Bee Points',free:'Free shipping · Amount due €0.00',confirm:'✅ Confirm Gift Basket order — €0.00',verifying:'Checking shipping details…',creating:'Creating Gift Basket order…',ready:'Everything is ready: you can confirm your basket.',missing:n=>'Choose '+n+' more '+(n===1?'product':'products')+'.',acquired:'✅ Thank you, your Gift Basket has been received!',eta:'Your Hive Gift Basket will be prepared and shipped free of charge within 5–7 business days. No payment is required.',orderNo:'Order number',mail:'Notification email',mailOk:'sent successfully',chosen:'5 selected products',shipTo:'Ship to',total:'Amount due: €0.00',receipt:'📄 Download PDF receipt'
+  },
+  de:{
+    gifts:{
+      'favo-integrale-bio':'Bio-Honigwabe','polline-italiano':'Italienischer Blütenpollen','orsetti-gommosi':'Bio-Gummibärchen','pappa-reale-italiana-bio':'Frisches italienisches Bio-Gelée Royale','bee-energy-bio':'Bee Energy – Bio-Tonikum','propol-active-bio':'Propol Active – Bio-Tabletten','propoli-30-spray-integratore':'Propolis 30% Spray','propoli-30-alcolica-integratore':'Propolis 30% alkoholische Tropfen','propoli-analcolica-integratore':'Alkoholfreie Propolis','cosmesi-crema-mani':'Handcreme mit Aloe, Bienenwachs und Propolis','cosmesi-burrocacao-propoli-aloe':'Lippenbalsam Propolis + Aloe','cosmesi-burrocacao-miele-pappa-reale':'Lippenbalsam Honig + Gelée Royale','cosmesi-shampoo-multivitaminico':'Shampoo mit Propolis und Aloe','cosmesi-saponetta-frutti-bosco':'Waldbeeren-Seife','cosmesi-saponetta-lavanda':'Lavendelseife','cosmesi-saponetta-aloe-vera':'Aloe-Vera-Seife','cosmesi-candela-alveare-cera-api':'Bienenstockkerze aus Bienenwachs','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Kaffeelikör','tesori-castagne-rum':'Kastanien in Rum'
+    },
+    title:'🎁 Stelle deinen Bienenstock-Geschenkkorb zusammen',unlocked:'🎁 DU HAST DEN GRATIS-GESCHENKKORB FREIGESCHALTET',intro:'Wähle unten genau 5 verschiedene Produkte. Gib danach deine vollständigen Versanddaten ein und bestätige die Bestellung für €0,00.',count:n=>n+' / 5 Produkte ausgewählt',shippingTitle:'📦 Versanddaten',summaryTitle:'Bienenstock-Geschenkkorb',summary:'5 Produkte nach Wahl · Zahlung mit 100 Bienenpunkten',free:'Kostenloser Versand · Zu zahlen €0,00',confirm:'✅ Geschenkkorb bestellen — €0,00',verifying:'Versanddaten werden geprüft…',creating:'Geschenkkorb-Bestellung wird erstellt…',ready:'Alles bereit: Du kannst den Korb bestätigen.',missing:n=>'Wähle noch '+n+' '+(n===1?'Produkt':'Produkte')+'.',acquired:'✅ Danke, dein Geschenkkorb wurde angenommen!',eta:'Dein Bienenstock-Geschenkkorb wird vorbereitet und innerhalb von 5–7 Werktagen kostenlos versendet. Es ist keine Zahlung erforderlich.',orderNo:'Bestellnummer',mail:'Benachrichtigungs-E-Mail',mailOk:'erfolgreich gesendet',chosen:'5 ausgewählte Produkte',shipTo:'Versand an',total:'Zu zahlen: €0,00',receipt:'📄 PDF-Beleg herunterladen'
+  },
+  fr:{
+    gifts:{
+      'favo-integrale-bio':'Rayon de miel entier BIO','polline-italiano':'Pollen italien','orsetti-gommosi':'Oursons gélifiés BIO','pappa-reale-italiana-bio':'Gelée royale italienne fraîche BIO','bee-energy-bio':'Bee Energy – Tonique BIO','propol-active-bio':'Propol Active – Comprimés BIO','propoli-30-spray-integratore':'Propolis 30% Spray','propoli-30-alcolica-integratore':'Propolis 30% alcoolique en gouttes','propoli-analcolica-integratore':'Propolis sans alcool','cosmesi-crema-mani':'Crème mains Aloe, Cire d’abeille et Propolis','cosmesi-burrocacao-propoli-aloe':'Baume à lèvres Propolis + Aloe','cosmesi-burrocacao-miele-pappa-reale':'Baume à lèvres Miel + Gelée royale','cosmesi-shampoo-multivitaminico':'Shampooing Propolis et Aloe','cosmesi-saponetta-frutti-bosco':'Savon Fruits des bois','cosmesi-saponetta-lavanda':'Savon Lavande','cosmesi-saponetta-aloe-vera':'Savon Aloe Vera','cosmesi-candela-alveare-cera-api':'Bougie ruche en cire d’abeille','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Liqueur au café','tesori-castagne-rum':'Châtaignes au rhum'
+    },
+    title:'🎁 Composez votre Panier de la Ruche',unlocked:'🎁 VOUS AVEZ DÉBLOQUÉ LE PANIER CADEAU',intro:'Choisissez exactement 5 produits différents ci-dessous. Saisissez ensuite vos coordonnées complètes de livraison et confirmez la commande à 0,00 €.',count:n=>n+' / 5 produits sélectionnés',shippingTitle:'📦 Coordonnées de livraison',summaryTitle:'Panier de la Ruche',summary:'5 produits au choix · Paiement avec 100 Points Abeille',free:'Livraison gratuite · Total à payer 0,00 €',confirm:'✅ Confirmer la commande du panier — 0,00 €',verifying:'Vérification des données de livraison…',creating:'Création de la commande du panier…',ready:'Tout est prêt : vous pouvez confirmer votre panier.',missing:n=>'Choisissez encore '+n+' '+(n===1?'produit':'produits')+'.',acquired:'✅ Merci, votre panier a bien été enregistré !',eta:'Votre Panier de la Ruche sera préparé et expédié gratuitement sous 5 à 7 jours ouvrables. Aucun paiement n’est requis.',orderNo:'Numéro de commande',mail:'E-mail de notification',mailOk:'envoyé correctement',chosen:'5 produits sélectionnés',shipTo:'Livraison à',total:'Total à payer : 0,00 €',receipt:'📄 Télécharger le reçu PDF'
+  },
+  es:{
+    gifts:{
+      'favo-integrale-bio':'Panal integral BIO','polline-italiano':'Polen italiano','orsetti-gommosi':'Ositos de goma BIO','pappa-reale-italiana-bio':'Jalea real italiana fresca BIO','bee-energy-bio':'Bee Energy – Tónico BIO','propol-active-bio':'Propol Active – Comprimidos BIO','propoli-30-spray-integratore':'Própolis 30% Spray','propoli-30-alcolica-integratore':'Própolis 30% alcohólico en gotas','propoli-analcolica-integratore':'Própolis sin alcohol','cosmesi-crema-mani':'Crema de manos con Aloe, Cera de abeja y Própolis','cosmesi-burrocacao-propoli-aloe':'Bálsamo labial Própolis + Aloe','cosmesi-burrocacao-miele-pappa-reale':'Bálsamo labial Miel + Jalea real','cosmesi-shampoo-multivitaminico':'Champú Própolis y Aloe','cosmesi-saponetta-frutti-bosco':'Jabón Frutos del bosque','cosmesi-saponetta-lavanda':'Jabón Lavanda','cosmesi-saponetta-aloe-vera':'Jabón Aloe Vera','cosmesi-candela-alveare-cera-api':'Vela colmena de cera de abeja','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Licor de café','tesori-castagne-rum':'Castañas al ron'
+    },
+    title:'🎁 Compón tu Cesta de la Colmena',unlocked:'🎁 HAS DESBLOQUEADO LA CESTA REGALO',intro:'Elige exactamente 5 productos diferentes. Después introduce los datos completos de envío y confirma el pedido por 0,00 €.',count:n=>n+' / 5 productos seleccionados',shippingTitle:'📦 Datos de envío',summaryTitle:'Cesta de la Colmena',summary:'5 productos a elegir · Pago con 100 Puntos Abeja',free:'Envío gratuito · Total a pagar 0,00 €',confirm:'✅ Confirmar pedido de la cesta — 0,00 €',verifying:'Verificando los datos de envío…',creating:'Creando el pedido de la cesta…',ready:'Todo listo: puedes confirmar la cesta.',missing:n=>'Elige '+n+' '+(n===1?'producto más':'productos más')+'.',acquired:'✅ ¡Gracias, tu cesta ha sido registrada!',eta:'Tu Cesta de la Colmena se preparará y se enviará gratuitamente en un plazo de 5 a 7 días laborables. No tienes que realizar ningún pago.',orderNo:'Número de pedido',mail:'Email de notificación',mailOk:'enviado correctamente',chosen:'5 productos seleccionados',shipTo:'Enviar a',total:'Total a pagar: 0,00 €',receipt:'📄 Descargar recibo PDF'
+  }
+};
+function cestoLanguage(){
+  try{const l=String(localStorage.getItem('fda-site-language')||'it').toLowerCase();return CESTO_UI[l]?l:'it';}catch(_){return 'it';}
+}
+function cestoUi(){return CESTO_UI[cestoLanguage()]||CESTO_UI.it;}
+function applyCestoStaticLanguage(){
+  const t=cestoUi();
+  const flow=document.getElementById('cestoFlow'); if(!flow)return;
+  const h=flow.querySelector('h3'); if(h)h.textContent=t.title;
+  const unlock=flow.querySelector('div[style*="background:#10392c"]'); if(unlock)unlock.textContent=t.unlocked;
+  const intro=unlock?.nextElementSibling; if(intro)intro.textContent=t.intro;
+  const hs=flow.querySelectorAll('h3'); if(hs[1])hs[1].textContent=t.shippingTitle;
+  const sum=flow.querySelector('.cesto-summary'); if(sum)sum.innerHTML='<strong>'+t.summaryTitle+'</strong><br>'+t.summary+'<br>'+t.free;
+  const btn=document.getElementById('testclaim'); if(btn)btn.textContent=t.confirm;
+}
+
 function renderGiftGrid(){
   const grid=document.getElementById('giftGrid');
   if(!grid)return;
-  grid.innerHTML=TEST_GIFTS.map(([id,name])=>'<button type="button" class="gift'+(selectedGifts.has(id)?' sel':'')+'" data-id="'+id+'">'+name+'</button>').join('');
+  const t=cestoUi();grid.innerHTML=TEST_GIFTS.map(([id,name])=>'<button type="button" class="gift'+(selectedGifts.has(id)?' sel':'')+'" data-id="'+id+'">'+(t.gifts[id]||name)+'</button>').join('');
   grid.querySelectorAll('.gift').forEach(btn=>btn.addEventListener('click',()=>{
     const id=btn.dataset.id;
     if(selectedGifts.has(id)) selectedGifts.delete(id);
     else if(selectedGifts.size<5) selectedGifts.add(id);
     renderGiftGrid();updateClaimState();
   }));
-  document.getElementById('giftCount').textContent=selectedGifts.size+' / 5 prodotti scelti';
+  document.getElementById('giftCount').textContent=cestoUi().count(selectedGifts.size);
 }
 function shippingPayload(){
   return {
@@ -154,9 +214,14 @@ function updateClaimState(){
   if(!btn)return;
   btn.disabled=!(activeTestCode&&selectedGifts.size===5&&shippingComplete());
   const st=document.getElementById('claimStatus');
-  if(selectedGifts.size!==5)st.textContent='Scegli ancora '+(5-selectedGifts.size)+' '+((5-selectedGifts.size)===1?'prodotto':'prodotti')+'.';
-  else if(!shippingComplete())st.textContent='Completa tutti i dati di spedizione contrassegnati con *.';
-  else st.textContent='Tutto pronto: puoi confermare il Cesto.';
+  const tx=cestoUi();
+  if(selectedGifts.size!==5)st.textContent=tx.missing(5-selectedGifts.size);
+  else if(!shippingComplete())st.textContent=cestoLanguage()==='es'?'Completa todos los datos de envío marcados con *.'
+    :cestoLanguage()==='en'?'Complete all shipping fields marked with *.'
+    :cestoLanguage()==='de'?'Fülle alle mit * markierten Versandfelder aus.'
+    :cestoLanguage()==='fr'?'Complétez tous les champs de livraison marqués d’un *.'
+    :'Completa tutti i dati di spedizione contrassegnati con *.';
+  else st.textContent=tx.ready;
 }
 document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
   kind=btn.dataset.kind;
@@ -189,6 +254,7 @@ async function checkBalance(){
       document.getElementById('testmessage').textContent=data.message||'';
       if(b>=100){
         flow.classList.add('show');
+        applyCestoStaticLanguage();
         selectedGifts.clear();
         renderGiftGrid();
         updateClaimState();
@@ -264,16 +330,17 @@ async function claimTestReward(){
   const btn=document.getElementById('testclaim');
   const msg=document.getElementById('claimStatus');
   if(selectedGifts.size!==5||!shippingComplete()){updateClaimState();return;}
-  const old=btn.textContent;btn.disabled=true;btn.textContent='Verifica dati di spedizione…';msg.textContent='';
+  const tx=cestoUi();const old=btn.textContent;btn.disabled=true;btn.textContent=tx.verifying;msg.textContent='';
   try{
     const verifiedShipping=await validateCestoShippingClient();
     if(!verifiedShipping){btn.disabled=false;btn.textContent=old;return;}
-    btn.textContent='Creazione ordine Cesto…';
+    btn.textContent=tx.creating;
     const r=await fetch('/api/bee-balance',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         code:activeTestCode,
+        language:cestoLanguage(),
         action:'claim_test_reward',
         giftProducts:[...selectedGifts],
         shipping:verifiedShipping
@@ -290,18 +357,18 @@ async function claimTestReward(){
     const names=(order.giftObjects||[]).map(x=>x.name).join('<br>• ');
     const confirm=document.getElementById('cestoConfirm');
     confirm.innerHTML=
-      '<div style="font-size:24px;font-weight:950;color:#10392c;margin-bottom:10px">✅ Grazie, il tuo Cesto è stato acquisito!</div>'+
-      '<div style="font-size:17px;line-height:1.5;margin-bottom:14px">Il tuo Cesto dell’Alveare verrà preparato e spedito <strong>gratuitamente entro 5–7 giorni lavorativi</strong>. Non devi effettuare alcun pagamento.</div>'+
-      'Numero ordine: <strong>'+String(order.orderNumber||'')+'</strong><br>'+
-      'Email di notifica: <strong>'+(data.emailSent?'inviata correttamente':'non inviata')+'</strong><br><br>'+
-      '<strong>5 prodotti scelti</strong><br>• '+names+'<br><br>'+
-      '<strong>Spedizione a</strong><br>'+
+      '<div style="font-size:24px;font-weight:950;color:#10392c;margin-bottom:10px">'+tx.acquired+'</div>'+
+      '<div style="font-size:17px;line-height:1.5;margin-bottom:14px">'+tx.eta+'</div>'+
+      tx.orderNo+': <strong>'+String(order.orderNumber||'')+'</strong><br>'+
+      tx.mail+': <strong>'+(data.emailSent?tx.mailOk:'—')+'</strong><br><br>'+
+      '<strong>'+tx.chosen+'</strong><br>• '+names+'<br><br>'+
+      '<strong>'+tx.shipTo+'</strong><br>'+
       String(order.shipping?.name||'')+'<br>'+
       String(order.shipping?.address||'')+'<br>'+
       String(order.shipping?.postalCode||'')+' '+String(order.shipping?.city||'')+' ('+String(order.shipping?.state||'')+')<br>'+
       String(order.shipping?.email||'')+' · '+String(order.shipping?.phone||'')+'<br><br>'+
-      '<strong>Totale da pagare: €0,00</strong><br>'+
-      (data.receiptUrl?'<a class="receipt-btn" href="'+data.receiptUrl+'">📄 Scarica ricevuta PDF</a>':'');
+      '<strong>'+tx.total+'</strong><br>'+
+      (data.receiptUrl?'<a class="receipt-btn" href="'+data.receiptUrl+'">'+tx.receipt+'</a>':'');
     confirm.classList.add('show');
     if(data.testKind==='once')document.getElementById('cestoFlow').classList.remove('show');
     else{selectedGifts.clear();renderGiftGrid();updateClaimState();}
