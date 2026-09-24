@@ -321,10 +321,13 @@ function style(){
   if(document.getElementById('fda-language-style'))return;
   const s=document.createElement('style');
   s.id='fda-language-style';
-  s.textContent='#fda-language-test{display:flex;align-items:center;gap:9px;color:#fff;font:800 12px/1.1 Arial,sans-serif;border:1px solid rgba(255,255,255,.32);border-radius:999px;padding:5px 6px 5px 10px;background:rgba(0,0,0,.18);white-space:nowrap}#fda-language-test span{font-weight:800}#fda-language-select{border:0;border-radius:999px;background:#f2b83f;color:#171717;padding:8px 10px;font-weight:900;outline:none;cursor:pointer}#fda-language-test.fallback{position:fixed;right:12px;top:12px;z-index:99999;box-shadow:0 5px 20px rgba(0,0,0,.3)}@media(max-width:900px){#fda-language-test{font-size:11px;padding-left:8px}#fda-language-test span{display:none}#fda-language-select{max-width:150px}}';
+  s.textContent='#fda-language-test{display:flex;align-items:center;gap:9px;color:#fff;font:800 12px/1.1 Arial,sans-serif;border:1px solid rgba(255,255,255,.32);border-radius:999px;padding:5px 6px 5px 10px;background:rgba(0,0,0,.18);white-space:nowrap}#fda-language-test span{font-weight:800}#fda-language-select{border:0;border-radius:999px;background:#f2b83f;color:#171717;padding:8px 10px;font-weight:900;outline:none;cursor:pointer}#fda-language-test.fallback{position:fixed;right:12px;top:12px;z-index:99999;box-shadow:0 5px 20px rgba(0,0,0,.3)}#fda-points-link{display:inline-flex;align-items:center;gap:6px;margin-left:6px;padding:8px 11px;border-radius:999px;background:#f2b83f;color:#171717!important;text-decoration:none!important;font:900 12px/1 Arial,sans-serif;white-space:nowrap;border:1px solid rgba(0,0,0,.12)}#fda-points-link:hover{filter:brightness(.96)}@media(max-width:900px){#fda-language-test{font-size:11px;padding-left:8px}#fda-language-test span{display:none}#fda-language-select{max-width:150px}}';
   document.head.appendChild(s);
 }
 
+function pointsLabel(l){
+  return ({it:'🐝 Saldo Punti Ape',en:'🐝 Bee Points Balance',de:'🐝 Bienenpunkte-Saldo',fr:'🐝 Solde Points Abeille',es:'🐝 Saldo Puntos Abeja'})[l]||'🐝 Saldo Punti Ape';
+}
 function selector(){
   style();
   let box=document.getElementById('fda-language-test');
@@ -337,6 +340,15 @@ function selector(){
     if(target)target.appendChild(box);else{box.classList.add('fallback');document.body.appendChild(box);}
     box.querySelector('select').addEventListener('change',e=>setLang(e.target.value));
   }
+  let points=document.getElementById('fda-points-link');
+  if(!points){
+    points=document.createElement('a');
+    points.id='fda-points-link';
+    points.href='/punti-ape';
+    points.setAttribute('aria-label','Saldo Punti Ape');
+    box.insertAdjacentElement('afterend',points);
+  }
+  points.textContent=pointsLabel(lang);
   const sel=document.getElementById('fda-language-select');
   if(sel)sel.value=lang;
 }
