@@ -72,6 +72,10 @@
       "destination": "/alveo-digitale.html"
     },
     {
+      "source": "/punti-ape",
+      "destination": "/punti-ape.html"
+    },
+    {
       "source": "/images/:path*",
       "destination": "https://miele-shop-experience-v2.onrender.com/images/:path*"
     },
