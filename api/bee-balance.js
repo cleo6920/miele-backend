@@ -170,8 +170,8 @@ async function createTestCestoOrder(code,permanent,body){
   return {orderNumber,giftObjects,shipping,emailSent:true,balance:permanent?100:0};
 }
 
-async function getOnceUsed(){const p=getTestPool();const r=await p.query("select payload from bee_test_state where id='wallet-test-once-v2-12830' limit 1");return Boolean(r.rows[0]?.payload?.used);}
-async function useOnce(){const p=getTestPool();await p.query("insert into bee_test_state(id,payload,updated_at) values('wallet-test-once-v2-12830',$1::jsonb,now()) on conflict(id) do update set payload=excluded.payload,updated_at=excluded.updated_at",[JSON.stringify({used:true,usedAt:new Date().toISOString()})]);}
+async function getOnceUsed(){const p=getTestPool();const r=await p.query("select payload from bee_test_state where id='wallet-test-once-v3-12830' limit 1");return Boolean(r.rows[0]?.payload?.used);}
+async function useOnce(){const p=getTestPool();await p.query("insert into bee_test_state(id,payload,updated_at) values('wallet-test-once-v3-12830',$1::jsonb,now()) on conflict(id) do update set payload=excluded.payload,updated_at=excluded.updated_at",[JSON.stringify({used:true,usedAt:new Date().toISOString()})]);}
 
 function escPdf(s){return String(s||'').replace(/[()\\]/g,m=>'\\'+m);}
 function walletCardPdf(code){
