@@ -27,6 +27,59 @@ const TEST_GIFTS=new Map([
   ['tesori-liquore-caffe','Liquore al Caffè'],
   ['tesori-castagne-rum','Castagne al Rum']
 ]);
+const CESTO_LANGS=new Set(['it','en','de','fr','es']);
+const CESTO_GIFT_NAMES={
+  en:{
+    'favo-integrale-bio':'Organic Whole Honeycomb','polline-italiano':'Italian Bee Pollen','orsetti-gommosi':'Organic Gummy Bears',
+    'pappa-reale-italiana-bio':'Fresh Organic Italian Royal Jelly','bee-energy-bio':'Bee Energy – Organic Tonic',
+    'propol-active-bio':'Propol Active – Organic Tablets','propoli-30-spray-integratore':'Propolis 30% Spray',
+    'propoli-30-alcolica-integratore':'Propolis 30% Alcohol Drops','propoli-analcolica-integratore':'Alcohol-Free Propolis',
+    'cosmesi-crema-mani':'Hand Cream with Aloe, Beeswax and Propolis','cosmesi-burrocacao-propoli-aloe':'Lip Balm with Propolis + Aloe',
+    'cosmesi-burrocacao-miele-pappa-reale':'Lip Balm with Honey + Royal Jelly','cosmesi-shampoo-multivitaminico':'Propolis and Aloe Shampoo',
+    'cosmesi-saponetta-frutti-bosco':'Wild Berries Soap','cosmesi-saponetta-lavanda':'Lavender Soap','cosmesi-saponetta-aloe-vera':'Aloe Vera Soap',
+    'cosmesi-candela-alveare-cera-api':'Beehive Candle in Beeswax','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Coffee Liqueur','tesori-castagne-rum':'Chestnuts in Rum'
+  },
+  de:{
+    'favo-integrale-bio':'Bio-Honigwabe','polline-italiano':'Italienischer Blütenpollen','orsetti-gommosi':'Bio-Gummibärchen',
+    'pappa-reale-italiana-bio':'Frisches italienisches Bio-Gelée Royale','bee-energy-bio':'Bee Energy – Bio-Tonikum',
+    'propol-active-bio':'Propol Active – Bio-Tabletten','propoli-30-spray-integratore':'Propolis 30% Spray',
+    'propoli-30-alcolica-integratore':'Propolis 30% alkoholische Tropfen','propoli-analcolica-integratore':'Alkoholfreie Propolis',
+    'cosmesi-crema-mani':'Handcreme mit Aloe, Bienenwachs und Propolis','cosmesi-burrocacao-propoli-aloe':'Lippenbalsam Propolis + Aloe',
+    'cosmesi-burrocacao-miele-pappa-reale':'Lippenbalsam Honig + Gelée Royale','cosmesi-shampoo-multivitaminico':'Shampoo mit Propolis und Aloe',
+    'cosmesi-saponetta-frutti-bosco':'Waldbeeren-Seife','cosmesi-saponetta-lavanda':'Lavendelseife','cosmesi-saponetta-aloe-vera':'Aloe-Vera-Seife',
+    'cosmesi-candela-alveare-cera-api':'Bienenstockkerze aus Bienenwachs','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Kaffeelikör','tesori-castagne-rum':'Kastanien in Rum'
+  },
+  fr:{
+    'favo-integrale-bio':'Rayon de miel entier BIO','polline-italiano':'Pollen italien','orsetti-gommosi':'Oursons gélifiés BIO',
+    'pappa-reale-italiana-bio':'Gelée royale italienne fraîche BIO','bee-energy-bio':'Bee Energy – Tonique BIO',
+    'propol-active-bio':'Propol Active – Comprimés BIO','propoli-30-spray-integratore':'Propolis 30% Spray',
+    'propoli-30-alcolica-integratore':'Propolis 30% alcoolique en gouttes','propoli-analcolica-integratore':'Propolis sans alcool',
+    'cosmesi-crema-mani':'Crème mains Aloe, Cire d’abeille et Propolis','cosmesi-burrocacao-propoli-aloe':'Baume à lèvres Propolis + Aloe',
+    'cosmesi-burrocacao-miele-pappa-reale':'Baume à lèvres Miel + Gelée royale','cosmesi-shampoo-multivitaminico':'Shampooing Propolis et Aloe',
+    'cosmesi-saponetta-frutti-bosco':'Savon Fruits des bois','cosmesi-saponetta-lavanda':'Savon Lavande','cosmesi-saponetta-aloe-vera':'Savon Aloe Vera',
+    'cosmesi-candela-alveare-cera-api':'Bougie ruche en cire d’abeille','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Liqueur au café','tesori-castagne-rum':'Châtaignes au rhum'
+  },
+  es:{
+    'favo-integrale-bio':'Panal integral BIO','polline-italiano':'Polen italiano','orsetti-gommosi':'Ositos de goma BIO',
+    'pappa-reale-italiana-bio':'Jalea real italiana fresca BIO','bee-energy-bio':'Bee Energy – Tónico BIO',
+    'propol-active-bio':'Propol Active – Comprimidos BIO','propoli-30-spray-integratore':'Própolis 30% Spray',
+    'propoli-30-alcolica-integratore':'Própolis 30% alcohólico en gotas','propoli-analcolica-integratore':'Própolis sin alcohol',
+    'cosmesi-crema-mani':'Crema de manos con Aloe, Cera de abeja y Própolis','cosmesi-burrocacao-propoli-aloe':'Bálsamo labial Própolis + Aloe',
+    'cosmesi-burrocacao-miele-pappa-reale':'Bálsamo labial Miel + Jalea real','cosmesi-shampoo-multivitaminico':'Champú Própolis y Aloe',
+    'cosmesi-saponetta-frutti-bosco':'Jabón Frutos del bosque','cosmesi-saponetta-lavanda':'Jabón Lavanda','cosmesi-saponetta-aloe-vera':'Jabón Aloe Vera',
+    'cosmesi-candela-alveare-cera-api':'Vela colmena de cera de abeja','tesori-limoncello':'Limoncello','tesori-liquore-caffe':'Licor de café','tesori-castagne-rum':'Castañas al ron'
+  }
+};
+const CESTO_TEXT={
+  it:{receiptTitle:"RICEVUTA ORDINE CESTO DELL'ALVEARE",status:'Stato: DA PREPARARE',payment:'Pagamento: 100 Punti Ape',shipping:'Spedizione: GRATUITA',total:'Totale da pagare: EUR 0,00',customer:'Cliente: ',email:'Email: ',phone:'Telefono: ',address:'Indirizzo: ',products:'Prodotti:',eta:'Il Cesto verrà preparato e spedito gratuitamente entro 5-7 giorni lavorativi.'},
+  en:{receiptTitle:'HIVE GIFT BASKET ORDER RECEIPT',status:'Status: TO BE PREPARED',payment:'Payment: 100 Bee Points',shipping:'Shipping: FREE',total:'Amount due: EUR 0.00',customer:'Customer: ',email:'Email: ',phone:'Phone: ',address:'Address: ',products:'Products:',eta:'The basket will be prepared and shipped free of charge within 5-7 business days.'},
+  de:{receiptTitle:'BESTELLBELEG BIENENSTOCK-GESCHENKKORB',status:'Status: VORBEREITUNG AUSSTEHEND',payment:'Zahlung: 100 Bienenpunkte',shipping:'Versand: KOSTENLOS',total:'Zu zahlen: EUR 0,00',customer:'Kunde: ',email:'E-Mail: ',phone:'Telefon: ',address:'Adresse: ',products:'Produkte:',eta:'Der Korb wird vorbereitet und innerhalb von 5-7 Werktagen kostenlos versendet.'},
+  fr:{receiptTitle:'REÇU DE COMMANDE PANIER DE LA RUCHE',status:'Statut : À PRÉPARER',payment:'Paiement : 100 Points Abeille',shipping:'Livraison : GRATUITE',total:'Total à payer : EUR 0,00',customer:'Client : ',email:'E-mail : ',phone:'Téléphone : ',address:'Adresse : ',products:'Produits :',eta:'Le panier sera préparé et expédié gratuitement sous 5 à 7 jours ouvrables.'},
+  es:{receiptTitle:'RECIBO DE PEDIDO CESTA DE LA COLMENA',status:'Estado: POR PREPARAR',payment:'Pago: 100 Puntos Abeja',shipping:'Envío: GRATUITO',total:'Total a pagar: EUR 0,00',customer:'Cliente: ',email:'Email: ',phone:'Teléfono: ',address:'Dirección: ',products:'Productos:',eta:'La cesta se preparará y se enviará gratuitamente en un plazo de 5 a 7 días laborables.'}
+};
+function cestoLang(v){const x=String(v||'it').toLowerCase();return CESTO_LANGS.has(x)?x:'it';}
+function cestoGiftName(id,lang){return lang==='it'?(TEST_GIFTS.get(id)||id):(CESTO_GIFT_NAMES[lang]?.[id]||TEST_GIFTS.get(id)||id);}
+
 function cleanField(v,max=180){return String(v||'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max);}
 function validateTestCesto(body){
   const gifts=Array.isArray(body.giftProducts)?body.giftProducts.map(x=>cleanField(x,100)):[];
@@ -78,27 +131,29 @@ async function validateShippingRemotely(shipping){
   return shipping;
 }
 
-function receiptPdf(order){
+function receiptPdf(order,lang='it'){
+  lang=cestoLang(lang);
+  const tx=CESTO_TEXT[lang]||CESTO_TEXT.it;
   const lines=[
     'LA FABBRICA DELLE API',
-    'RICEVUTA ORDINE CESTO DELL\'ALVEARE',
+    tx.receiptTitle,
     '',
-    'Ordine: '+order.orderNumber,
-    'Stato: DA PREPARARE',
-    'Pagamento: 100 Punti Ape',
-    'Spedizione: GRATUITA',
-    'Totale da pagare: EUR 0,00',
+    'Order / Ordine: '+order.orderNumber,
+    tx.status,
+    tx.payment,
+    tx.shipping,
+    tx.total,
     '',
-    'Cliente: '+order.shipping.name,
-    'Email: '+order.shipping.email,
-    'Telefono: '+order.shipping.phone,
-    'Indirizzo: '+order.shipping.address,
+    tx.customer+order.shipping.name,
+    tx.email+order.shipping.email,
+    tx.phone+order.shipping.phone,
+    tx.address+order.shipping.address,
     order.shipping.postalCode+' '+order.shipping.city+' ('+order.shipping.state+')',
     '',
-    'Prodotti:',
-    ...order.giftObjects.map((g,i)=>(i+1)+'. '+g.name),
+    tx.products,
+    ...order.giftObjects.map((g,i)=>(i+1)+'. '+cestoGiftName(g.id,lang)),
     '',
-    'Il Cesto verra preparato e spedito gratuitamente entro 5-7 giorni lavorativi.'
+    tx.eta
   ];
   const content=['BT','/F1 16 Tf','54 785 Td'];
   lines.forEach((line,i)=>{
@@ -126,6 +181,7 @@ function receiptPdf(order){
 }
 
 async function createTestCestoOrder(code,permanent,body){
+  const lang=cestoLang(body.language);
   const {gifts,shipping}=validateTestCesto(body);
   await validateShippingRemotely(shipping);
   const p=getTestPool();
@@ -140,6 +196,7 @@ async function createTestCestoOrder(code,permanent,body){
       JSON.stringify({
         orderNumber,
         code,
+        language:lang,
         accountId,
         customer:shipping,
         giftProducts:giftObjects,
@@ -167,7 +224,7 @@ async function createTestCestoOrder(code,permanent,body){
   const notifyData=await notify.json().catch(()=>null);
   if(!notify.ok) throw new Error((notifyData&&notifyData.error)||'Ordine creato ma email di notifica non inviata.');
   if(!permanent) await useOnce();
-  return {orderNumber,giftObjects,shipping,emailSent:true,balance:permanent?100:0};
+  return {orderNumber,giftObjects:giftObjects.map(g=>({id:g.id,name:cestoGiftName(g.id,lang)})),shipping,emailSent:true,balance:permanent?100:0,language:lang};
 }
 
 async function getOnceUsed(){const p=getTestPool();const r=await p.query("select payload from bee_test_state where id='wallet-test-once-v3-12830' limit 1");return Boolean(r.rows[0]?.payload?.used);}
@@ -230,6 +287,7 @@ module.exports=async(req,res)=>{
       const r=await p.query("select payload from bee_test_state where id=$1 limit 1",['cesto-test:'+orderNumber]);
       const payload=r.rows[0]?.payload;
       if(!payload||payload.code!==code) return res.status(404).send('Ricevuta non trovata.');
+      const lang=cestoLang(req.query?.lang||payload.language||'it');
       const order={
         orderNumber:payload.orderNumber,
         shipping:payload.customer||{},
@@ -238,7 +296,7 @@ module.exports=async(req,res)=>{
       res.setHeader('Content-Type','application/pdf');
       res.setHeader('Content-Disposition','attachment; filename="Ricevuta_'+orderNumber.replace(/[^A-Z0-9-]/gi,'_')+'.pdf"');
       res.setHeader('Cache-Control','private, no-store');
-      return res.status(200).send(receiptPdf(order));
+      return res.status(200).send(receiptPdf(order,lang));
     }catch(e){
       return res.status(500).send('Impossibile generare la ricevuta.');
     }
@@ -258,7 +316,7 @@ module.exports=async(req,res)=>{
           ok:true,found:true,testMode:true,testKind:permanent?'always':'once',balance,earned:100,spent:permanent?0:100,
           goal:100,remainingToReward:Math.max(0,100-balance),
           testClaimed:true,cestoOrder:order,emailSent:true,
-          receiptUrl:'/api/bee-balance?receipt=1&order='+encodeURIComponent(order.orderNumber)+'&code='+encodeURIComponent(code),
+          receiptUrl:'/api/bee-balance?receipt=1&order='+encodeURIComponent(order.orderNumber)+'&code='+encodeURIComponent(code)+'&lang='+encodeURIComponent(order.language||'it'),
           message:permanent
             ? 'Ordine Cesto TEST creato e email inviata. Il codice permanente resta a 100 Punti Ape.'
             : 'Ordine Cesto TEST creato e email inviata. Il saldo TEST è tornato a 0.'
