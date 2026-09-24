@@ -231,11 +231,13 @@ async function claimTestReward(){
     const order=data.cestoOrder||{};
     const names=(order.giftObjects||[]).map(x=>x.name).join('<br>• ');
     const confirm=document.getElementById('cestoConfirm');
-    confirm.innerHTML='<strong>✅ ORDINE CESTO CONFERMATO</strong><br><br>'+
+    confirm.innerHTML=
+      '<div style="font-size:24px;font-weight:950;color:#10392c;margin-bottom:10px">✅ Grazie, il tuo Cesto è stato acquisito!</div>'+
+      '<div style="font-size:17px;line-height:1.5;margin-bottom:14px">Il tuo Cesto dell’Alveare verrà preparato e spedito <strong>gratuitamente entro 5–7 giorni lavorativi</strong>. Non devi effettuare alcun pagamento.</div>'+
       'Numero ordine: <strong>'+String(order.orderNumber||'')+'</strong><br>'+
-      'Email di notifica: <strong>'+(data.emailSent?'inviata':'non inviata')+'</strong><br><br>'+
+      'Email di notifica: <strong>'+(data.emailSent?'inviata correttamente':'non inviata')+'</strong><br><br>'+
       '<strong>5 prodotti scelti</strong><br>• '+names+'<br><br>'+
-      '<strong>Spedizione</strong><br>'+
+      '<strong>Spedizione a</strong><br>'+
       String(order.shipping?.name||'')+'<br>'+
       String(order.shipping?.address||'')+'<br>'+
       String(order.shipping?.postalCode||'')+' '+String(order.shipping?.city||'')+' ('+String(order.shipping?.state||'')+')<br>'+
