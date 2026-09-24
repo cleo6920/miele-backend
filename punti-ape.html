@@ -17,6 +17,7 @@
 .method{display:none}.method.active{display:block}.method label{display:block;font-weight:900;margin-bottom:7px}.method input{width:100%;border:1px solid #d7ccba;border-radius:14px;padding:14px;font:inherit;font-size:16px;background:#fff}.hint{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.4}
 .check{margin-top:16px;width:100%;border:0;border-radius:999px;background:var(--gold);color:#17241e;padding:14px 18px;font-weight:950;font-size:16px;cursor:pointer}
 #status{min-height:24px;margin:12px 0;font-weight:800;color:#7a3c16}.result{display:none;margin-top:18px;background:#edf5f0;border:1px solid #c8dfd0;border-radius:22px;padding:20px}.result.show{display:block}.balance{font:700 52px/1 Georgia,serif;color:var(--g)}.progress{height:16px;background:#dbe7df;border-radius:999px;overflow:hidden;margin:15px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#d49b21,#f0c85a);transition:width .35s}.goal{font-weight:900;color:#496158}
+.testbox{display:none;margin-top:18px;padding:16px;border-radius:18px;background:#fff3c9;border:1px solid #e1c45a;color:#5e480d}.testbox.show{display:block}.testbox button{margin-top:12px;border:0;border-radius:999px;background:#10392c;color:#fff;padding:11px 15px;font-weight:950;cursor:pointer}.testnote{font-size:13px;margin-top:8px;line-height:1.4}
 .privacy{margin-top:22px;padding:16px;border-radius:18px;background:#fff3c9;color:#624d0f;line-height:1.45}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions a{text-decoration:none;border-radius:999px;padding:11px 15px;font-weight:900}.primary{background:var(--g);color:#fff}.secondary{border:1px solid #bea66e;color:#60480c;background:#fff}
 @media(max-width:760px){.guide{grid-template-columns:1fr}.hero{padding:28px}.lookup{padding:20px}}
 </style>
@@ -54,6 +55,11 @@
 <div class="balance"><span id="balance">0</span> 🐝</div>
 <div class="progress"><div class="bar" id="bar"></div></div>
 <div class="goal" id="goal"></div>
+<div class="testbox" id="testbox">
+  <strong id="testtitle">Modalità TEST</strong>
+  <div id="testmessage" class="testnote"></div>
+  <button id="testclaim" type="button">🎁 Prova richiesta cesto omaggio</button>
+</div>
 <div class="actions"><a class="primary" href="/shop">Continua nella Bottega →</a><a class="secondary" href="/alveo-digitale">Scopri Alveo Digitale</a></div>
 </div>
 <div class="privacy"><strong>Come funziona?</strong> Il sistema usa il dato inserito solo per trovare il tuo Saldo Punti Ape. Se hai scelto di non lasciare email o telefono, puoi usare il tuo Codice Punti Ape personale.</div>
@@ -61,6 +67,7 @@
 </main>
 <script>
 let kind='email';
+let activeTestCode='';
 document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
   kind=btn.dataset.kind;
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));
@@ -83,11 +90,42 @@ async function checkBalance(){
     document.getElementById('balance').textContent=b;
     document.getElementById('bar').style.width=Math.min(100,b)+'%';
     document.getElementById('goal').textContent=b>=100?'Hai raggiunto almeno 100 punti: puoi richiedere il cesto omaggio.':'Ti mancano '+Math.max(0,100-b)+' punti per arrivare al cesto omaggio da 100 punti.';
+    const tb=document.getElementById('testbox');
+    const tc=document.getElementById('testclaim');
+    if(data.testMode){
+      activeTestCode=String(value||'').toUpperCase();
+      tb.classList.add('show');
+      document.getElementById('testtitle').textContent=data.testKind==='always'?'Modalità TEST permanente':'Modalità TEST una tantum';
+      document.getElementById('testmessage').textContent=data.message||'';
+      tc.style.display=data.canTestClaim===false||b<100?'none':'inline-block';
+    }else{
+      activeTestCode='';
+      tb.classList.remove('show');
+    }
     document.getElementById('result').classList.add('show');
   }catch(e){status.textContent=e?.message||'Non è stato possibile controllare il saldo.';}
   button.disabled=false;button.textContent=old;
 }
+async function claimTestReward(){
+  if(!activeTestCode)return;
+  const btn=document.getElementById('testclaim');
+  const msg=document.getElementById('testmessage');
+  const old=btn.textContent;btn.disabled=true;btn.textContent='Simulazione in corso…';
+  try{
+    const r=await fetch('/api/bee-balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:activeTestCode,action:'claim_test_reward'})});
+    const data=await r.json().catch(()=>null);
+    if(!r.ok||!data?.ok)throw new Error(data?.error||'Test non disponibile.');
+    const b=Math.max(0,Number(data.balance||0));
+    document.getElementById('balance').textContent=b;
+    document.getElementById('bar').style.width=Math.min(100,b)+'%';
+    document.getElementById('goal').textContent=b>=100?'Hai raggiunto almeno 100 punti: puoi richiedere il cesto omaggio.':'Ti mancano '+Math.max(0,100-b)+' punti per arrivare al cesto omaggio da 100 punti.';
+    msg.textContent=data.message||'Test completato.';
+    if(data.testKind==='once')btn.style.display='none';
+  }catch(e){msg.textContent=e?.message||'Non è stato possibile completare il test.';}
+  btn.disabled=false;btn.textContent=old;
+}
 document.getElementById('check').addEventListener('click',checkBalance);
+document.getElementById('testclaim').addEventListener('click',claimTestReward);
 ['email','phone','code'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')checkBalance();}));
 </script>
 </body>
