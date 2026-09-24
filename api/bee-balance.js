@@ -57,12 +57,23 @@ async function createTestCestoOrder(code,permanent,body){
   const accountId='TEST-'+(permanent?'ALWAYS':'ONCE')+'-12830';
   const giftObjects=gifts.map(id=>({id,name:TEST_GIFTS.get(id)}));
   await p.query(
-    `insert into bee_cesto_orders(
-      order_number,claim_id,account_id,customer_name,customer_email,customer_phone,
-      address,postal_code,city,state,country,notes,gift_products,points_spent,
-      merchandise_total,shipping_total,amount_due,payment_method,status,created_at,updated_at
-    ) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13::jsonb,100,0,0,0,'100 PUNTI APE - TEST','DA PREPARARE',now(),now())`,
-    [orderNumber,'TEST-'+code,accountId,shipping.name,shipping.email,shipping.phone,shipping.address,shipping.postalCode,shipping.city,shipping.state,shipping.country,shipping.notes,JSON.stringify(giftObjects)]
+    "insert into bee_test_state(id,payload,updated_at) values($1,$2::jsonb,now()) on conflict(id) do update set payload=excluded.payload,updated_at=excluded.updated_at",
+    [
+      'cesto-test:'+orderNumber,
+      JSON.stringify({
+        orderNumber,
+        code,
+        accountId,
+        customer:shipping,
+        giftProducts:giftObjects,
+        pointsSpent:100,
+        shippingTotal:0,
+        amountDue:0,
+        paymentMethod:'100 PUNTI APE - TEST',
+        status:'DA PREPARARE',
+        createdAt:new Date().toISOString()
+      })
+    ]
   );
   const notify=await fetch('https://miele-shop-experience-v2.onrender.com/api/cesto-notification',{
     method:'POST',
