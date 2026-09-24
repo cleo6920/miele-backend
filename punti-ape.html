@@ -18,7 +18,7 @@
 .check{margin-top:16px;width:100%;border:0;border-radius:999px;background:var(--gold);color:#17241e;padding:14px 18px;font-weight:950;font-size:16px;cursor:pointer}
 #status{min-height:24px;margin:12px 0;font-weight:800;color:#7a3c16}.result{display:none;margin-top:18px;background:#edf5f0;border:1px solid #c8dfd0;border-radius:22px;padding:20px}.result.show{display:block}.balance{font:700 52px/1 Georgia,serif;color:var(--g)}.progress{height:16px;background:#dbe7df;border-radius:999px;overflow:hidden;margin:15px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#d49b21,#f0c85a);transition:width .35s}.goal{font-weight:900;color:#496158}
 .testbox{display:none;margin-top:18px;padding:16px;border-radius:18px;background:#fff3c9;border:1px solid #e1c45a;color:#5e480d}.testbox.show{display:block}.testnote{font-size:13px;margin-top:8px;line-height:1.4}
-.cesto-flow{display:none;margin-top:18px;padding:18px;border-radius:20px;background:#fff;border:1px solid #d9cfbb}.cesto-flow.show{display:block}.cesto-flow h3{font:700 28px/1 Georgia,serif;margin:0 0 8px}.cesto-flow p{color:#5f6a64;line-height:1.45}.gift-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0}.gift{border:1px solid #cbb98f;background:#fffaf0;border-radius:14px;padding:11px;text-align:left;font-weight:850;cursor:pointer}.gift.sel{background:#10392c;color:#fff;border-color:#10392c}.gift-count{font-weight:950;margin:10px 0}.ship-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ship-grid input,.cesto-flow textarea{width:100%;border:1px solid #d7ccba;border-radius:12px;padding:12px;font:inherit}.cesto-flow textarea{min-height:80px;margin-top:10px}.cesto-summary{margin-top:14px;background:#edf5f0;border:1px solid #c6ddce;border-radius:16px;padding:14px;line-height:1.55}.claim-cesto{width:100%;margin-top:14px;border:0;border-radius:999px;background:#10392c;color:#fff;padding:14px;font-weight:950;font-size:16px;cursor:pointer}.claim-cesto:disabled{opacity:.45;cursor:not-allowed}.cesto-confirm{display:none;margin-top:18px;padding:18px;border-radius:18px;background:#e9f5ee;border:2px solid #95c5a7}.cesto-confirm.show{display:block}.cesto-confirm strong{color:#10392c}
+.cesto-flow{display:none;margin-top:18px;padding:18px;border-radius:20px;background:#fff;border:1px solid #d9cfbb}.cesto-flow.show{display:block}.cesto-flow h3{font:700 28px/1 Georgia,serif;margin:0 0 8px}.cesto-flow p{color:#5f6a64;line-height:1.45}.gift-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0}.gift{border:1px solid #cbb98f;background:#fffaf0;border-radius:14px;padding:11px;text-align:left;font-weight:850;cursor:pointer}.gift.sel{background:#10392c;color:#fff;border-color:#10392c}.gift-count{font-weight:950;margin:10px 0}.ship-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ship-grid input,.cesto-flow textarea{width:100%;border:1px solid #d7ccba;border-radius:12px;padding:12px;font:inherit}.cesto-flow textarea{min-height:80px;margin-top:10px}.cesto-summary{margin-top:14px;background:#edf5f0;border:1px solid #c6ddce;border-radius:16px;padding:14px;line-height:1.55}.claim-cesto{width:100%;margin-top:14px;border:0;border-radius:999px;background:#10392c;color:#fff;padding:14px;font-weight:950;font-size:16px;cursor:pointer}.claim-cesto:disabled{opacity:.45;cursor:not-allowed}.field-error{border-color:#b42318!important;background:#fff5f4!important}.validation-error{margin-top:10px;padding:11px 13px;border-radius:12px;background:#fff1f0;border:1px solid #efb0aa;color:#8a1c13;font-weight:850}.receipt-btn{display:inline-block;margin-top:16px;padding:12px 16px;border-radius:999px;background:#10392c;color:#fff;text-decoration:none;font-weight:950}.cesto-confirm{display:none;margin-top:18px;padding:18px;border-radius:18px;background:#e9f5ee;border:2px solid #95c5a7}.cesto-confirm.show{display:block}.cesto-confirm strong{color:#10392c}
 @media(max-width:680px){.gift-grid,.ship-grid{grid-template-columns:1fr}}
 .privacy{margin-top:22px;padding:16px;border-radius:18px;background:#fff3c9;color:#624d0f;line-height:1.45}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions a{text-decoration:none;border-radius:999px;padding:11px 15px;font-weight:900}.primary{background:var(--g);color:#fff}.secondary{border:1px solid #bea66e;color:#60480c;background:#fff}
 @media(max-width:760px){.guide{grid-template-columns:1fr}.hero{padding:28px}.lookup{padding:20px}}
@@ -86,6 +86,7 @@
   </div>
   <button id="testclaim" class="claim-cesto" type="button" disabled>✅ Conferma ordine Cesto — €0,00</button>
   <div id="claimStatus" class="testnote"></div>
+  <div id="validationError" class="validation-error" style="display:none"></div>
 </div>
 <div class="cesto-confirm" id="cestoConfirm"></div>
 <div class="actions"><a class="primary" href="/shop">Continua nella Bottega →</a><a class="secondary" href="/alveo-digitale">Scopri Alveo Digitale</a></div>
@@ -204,13 +205,70 @@ async function checkBalance(){
   }catch(e){status.textContent=e?.message||'Non è stato possibile controllare il saldo.';}
   button.disabled=false;button.textContent=old;
 }
+function clearFieldErrors(){
+  ['shipName','shipEmail','shipPhone','shipAddress','shipPostal','shipCity','shipState','shipCountry'].forEach(id=>document.getElementById(id)?.classList.remove('field-error'));
+  const box=document.getElementById('validationError');if(box){box.style.display='none';box.textContent='';}
+}
+function showValidationError(message,fieldId){
+  const box=document.getElementById('validationError');
+  if(box){box.textContent='⛔ '+message;box.style.display='block';box.scrollIntoView({behavior:'smooth',block:'center'});}
+  if(fieldId){const el=document.getElementById(fieldId);el?.classList.add('field-error');el?.focus();}
+}
+async function validateCestoShippingClient(){
+  clearFieldErrors();
+  const s=shippingPayload();
+  const required=[
+    ['name','shipName','Inserisci nome e cognome.'],
+    ['email','shipEmail','Inserisci l’email.'],
+    ['phone','shipPhone','Inserisci il telefono.'],
+    ['address','shipAddress','Inserisci via e numero civico.'],
+    ['postalCode','shipPostal','Inserisci il CAP.'],
+    ['city','shipCity','Inserisci il Comune.'],
+    ['state','shipState','Inserisci la Provincia.']
+  ];
+  for(const [key,id,msg] of required){if(!s[key]){showValidationError(msg,id);return null;}}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email)){showValidationError('L’email non è valida. Controllala e riprova.','shipEmail');return null;}
+  if(!/^\d{5}$/.test(s.postalCode)){showValidationError('Il CAP deve essere composto da 5 cifre.','shipPostal');return null;}
+  if(!/^[A-Za-z]{2}$/.test(s.state)){showValidationError('La Provincia deve essere indicata con 2 lettere, ad esempio VR o MN.','shipState');return null;}
+
+  let raw=s.phone.replace(/[\s().-]/g,'');
+  let prefix='+39', national=raw;
+  if(raw.startsWith('0039'))national=raw.slice(4);
+  else if(raw.startsWith('+39'))national=raw.slice(3);
+  else if(raw.startsWith('+')){showValidationError('Per ora inserisci un numero italiano con prefisso +39 oppure senza prefisso.','shipPhone');return null;}
+  const phoneRes=await fetch('/api/phone-normalize?'+new URLSearchParams({prefix,phone:national}).toString(),{cache:'no-store'});
+  const phoneData=await phoneRes.json().catch(()=>null);
+  if(!phoneRes.ok||!phoneData?.ok||!phoneData?.e164){
+    showValidationError(phoneData?.error||'Il numero di telefono non risulta valido.','shipPhone');return null;
+  }
+  document.getElementById('shipPhone').value=phoneData.e164;
+  s.phone=phoneData.e164;
+
+  const addrRes=await fetch('/api/local-delivery-check?'+new URLSearchParams({
+    address:s.address,city:s.city,cap:s.postalCode,province:s.state,country:'IT'
+  }).toString(),{cache:'no-store'});
+  const addrData=await addrRes.json().catch(()=>null);
+  if(!addrRes.ok||!addrData?.ok||addrData?.validFullAddress!==true){
+    const msg=addrData?.error||'Indirizzo non verificato. Controlla via, numero civico, Comune, CAP e Provincia.';
+    let field='shipAddress';
+    if(/CAP/i.test(msg))field='shipPostal';
+    else if(/Comune/i.test(msg))field='shipCity';
+    else if(/Provincia/i.test(msg))field='shipState';
+    showValidationError(msg,field);return null;
+  }
+  return s;
+}
+
 async function claimTestReward(){
   if(!activeTestCode)return;
   const btn=document.getElementById('testclaim');
   const msg=document.getElementById('claimStatus');
   if(selectedGifts.size!==5||!shippingComplete()){updateClaimState();return;}
-  const old=btn.textContent;btn.disabled=true;btn.textContent='Creazione ordine Cesto…';msg.textContent='';
+  const old=btn.textContent;btn.disabled=true;btn.textContent='Verifica dati di spedizione…';msg.textContent='';
   try{
+    const verifiedShipping=await validateCestoShippingClient();
+    if(!verifiedShipping){btn.disabled=false;btn.textContent=old;return;}
+    btn.textContent='Creazione ordine Cesto…';
     const r=await fetch('/api/bee-balance',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -218,7 +276,7 @@ async function claimTestReward(){
         code:activeTestCode,
         action:'claim_test_reward',
         giftProducts:[...selectedGifts],
-        shipping:shippingPayload()
+        shipping:verifiedShipping
       })
     });
     const data=await r.json().catch(()=>null);
@@ -242,7 +300,8 @@ async function claimTestReward(){
       String(order.shipping?.address||'')+'<br>'+
       String(order.shipping?.postalCode||'')+' '+String(order.shipping?.city||'')+' ('+String(order.shipping?.state||'')+')<br>'+
       String(order.shipping?.email||'')+' · '+String(order.shipping?.phone||'')+'<br><br>'+
-      '<strong>Totale da pagare: €0,00</strong>';
+      '<strong>Totale da pagare: €0,00</strong><br>'+
+      (data.receiptUrl?'<a class="receipt-btn" href="'+data.receiptUrl+'">📄 Scarica ricevuta PDF</a>':'');
     confirm.classList.add('show');
     if(data.testKind==='once')document.getElementById('cestoFlow').classList.remove('show');
     else{selectedGifts.clear();renderGiftGrid();updateClaimState();}
