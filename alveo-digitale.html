@@ -62,6 +62,7 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
 .api-direct-download-form:after{content:"Basta email oppure telefono. Se li lasci vuoti riceverai un codice personale.";order:-1;font-size:12px;color:#6f7a73}
 .api-direct-download-form label{font-weight:900;font-size:13px}.api-direct-download-form label span{font-weight:700;color:#77817b}.api-direct-download-form input{width:100%;margin-top:6px;border:1px solid #d7cebf;border-radius:12px;padding:12px;font:inherit;background:#fff;color:#17241e}
 .api-wallet-guide{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.api-wallet-option{border-radius:16px;padding:14px;line-height:1.4}.api-wallet-option.easy{background:#e9f5ee;border:1px solid #bfdcca}.api-wallet-option.code{background:#fff0bd;border:1px solid #e4c35d}.api-wallet-option strong{display:block;margin-bottom:4px}.api-wallet-result{margin-top:12px;padding:14px;border-radius:16px;background:#edf5f0;border:1px solid #c6ddce}.api-wallet-result a{display:inline-block;margin-top:9px;margin-right:7px;padding:9px 12px;border-radius:999px;text-decoration:none;font-weight:900;background:#10392c;color:#fff}.api-wallet-result a.alt{background:#fff;color:#654c08;border:1px solid #d2b661}
+.field-error{border-color:#b42318!important;background:#fff5f4!important;box-shadow:0 0 0 2px rgba(180,35,24,.08)!important}
 #api-direct-download-status{min-height:22px;color:#7a3c16;font-weight:850;margin:8px 0}
 @media(max-width:620px){.api-wallet-guide{grid-template-columns:1fr}}
 #api-direct-download-start{width:100%;border:0;border-radius:999px;background:#dda92e;color:#17241e;padding:14px 18px;font-weight:950;font-size:15px;cursor:pointer}
@@ -262,6 +263,14 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
     try{let id=localStorage.getItem(key);if(!id){id=(window.crypto&&crypto.randomUUID?crypto.randomUUID():'free-'+Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem(key,id);}return id;}
     catch(_){return 'free-'+Date.now()+'-'+Math.random().toString(36).slice(2);}
   }
+  function clearDirectContactErrors(){
+    ['apiDirectName','apiDirectEmail','apiDirectPhone'].forEach(id=>document.getElementById(id)?.classList.remove('field-error'));
+  }
+  function markDirectContactError(id,message,status){
+    clearDirectContactErrors();
+    const el=document.getElementById(id); if(el){el.classList.add('field-error');el.focus();}
+    status.textContent=message;
+  }
   async function startDownload(){
     const btn=document.getElementById('api-direct-download-start');
     const status=document.getElementById('api-direct-download-status');
@@ -270,7 +279,20 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
     const phone=document.getElementById('apiDirectPhone').value.trim();
     const selectedLanguage=String(document.getElementById('apiDirectLanguage')?.value||'').toLowerCase();
     const downloadLanguage=supported.includes(selectedLanguage)?selectedLanguage:lang();
-    if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){status.textContent='Controlla l’indirizzo email oppure lascialo vuoto.';return;}
+    clearDirectContactErrors();
+    if(name && (name.length<2 || !/[A-Za-zÀ-ÿ]/.test(name) || /^\d+$/.test(name))){markDirectContactError('apiDirectName','Controlla nome e cognome oppure lascia il campo vuoto.',status);return;}
+    if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){markDirectContactError('apiDirectEmail','Controlla l’indirizzo email oppure lascialo vuoto.',status);return;}
+    if(phone){
+      btn.disabled=true;const temp=btn.textContent;btn.textContent='Verifica telefono…';
+      try{
+        const test=await fetch('/api/free-edition-download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({editionId:'api-oggi-01',language:downloadLanguage,claimId:'validation-only-'+Date.now(),validationOnly:true,customer:{name,email,phone}})});
+        const td=await test.json().catch(()=>null);
+        if(test.status===422 && td?.field==='phone'){markDirectContactError('apiDirectPhone',td.error||'Numero di telefono non valido.',status);btn.disabled=false;btn.textContent=temp;return;}
+        if(test.status===422 && td?.field==='name'){markDirectContactError('apiDirectName',td.error||'Nome non valido.',status);btn.disabled=false;btn.textContent=temp;return;}
+        if(test.status===422 && td?.field==='email'){markDirectContactError('apiDirectEmail',td.error||'Email non valida.',status);btn.disabled=false;btn.textContent=temp;return;}
+      }catch(_){}
+      btn.disabled=false;btn.textContent=temp;
+    }
     btn.disabled=true;const old=btn.textContent;btn.textContent='Preparazione download…';status.textContent='';
     try{
       const response=await fetch('/api/free-edition-download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({editionId:'api-oggi-01',language:downloadLanguage,claimId:claimId(),customer:{name,email,phone}})});
