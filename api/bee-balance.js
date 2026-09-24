@@ -1,4 +1,12 @@
 const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');
+const {Pool}=require('pg');
+const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
+let testPool;
+function getTestPool(){if(!TEST_DB_URL)throw new Error('Database Saldo Api non configurato.');if(!testPool)testPool=new Pool({connectionString:TEST_DB_URL,max:1,idleTimeoutMillis:30000,connectionTimeoutMillis:10000});return testPool;}
+const TEST_ONCE='TESTAPI-ONCE-12830';
+const TEST_ALWAYS='TESTAPI-ALWAYS-12830';
+async function getOnceUsed(){const p=getTestPool();const r=await p.query("select payload from bee_test_state where id='wallet-test-once-12830' limit 1");return Boolean(r.rows[0]?.payload?.used);}
+async function useOnce(){const p=getTestPool();await p.query("insert into bee_test_state(id,payload,updated_at) values('wallet-test-once-12830',$1::jsonb,now()) on conflict(id) do update set payload=excluded.payload,updated_at=excluded.updated_at",[JSON.stringify({used:true,usedAt:new Date().toISOString()})]);}
 
 function escPdf(s){return String(s||'').replace(/[()\\]/g,m=>'\\'+m);}
 function walletCardPdf(code){
@@ -54,6 +62,31 @@ module.exports=async(req,res)=>{
     const email=normalizeEmail(body.email);
     const phone=normalizePhone(body.phone);
     const code=normalizeCode(body.code);
+    if(code===TEST_ONCE||code===TEST_ALWAYS){
+      const permanent=code===TEST_ALWAYS;
+      if(String(body.action||'')==='claim_test_reward'){
+        if(!permanent) await useOnce();
+        const balance=permanent?100:0;
+        return res.json({
+          ok:true,found:true,testMode:true,testKind:permanent?'always':'once',balance,earned:100,spent:permanent?0:100,
+          goal:100,remainingToReward:Math.max(0,100-balance),
+          testClaimed:true,
+          message:permanent
+            ? 'TEST completato: il codice permanente resta a 100 Punti Ape.'
+            : 'TEST completato: il cesto omaggio è stato simulato e il saldo TEST è tornato a 0.'
+        });
+      }
+      const used=permanent?false:await getOnceUsed();
+      const balance=permanent?100:(used?0:100);
+      return res.json({
+        ok:true,found:true,testMode:true,testKind:permanent?'always':'once',balance,earned:100,spent:used?100:0,
+        goal:100,remainingToReward:Math.max(0,100-balance),
+        canTestClaim:balance>=100,
+        message:permanent
+          ? 'Modalità TEST permanente: questo saldo resterà sempre a 100 Punti Ape.'
+          : (used?'Modalità TEST una tantum già utilizzata: saldo TEST = 0.':'Modalità TEST una tantum: puoi simulare il riscatto del cesto.')
+      });
+    }
     if(!email&&!phone&&!code) return res.status(422).json({ok:false,error:'Inserisci email, telefono oppure Codice Punti Ape.'});
     if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(422).json({ok:false,error:'Email non valida.'});
     if(phone&&phone.length<6) return res.status(422).json({ok:false,error:'Numero di telefono non valido.'});
