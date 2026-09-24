@@ -59,6 +59,9 @@ module.exports=async(req,res)=>{
       try{contact.phone=await normalizeOptionalPhone(contact.phone);}
       catch(_){return res.status(422).json({ok:false,field:'phone',error:'Numero di telefono non valido. Correggilo oppure lascia il campo vuoto.'});}
     }
+    if(body.validationOnly===true){
+      return res.json({ok:true,validated:true,customer:contact});
+    }
 
     const claimId=clean(body.claimId,180)||crypto.randomUUID();
     const orderId='FREE-'+EDITION_ID.toUpperCase()+'-'+hash(claimId).toUpperCase();
