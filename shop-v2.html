@@ -413,6 +413,7 @@ img{display:block;max-width:100%}
 .free-edition-form label span{font-weight:700;color:#79827c}
 .free-edition-form input{display:block;width:100%;margin-top:6px;border:1px solid #d7cdbb;border-radius:13px;padding:12px 13px;font:inherit;background:#fff;color:#17241e}
 .free-wallet-guide{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.free-wallet-option{border-radius:16px;padding:14px;line-height:1.4}.free-wallet-option.easy{background:#e9f5ee;border:1px solid #bfdcca}.free-wallet-option.code{background:#fff0bd;border:1px solid #e4c35d}.free-wallet-option strong{display:block;margin-bottom:4px}.free-wallet-result{margin-top:12px;padding:14px;border-radius:16px;background:#edf5f0;border:1px solid #c6ddce}.free-wallet-result a{display:inline-block;margin-top:9px;margin-right:7px;padding:9px 12px;border-radius:999px;text-decoration:none;font-weight:900;background:#10392c;color:#fff}.free-wallet-result a.alt{background:#fff;color:#654c08;border:1px solid #d2b661}
+.field-error{border-color:#b42318!important;background:#fff5f4!important;box-shadow:0 0 0 2px rgba(180,35,24,.08)!important}
 .free-edition-points{margin:18px 0;background:#fff0ae;color:#654c08;border-radius:16px;padding:13px 15px}
 @media(max-width:620px){.free-wallet-guide{grid-template-columns:1fr}}
 #freeEditionStatus{min-height:22px;margin:8px 0;color:#7a3c16;font-weight:800}
@@ -1602,6 +1603,14 @@ function closeFreeEditionModal(){
   o.classList.remove('open');
   o.setAttribute('aria-hidden','true');
 }
+function clearFreeContactErrors(){
+  ['freeName','freeEmail','freePhone'].forEach(id=>document.getElementById(id)?.classList.remove('field-error'));
+}
+function markFreeContactError(id,message,status){
+  clearFreeContactErrors();
+  const el=document.getElementById(id); if(el){el.classList.add('field-error');el.focus();}
+  status.textContent=message;
+}
 async function startFreeEditionDownload(){
   const btn=document.getElementById('freeEditionDownload');
   const status=document.getElementById('freeEditionStatus');
@@ -1610,9 +1619,19 @@ async function startFreeEditionDownload(){
   const phone=document.getElementById('freePhone').value.trim();
   const selectedLanguage=String(document.getElementById('freeLanguage')?.value||'').toLowerCase();
   const downloadLanguage=['it','en','de','fr','es'].includes(selectedLanguage)?selectedLanguage:purchaseLanguage();
-  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-    status.textContent='Controlla l’indirizzo email oppure lascialo vuoto.';
-    return;
+  clearFreeContactErrors();
+  if(name && (name.length<2 || !/[A-Za-zÀ-ÿ]/.test(name) || /^\d+$/.test(name))){markFreeContactError('freeName','Controlla nome e cognome oppure lascia il campo vuoto.',status);return;}
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){markFreeContactError('freeEmail','Controlla l’indirizzo email oppure lascialo vuoto.',status);return;}
+  if(phone){
+    btn.disabled=true;const temp=btn.textContent;btn.textContent='Verifica telefono…';
+    try{
+      const test=await fetch('/api/free-edition-download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({editionId:'api-oggi-01',language:downloadLanguage,claimId:'validation-only-'+Date.now(),validationOnly:true,customer:{name,email,phone}})});
+      const td=await test.json().catch(()=>null);
+      if(test.status===422 && td?.field==='phone'){markFreeContactError('freePhone',td.error||'Numero di telefono non valido.',status);btn.disabled=false;btn.textContent=temp;return;}
+      if(test.status===422 && td?.field==='name'){markFreeContactError('freeName',td.error||'Nome non valido.',status);btn.disabled=false;btn.textContent=temp;return;}
+      if(test.status===422 && td?.field==='email'){markFreeContactError('freeEmail',td.error||'Email non valida.',status);btn.disabled=false;btn.textContent=temp;return;}
+    }catch(_){}
+    btn.disabled=false;btn.textContent=temp;
   }
   btn.disabled=true;
   const old=btn.textContent;
