@@ -82,6 +82,43 @@ function cestoLang(v){const x=String(v||'it').toLowerCase();return CESTO_LANGS.h
 function cestoGiftName(id,lang){return lang==='it'?(TEST_GIFTS.get(id)||id):(CESTO_GIFT_NAMES[lang]?.[id]||TEST_GIFTS.get(id)||id);}
 
 function cleanField(v,max=180){return String(v||'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max);}
+function normalizePlace(v){
+  return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
+}
+let comuniCache=null,comuniCacheAt=0;
+async function getComuniItaliaDataset(){
+  if(comuniCache&&Date.now()-comuniCacheAt<86400000)return comuniCache;
+  const r=await fetch('https://cdn.jsdelivr.net/gh/RP92/comuni-italiani@main/data/comuni.json',{headers:{'Accept':'application/json','User-Agent':'LaFabbricaDelleApi/1.0 address-validator'}});
+  if(!r.ok)throw new Error('Servizio di verifica indirizzo temporaneamente non disponibile.');
+  const data=await r.json();
+  if(!Array.isArray(data))throw new Error('Servizio di verifica indirizzo temporaneamente non disponibile.');
+  comuniCache=data;comuniCacheAt=Date.now();return data;
+}
+async function validateItalianShippingAddress(shipping){
+  const city=cleanField(shipping.city,100);
+  const cap=cleanField(shipping.postalCode,20);
+  const province=cleanField(shipping.state,10).toUpperCase();
+  const address=cleanField(shipping.address,180);
+  if(!/[A-Za-zÀ-ÿ]/.test(address)||!/\d/.test(address))throw new Error('Inserisci sia il nome della via sia il numero civico.');
+  const dataset=await getComuniItaliaDataset();
+  const cityNorm=normalizePlace(city);
+  const matches=dataset.filter(item=>[item.nome,item.nomeAltraLingua].filter(Boolean).some(n=>normalizePlace(n)===cityNorm));
+  if(!matches.length)throw new Error('Il Comune “'+city+'” non risulta nell’elenco dei comuni italiani.');
+  const municipality=matches.find(item=>{
+    const caps=Array.isArray(item.cap)?item.cap.map(String):[];
+    const sigla=String(item.sigla||item.provincia?.sigla||'').toUpperCase();
+    return caps.includes(cap)&&sigla===province;
+  });
+  if(!municipality){
+    const caps=[...new Set(matches.flatMap(item=>Array.isArray(item.cap)?item.cap:[]))];
+    const sigle=[...new Set(matches.map(item=>item.sigla||item.provincia?.sigla).filter(Boolean))];
+    let msg='CAP, Comune e Provincia non corrispondono.';
+    if(caps.length)msg+=' Per '+city+' risultano: CAP '+caps.join(', ')+'.';
+    if(sigle.length)msg+=' Provincia '+sigle.join(', ')+'.';
+    throw new Error(msg);
+  }
+  return shipping;
+}
 function validateTestCesto(body){
   const gifts=Array.isArray(body.giftProducts)?body.giftProducts.map(x=>cleanField(x,100)):[];
   const unique=[...new Set(gifts)];
@@ -117,17 +154,7 @@ async function validateShippingRemotely(shipping){
   if(!/^3\d{8,9}$/.test(national)) throw new Error('Numero di telefono non valido.');
   shipping.phone='+39'+national;
 
-  const addressRes=await fetch('https://miele-shop-experience-v2.onrender.com/api/local-delivery-check?'+new URLSearchParams({
-    address:shipping.address,
-    city:shipping.city,
-    cap:shipping.postalCode,
-    province:shipping.state,
-    country:'IT'
-  }).toString(),{cache:'no-store'});
-  const addressData=await addressRes.json().catch(()=>null);
-  if(!addressRes.ok||!addressData?.ok||addressData?.validFullAddress!==true){
-    throw new Error(addressData?.error||'Indirizzo non verificato. Controlla via, numero civico, Comune, CAP e Provincia.');
-  }
+  await validateItalianShippingAddress(shipping);
   return shipping;
 }
 
