@@ -13,5 +13,25 @@ a{display:inline-block;background:var(--forest);color:#fff;text-decoration:none;
 const t={it:['Pagamento annullato','Nessun addebito è stato completato.','Il tuo carrello è stato conservato: puoi tornare allo shop e riprovare quando vuoi.','Torna allo shop'],en:['Payment cancelled','No charge was completed.','Your cart has been kept: you can return to the shop and try again whenever you want.','Back to shop'],de:['Zahlung abgebrochen','Es wurde keine Zahlung abgeschlossen.','Dein Warenkorb wurde gespeichert: Du kannst zum Shop zurückkehren und es erneut versuchen.','Zurück zum Shop'],fr:['Paiement annulé','Aucun débit n’a été effectué.','Votre panier a été conservé : vous pouvez revenir à la boutique et réessayer quand vous le souhaitez.','Retour à la boutique'],es:['Pago cancelado','No se ha realizado ningún cargo.','Tu carrito se ha conservado: puedes volver a la tienda e intentarlo de nuevo cuando quieras.','Volver a la tienda']};
 let l='it';try{const x=localStorage.getItem('fda-site-language');if(t[x])l=x}catch(_){}
 const x=t[l];document.getElementById('title').textContent=x[0];document.getElementById('text').textContent=x[1];document.getElementById('note').textContent=x[2];document.getElementById('back').textContent=x[3];
+
+(async()=>{
+  try{
+    const raw=localStorage.getItem('fda-production-pending-order');
+    if(!raw)return;
+    const order=JSON.parse(raw);
+    if(!order||!order.id)return;
+    const marker='fda-cancel-notified-'+String(order.id);
+    if(localStorage.getItem(marker)==='1')return;
+    const qs=new URLSearchParams(location.search);
+    const reason=qs.get('xpay')||'annullato';
+    const r=await fetch('/api/order-cancel-notification',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({...order,cancelReason:reason})
+    });
+    const d=await r.json().catch(()=>null);
+    if(r.ok&&d?.ok)localStorage.setItem(marker,'1');
+  }catch(_){}
+})();
 </script><script src="/render-language-de-test.js?v=20260923-10"></script>
 </body></html>
