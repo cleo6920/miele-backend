@@ -278,7 +278,10 @@ async function createTestCestoOrder(code,permanent,body){
     body:JSON.stringify({from:notifyFrom,to:[notifyTo],reply_to:shipping.email,subject,text})
   });
   const notifyData=await notify.json().catch(()=>null);
-  if(!notify.ok) throw new Error('Ordine creato ma email di notifica non inviata.');
+  if(!notify.ok){
+    console.error('[Cesto Punti Ape] Resend error',notify.status,notifyData?.message||notifyData?.error||'unknown');
+    throw new Error('Ordine creato ma email di notifica non inviata.');
+  }
   if(!permanent) await useOnce();
   return {orderNumber,giftObjects:giftObjects.map(g=>({id:g.id,name:cestoGiftName(g.id,lang)})),shipping,emailSent:true,balance:permanent?100:0,language:lang};
 }
