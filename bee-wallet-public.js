@@ -81,6 +81,16 @@ async function lookupWallet(identity){
   const b=await balanceForAccounts(accountIds);
   return {found:true,...b};
 }
+async function hasFreeEditionAward(identity,editionId){
+  const accountIds=await accountIdsFor(identity||{});
+  if(!accountIds.length)return false;
+  const p=getPool();
+  const r=await p.query(
+    "select 1 from bee_orders where account_id=any($1::text[]) and bee_points>0 and lower(coalesce(notes,'')) like lower($2) limit 1",
+    [accountIds,'%'+clean(editionId,80)+'%']
+  );
+  return Boolean(r.rows[0]);
+}
 async function attachContactToOrder(orderId,{email='',phone=''}={}){
   const p=getPool();
   const r=await p.query("select account_id from bee_orders where order_id=$1 limit 1",[clean(orderId,220)]);
@@ -121,4 +131,4 @@ async function ensureWalletCodeForOrder(orderId){
   }
   throw new Error('Impossibile creare il Codice Punti Ape.');
 }
-module.exports={lookupWallet,ensureWalletCodeForOrder,attachContactToOrder,normalizeEmail,normalizePhone,normalizeCode};
+module.exports={lookupWallet,ensureWalletCodeForOrder,attachContactToOrder,hasFreeEditionAward,normalizeEmail,normalizePhone,normalizeCode};
