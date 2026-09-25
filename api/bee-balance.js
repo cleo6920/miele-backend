@@ -37,6 +37,42 @@ function setAdminCookie(res,secret){
 function clearAdminCookie(res){
   res.setHeader('Set-Cookie',ADMIN_COOKIE+'=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
 }
+async function ensureAdminOrderEventsTable(){
+  const p=getTestPool();
+  await p.query(`
+    create table if not exists bee_admin_order_events(
+      id bigserial primary key,
+      event_type text not null,
+      order_id text not null,
+      created_at timestamptz not null default now(),
+      payload jsonb not null default '{}'::jsonb
+    )
+  `);
+  await p.query("create index if not exists bee_admin_order_events_order_idx on bee_admin_order_events(order_id)");
+  await p.query("create index if not exists bee_admin_order_events_created_idx on bee_admin_order_events(created_at desc)");
+}
+async function recordAdminOrderEvent(eventType,orderId,payload){
+  try{
+    await ensureAdminOrderEventsTable();
+    const p=getTestPool();
+    await p.query(
+      "insert into bee_admin_order_events(event_type,order_id,payload) values($1,$2,$3::jsonb)",
+      [cleanField(eventType,40),cleanField(orderId,160),JSON.stringify(payload||{})]
+    );
+  }catch(error){
+    console.warn('[Area riservata] impossibile registrare evento ordine',error?.message||error);
+  }
+}
+async function adminOrdersSnapshot(){
+  await ensureAdminOrderEventsTable();
+  const p=getTestPool();
+  const [paid,events]=await Promise.all([
+    p.query("select * from bee_orders order by created_at desc limit 80"),
+    p.query("select event_type,order_id,created_at,payload from bee_admin_order_events order by created_at desc limit 80")
+  ]);
+  return {paid:paid.rows||[],events:events.rows||[]};
+}
+
 async function handleAdminAction(req,res,action){
   const secret=adminSecret();
   if(action==='status') return res.json({ok:true,configured:Boolean(secret),authenticated:Boolean(secret&&isAdmin(req))});
@@ -52,6 +88,15 @@ async function handleAdminAction(req,res,action){
     return res.json({ok:true});
   }
   if(!isAdmin(req))return res.status(401).json({ok:false,error:'Accesso riservato.'});
+  if(action==='orders'){
+    try{
+      const data=await adminOrdersSnapshot();
+      return res.json({ok:true,...data});
+    }catch(error){
+      console.error('[Area riservata] ordini',error);
+      return res.status(500).json({ok:false,error:'Non è stato possibile caricare gli ordini.'});
+    }
+  }
   return res.status(400).json({ok:false,error:'Operazione amministrativa non riconosciuta.'});
 }
 const TEST_ONCE='TESTAPI-ONCE-12830';
@@ -178,6 +223,7 @@ async function handleOrderEmailAction(req,res,action){
       '','Nessun pagamento completato da questa notifica.'
     ].join('\n');
     await sendAdminResend({subject:'ACQUISTO ANNULLATO · '+o.id+' · '+o.customer.name,text,replyTo:o.customer.email,idempotency:'cancel-'+o.id});
+    await recordAdminOrderEvent('cancelled',o.id,{...o,cancelReason:reason});
     return res.json({ok:true,orderId:o.id,emailSent:true,cancelled:true});
   }
   const text=[
