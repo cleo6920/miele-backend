@@ -96,6 +96,14 @@
       "destination": "https://miele-shop-experience-v2.onrender.com/api/phone-normalize"
     },
     {
+      "source": "/api/order-notification",
+      "destination": "/api/bee-balance?emailAction=order"
+    },
+    {
+      "source": "/api/order-cancel-notification",
+      "destination": "/api/bee-balance?emailAction=cancel"
+    },
+    {
       "source": "/api/site-translate",
       "destination": "https://miele-shop-experience-v2.onrender.com/api/site-translate"
     },
