@@ -65,36 +65,55 @@ def restore(text,saved):
     for token,val in saved.items(): out=out.replace(token,val)
     return out
 
+def translate_one_google(text,lang):
+    if not text:return text
+    p,saved=protect(text)
+    params={"client":"gtx","sl":"it","tl":lang,"dt":"t","q":p}
+    last=None
+    for attempt in range(6):
+        try:
+            r=requests.get("https://translate.googleapis.com/translate_a/single",params=params,timeout=40)
+            if r.ok:
+                data=r.json()
+                out="".join((part[0] or "") for part in (data[0] or []) if isinstance(part,list))
+                out=restore(str(out or "").strip(),saved)
+                if out:
+                    return out
+            last=f"HTTP {r.status_code}"
+        except Exception as e:
+            last=str(e)
+        time.sleep(1.5+attempt*1.5)
+    raise RuntimeError(f"google translation failed {lang}: {last}")
+
 def translate_batch(texts,lang):
     if not texts:return []
-    url="https://www.lafabbricadelleapi.it/api/site-translate"
     results=[]
-    for start in range(0,len(texts),14):
-        chunk=texts[start:start+14]
-        payload=[]
-        maps=[]
-        for t in chunk:
-            p,s=protect(t)
-            payload.append(p); maps.append(s)
-        data=None
-        for attempt in range(5):
-            try:
-                r=requests.post(url,json={"target":lang,"texts":payload},timeout=90)
-                if r.ok:
-                    j=r.json()
-                    if j.get("ok") and isinstance(j.get("translations"),list):
-                        data=j["translations"]; break
-            except Exception as e:
-                print("translate retry",lang,attempt,e)
-            time.sleep(2+attempt*2)
-        if not data or len(data)!=len(chunk):
-            raise RuntimeError(f"translation failed {lang} batch {start}")
-        for original,tr,saved in zip(chunk,data,maps):
-            tr=restore(str(tr or "").strip(),saved)
-            if not tr: tr=original
-            results.append(tr)
-        print(lang,start+len(chunk),"/",len(texts))
+    total=len(texts)
+    for i,t in enumerate(texts,1):
+        if should_skip(t):
+            results.append(t)
+            continue
+        tr=translate_one_google(t,lang)
+        results.append(tr)
+        if i%10==0 or i==total:
+            print(lang,i,"/",total)
+        time.sleep(0.08)
     return results
+
+def validate_pdf_language(pdf_path,lang):
+    import pymupdf
+    from langdetect import detect, DetectorFactory
+    DetectorFactory.seed=0
+    doc=pymupdf.open(pdf_path)
+    text=" ".join((p.get_text("text") or "") for p in doc)
+    doc.close()
+    text=re.sub(r"\\s+"," ",text).strip()
+    if len(text)<500:
+        raise RuntimeError(f"{pdf_path}: insufficient text for language validation")
+    detected=detect(text[:12000])
+    if detected!=lang:
+        raise RuntimeError(f"{pdf_path}: detected {detected}, expected {lang}")
+    print("validated",pdf_path,detected)
 
 def extract_blocks(doc):
     pages=[]
@@ -199,6 +218,7 @@ def main():
         lookup=dict(zip(unique,translated_unique))
         ordered=[lookup[t] for t in translatable]
         out=build(lang,pages_info,ordered)
+        validate_pdf_language(out,lang)
         render_preview(out,lang)
         print("built",out,out.stat().st_size)
     print("done")
