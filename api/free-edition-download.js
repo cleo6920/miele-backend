@@ -17,25 +17,19 @@ async function normalizeOptionalPhone(v){
   const raw=String(v||'').trim();
   if(!raw)return '';
   let compact=raw.replace(/[\s().-]/g,'');
-  if(compact.startsWith('00')) compact='+'+compact.slice(2);
-  const candidates=[];
-  if(compact.startsWith('+')){
-    const digits=compact.slice(1).replace(/\D/g,'');
-    for(let n=1;n<=4;n++){
-      if(digits.length>n+3)candidates.push({prefix:'+'+digits.slice(0,n),phone:digits.slice(n)});
-    }
-  }else{
+  if(compact.startsWith('00'))compact='+'+compact.slice(2);
+  if(!compact.startsWith('+')){
     const digits=compact.replace(/\D/g,'');
-    candidates.push({prefix:'+39',phone:digits});
+    if(!/^3\d{8,9}$/.test(digits))throw new Error('Telefono non valido.');
+    return '+39'+digits;
   }
-  for(const candidate of candidates){
-    try{
-      const response=await fetch('https://miele-shop-experience-v2.onrender.com/api/phone-normalize?'+new URLSearchParams(candidate).toString(),{cache:'no-store'});
-      const data=await response.json().catch(()=>null);
-      if(response.ok&&data?.ok&&data?.e164)return data.e164;
-    }catch(_){}
+  const digits=compact.slice(1).replace(/\D/g,'');
+  if(!/^\d{8,15}$/.test(digits))throw new Error('Telefono non valido.');
+  if(compact.startsWith('+39')){
+    const national=digits.slice(2);
+    if(!/^3\d{8,9}$/.test(national))throw new Error('Telefono non valido.');
   }
-  throw new Error('Telefono non valido.');
+  return '+'+digits;
 }
 function hash(v){return crypto.createHash('sha256').update(String(v||'')).digest('hex').slice(0,20);}
 
