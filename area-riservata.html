@@ -18,6 +18,8 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 .tile{border:1px solid var(--line);border-radius:18px;padding:18px;background:var(--cream)}.tile h3{margin:0 0 8px;color:var(--g)}.tile p{margin:0;color:#66736d;line-height:1.45}
 .badge{display:inline-block;margin-top:10px;padding:6px 9px;border-radius:999px;background:#efe6d2;font-size:12px;font-weight:900}
 .back{display:inline-block;margin:0 0 18px;color:var(--g);font-weight:800;text-decoration:none}
+.orders{margin-top:22px}.orders-head{display:flex;gap:10px;align-items:center;justify-content:space-between}.orders-head button{width:auto;margin:0;padding:10px 14px;font-size:14px}
+.order-list{display:grid;gap:12px;margin-top:14px}.order{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff}.order-top{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.order strong{color:var(--g)}.order small{color:#708078}.status{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.status.paid{background:#dff3e8;color:#17613f}.status.cancelled{background:#fde6df;color:#8f3c2c}.order-lines{margin-top:8px;line-height:1.5;color:#4e5b55;font-size:14px}
 </style>
 </head>
 <body>
@@ -40,19 +42,57 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
   <div class="grid">
     <div class="tile"><h3>🐝 Codici Punti Ape</h3><p>Generazione codici per vendite fisiche alla Galena e ai mercatini.</p><span class="badge">prossimo passo</span></div>
     <div class="tile"><h3>📦 Stock prodotti</h3><p>Controllo e aggiornamento delle quantità disponibili.</p><span class="badge">in preparazione</span></div>
-    <div class="tile"><h3>🧾 Ordini</h3><p>Consultazione ordini online e cesti riscattati.</p><span class="badge">in preparazione</span></div>
+    <div class="tile"><h3>🧾 Ordini</h3><p>Pagamenti riusciti e operazioni annullate/non completate.</p><span class="badge">attivo</span></div>
   </div>
+  <section class="orders">
+    <div class="orders-head"><h3 style="margin:0">Ordini recenti</h3><button id="refreshOrders" type="button">Aggiorna</button></div>
+    <div id="ordersMsg" class="msg"></div>
+    <div id="orderList" class="order-list"></div>
+  </section>
   <button id="logoutBtn" class="alt" type="button">Esci dall'area riservata</button>
 </section>
 </div>
 <script>
 const loginCard=document.getElementById('loginCard'),dashboard=document.getElementById('dashboard'),msg=document.getElementById('loginMsg');
 async function api(action,body={}){const r=await fetch('/api/bee-balance?adminAction='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'});const d=await r.json().catch(()=>({}));return {r,d};}
-function showDash(){loginCard.style.display='none';dashboard.style.display='block'}
+function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders()}
 function showLogin(){dashboard.style.display='none';loginCard.style.display='block'}
 (async()=>{try{const {d}=await api('status');if(d.authenticated)showDash();else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';}catch(_){}})();
 document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash();}else msg.textContent=d.error||'Accesso non riuscito.';});
 document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginBtn').click();});
+function euro(v){return Number(v||0).toFixed(2).replace('.',',')+' €'}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function paidCard(o){
+  const customer=o.customer||{},items=Array.isArray(o.items)?o.items:[];
+  const id=o.order_id||o.orderId||o.id||'—';
+  const when=o.created_at?new Date(o.created_at).toLocaleString('it-IT'):'';
+  return '<div class="order"><div class="order-top"><div><strong>'+esc(id)+'</strong><br><small>'+esc(when)+'</small></div><span class="status paid">PAGATO</span></div><div class="order-lines">'+
+    esc(customer.name||'Cliente non indicato')+' · '+esc(customer.email||customer.phone||'')+'<br>'+
+    items.map(x=>esc(x.productName||x.name||x.id||'Prodotto')+' × '+esc(x.quantity||x.qty||1)).join('<br>')+
+    '<br><strong>Totale: '+euro(o.total||0)+'</strong></div></div>';
+}
+function cancelledCard(e){
+  const o=e.payload||{},customer=o.customer||{},items=Array.isArray(o.items)?o.items:[];
+  const when=e.created_at?new Date(e.created_at).toLocaleString('it-IT'):'';
+  return '<div class="order"><div class="order-top"><div><strong>'+esc(e.order_id||o.id||'—')+'</strong><br><small>'+esc(when)+'</small></div><span class="status cancelled">ANNULLATO</span></div><div class="order-lines">'+
+    esc(customer.name||'Cliente non indicato')+' · '+esc(customer.email||customer.phone||'')+'<br>'+
+    items.map(x=>esc(x.name||x.productName||x.id||'Prodotto')+' × '+esc(x.qty||x.quantity||1)).join('<br>')+
+    '<br><strong>Totale previsto: '+euro(o.total||0)+'</strong>'+
+    (o.cancelReason?'<br>Motivo: '+esc(o.cancelReason):'')+'</div></div>';
+}
+async function loadOrders(){
+  const box=document.getElementById('orderList'),m=document.getElementById('ordersMsg');
+  if(!box)return;m.textContent='Caricamento…';box.innerHTML='';
+  const {r,d}=await api('orders');
+  if(!r.ok){m.textContent=d.error||'Impossibile caricare gli ordini.';return;}
+  m.textContent='';
+  const merged=[
+    ...(Array.isArray(d.paid)?d.paid.map(x=>({kind:'paid',at:new Date(x.created_at||0).getTime(),x})):[]),
+    ...(Array.isArray(d.events)?d.events.map(x=>({kind:'cancelled',at:new Date(x.created_at||0).getTime(),x})):[])
+  ].sort((a,b)=>b.at-a.at).slice(0,100);
+  box.innerHTML=merged.length?merged.map(v=>v.kind==='paid'?paidCard(v.x):cancelledCard(v.x)).join(''):'<p>Nessun ordine registrato.</p>';
+}
+document.getElementById('refreshOrders').addEventListener('click',loadOrders);
 document.getElementById('logoutBtn').addEventListener('click',async()=>{await api('logout');showLogin();});
 </script>
 </body>
