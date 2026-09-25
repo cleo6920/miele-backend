@@ -1,4 +1,4 @@
-const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');
+const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');\nconst {callBeeDataApi}=require('../bee-wallet-client');
 const {Pool}=require('pg');
 const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
 let testPool;
@@ -337,7 +337,22 @@ module.exports=async(req,res)=>{
     if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(422).json({ok:false,error:'Email non valida.'});
     if(phone&&phone.length<6) return res.status(422).json({ok:false,error:'Numero di telefono non valido.'});
     if(code&&!/^APE-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(code)) return res.status(422).json({ok:false,error:'Codice Punti Ape non valido.'});
-    const result=await lookupWallet({email,phone,code});
+    let result;
+    if(email||phone){
+      const data=await callBeeDataApi('lookup',{email,phone});
+      if(data&&data.ok===false){
+        const status=Number(data.status)||400;
+        return res.status(status).json(data);
+      }
+      result={
+        found:!!(data&&data.found),
+        balance:Number(data&&data.balance||0),
+        earned:Number(data&&data.earned||0),
+        spent:Number(data&&data.spent||0)
+      };
+    }else{
+      result=await lookupWallet({email,phone,code});
+    }
     if(!result.found) return res.status(404).json({ok:false,found:false,error:'Nessun Saldo Punti Ape trovato con questi dati.'});
     return res.json({
       ok:true,found:true,balance:result.balance,earned:result.earned,spent:result.spent,
