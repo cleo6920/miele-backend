@@ -109,14 +109,13 @@ async function validateShippingRemotely(shipping){
   if(!/^\d{5}$/.test(cleanField(shipping.postalCode,20))) throw new Error('Il CAP deve essere composto da 5 cifre.');
   if(!/^[A-Za-z]{2}$/.test(cleanField(shipping.state,10))) throw new Error('La Provincia deve essere indicata con la sigla di 2 lettere, ad esempio MN.');
   let phoneRaw=cleanField(shipping.phone,60).replace(/[\s().-]/g,'');
-  let prefix='+39', national=phoneRaw;
+  let national=phoneRaw;
   if(phoneRaw.startsWith('0039')) national=phoneRaw.slice(4);
   else if(phoneRaw.startsWith('+39')) national=phoneRaw.slice(3);
   else if(phoneRaw.startsWith('+')) throw new Error('Per il test usa un numero italiano oppure il prefisso +39.');
-  const phoneRes=await fetch('https://miele-shop-experience-v2.onrender.com/api/phone-normalize?'+new URLSearchParams({prefix,phone:national}).toString(),{cache:'no-store'});
-  const phoneData=await phoneRes.json().catch(()=>null);
-  if(!phoneRes.ok||!phoneData?.ok||!phoneData?.e164) throw new Error(phoneData?.error||'Numero di telefono non valido.');
-  shipping.phone=phoneData.e164;
+  national=national.replace(/\D/g,'');
+  if(!/^3\d{8,9}$/.test(national)) throw new Error('Numero di telefono non valido.');
+  shipping.phone='+39'+national;
 
   const addressRes=await fetch('https://miele-shop-experience-v2.onrender.com/api/local-delivery-check?'+new URLSearchParams({
     address:shipping.address,
