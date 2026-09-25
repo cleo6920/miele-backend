@@ -1,4 +1,4 @@
-import fitz, os, re, json, time, requests
+import fitz, os, re, json
 from pathlib import Path
 
 SRC=Path("downloads/il-mondo-delle-api-oggi-01.pdf")
@@ -65,104 +65,19 @@ def restore(text,saved):
     for token,val in saved.items(): out=out.replace(token,val)
     return out
 
-def _google_request(text,lang):
-    params={"client":"gtx","sl":"it","tl":lang,"dt":"t","q":text}
-    last=None
-    waits=[0,18,35,60,90,120]
-    for attempt,wait in enumerate(waits):
-        if wait:
-            print("rate-limit wait",lang,wait,"s")
-            time.sleep(wait)
-        try:
-            r=requests.get(
-                "https://translate.googleapis.com/translate_a/single",
-                params=params,
-                timeout=60,
-                headers={"User-Agent":"Mozilla/5.0"}
-            )
-            if r.ok:
-                data=r.json()
-                out="".join((part[0] or "") for part in (data[0] or []) if isinstance(part,list))
-                if out.strip():
-                    return out.strip()
-            last=f"HTTP {r.status_code}"
-            if r.status_code!=429 and r.status_code<500:
-                break
-        except Exception as e:
-            last=str(e)
-    raise RuntimeError(f"google translation failed {lang}: {last}")
+def load_static_translations(lang,expected_count):
+    path=Path("scripts/api_oggi_translations")/f"{lang}.tsv"
+    if not path.exists():
+        raise RuntimeError(f"missing static translation file: {path}")
+    rows={}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip(): continue
+        idx,text=line.split("\t",1)
+        rows[int(idx)]=text.replace("\\n","\n")
+    if sorted(rows.keys()) != list(range(expected_count)):
+        raise RuntimeError(f"{lang}: expected {expected_count} translation rows, found {len(rows)}")
+    return [rows[i] for i in range(expected_count)]
 
-def translate_one_google(text,lang):
-    if not text:return text
-    p,saved=protect(text)
-    out=_google_request(p,lang)
-    return restore(out,saved)
-
-def translate_batch(texts,lang):
-    if not texts:return []
-    prepared=[]
-    saved_maps=[]
-    for t in texts:
-        p,s=protect(t)
-        prepared.append(p)
-        saved_maps.append(s)
-
-    # Translate groups instead of one HTTP request per text. This keeps the
-    # public endpoint well below its rate limit and preserves the exact order.
-    chunks=[]
-    current=[]
-    current_len=0
-    max_chars=3200
-    for idx,p in enumerate(prepared):
-        extra=len(p)+80
-        if current and current_len+extra>max_chars:
-            chunks.append(current)
-            current=[]
-            current_len=0
-        current.append((idx,p))
-        current_len+=extra
-    if current:chunks.append(current)
-
-    results=[None]*len(texts)
-    for ci,chunk in enumerate(chunks,1):
-        markers=[]
-        pieces=[]
-        for local,(idx,p) in enumerate(chunk):
-            marker=f"___FDA_SPLIT_{local:04d}___"
-            markers.append(marker)
-            pieces.append(marker+"\n"+p)
-        payload="\n\n".join(pieces)
-        translated=_google_request(payload,lang)
-
-        pattern=r"___FDA_SPLIT_(\\d{4})___"
-        matches=list(re.finditer(pattern,translated))
-        parsed={}
-        for mi,m in enumerate(matches):
-            local=int(m.group(1))
-            a=m.end()
-            b=matches[mi+1].start() if mi+1<len(matches) else len(translated)
-            parsed[local]=translated[a:b].strip()
-
-        if len(parsed)!=len(chunk):
-            print("chunk markers changed; safe fallback",lang,ci)
-            # Slow fallback only for this chunk, with a pause between calls.
-            for local,(idx,p) in enumerate(chunk):
-                tr=_google_request(p,lang)
-                results[idx]=restore(tr,saved_maps[idx])
-                time.sleep(2.0)
-        else:
-            for local,(idx,p) in enumerate(chunk):
-                tr=parsed.get(local,"").strip()
-                if not tr:
-                    raise RuntimeError(f"empty translation {lang} chunk {ci} item {local}")
-                results[idx]=restore(tr,saved_maps[idx])
-
-        print(lang,"chunk",ci,"/",len(chunks),"items",len(chunk))
-        time.sleep(2.2)
-
-    if any(x is None for x in results):
-        raise RuntimeError(f"incomplete translation {lang}")
-    return results
 
 def validate_pdf_language(pdf_path,lang):
     import pymupdf
@@ -278,7 +193,7 @@ def main():
     # translate only unique strings, then remap in source order
     unique=list(dict.fromkeys(translatable))
     for lang in LANGS:
-        translated_unique=translate_batch(unique,lang)
+        translated_unique=load_static_translations(lang,len(unique))
         lookup=dict(zip(unique,translated_unique))
         ordered=[lookup[t] for t in translatable]
         out=build(lang,pages_info,ordered)
