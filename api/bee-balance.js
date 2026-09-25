@@ -1,9 +1,59 @@
+const crypto=require('crypto');
 const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');
 const {callBeeDataApi}=require('../bee-wallet-client');
 const {Pool}=require('pg');
 const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
 let testPool;
 function getTestPool(){if(!TEST_DB_URL)throw new Error('Database Saldo Api non configurato.');if(!testPool)testPool=new Pool({connectionString:TEST_DB_URL,max:1,idleTimeoutMillis:30000,connectionTimeoutMillis:10000});return testPool;}
+const ADMIN_COOKIE='fda_admin_session';
+function adminSecret(){return String(process.env.ADMIN_ACCESS_KEY||'').trim();}
+function safeEqual(a,b){
+  const aa=Buffer.from(String(a||'')),bb=Buffer.from(String(b||''));
+  return aa.length===bb.length&&crypto.timingSafeEqual(aa,bb);
+}
+function parseCookies(req){
+  const out={};
+  String(req.headers?.cookie||'').split(';').forEach(part=>{const i=part.indexOf('=');if(i>0)out[part.slice(0,i).trim()]=decodeURIComponent(part.slice(i+1).trim());});
+  return out;
+}
+function adminToken(secret,ts){
+  return ts+'.'+crypto.createHmac('sha256',secret).update('admin:'+ts).digest('hex');
+}
+function isAdmin(req){
+  const secret=adminSecret(); if(!secret)return false;
+  const token=parseCookies(req)[ADMIN_COOKIE]||'';
+  const [ts,sig]=String(token).split('.');
+  if(!/^\d+$/.test(ts)||!sig)return false;
+  const age=Date.now()-Number(ts);
+  if(age<0||age>12*60*60*1000)return false;
+  const expected=adminToken(secret,ts).split('.')[1];
+  return safeEqual(sig,expected);
+}
+function setAdminCookie(res,secret){
+  const ts=String(Date.now());
+  const token=adminToken(secret,ts);
+  res.setHeader('Set-Cookie',ADMIN_COOKIE+'='+encodeURIComponent(token)+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=43200');
+}
+function clearAdminCookie(res){
+  res.setHeader('Set-Cookie',ADMIN_COOKIE+'=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
+}
+async function handleAdminAction(req,res,action){
+  const secret=adminSecret();
+  if(action==='status') return res.json({ok:true,configured:Boolean(secret),authenticated:Boolean(secret&&isAdmin(req))});
+  if(action==='login'){
+    if(!secret)return res.status(503).json({ok:false,error:'Area riservata non ancora configurata.'});
+    const supplied=String(req.body?.password||'');
+    if(!safeEqual(supplied,secret))return res.status(401).json({ok:false,error:'Credenziali non valide.'});
+    setAdminCookie(res,secret);
+    return res.json({ok:true,authenticated:true});
+  }
+  if(action==='logout'){
+    clearAdminCookie(res);
+    return res.json({ok:true});
+  }
+  if(!isAdmin(req))return res.status(401).json({ok:false,error:'Accesso riservato.'});
+  return res.status(400).json({ok:false,error:'Operazione amministrativa non riconosciuta.'});
+}
 const TEST_ONCE='TESTAPI-ONCE-12830';
 const TEST_ALWAYS='TESTAPI-ALWAYS-12830';
 const TEST_GIFTS=new Map([
@@ -423,6 +473,8 @@ module.exports=async(req,res)=>{
   }
   if(req.method!=='POST') return res.status(405).json({ok:false,error:'Metodo non consentito.'});
   try{
+    const adminAction=cleanField(req.query?.adminAction,30).toLowerCase();
+    if(adminAction) return await handleAdminAction(req,res,adminAction);
     const emailAction=cleanField(req.query?.emailAction,30).toLowerCase();
     if(emailAction==='order'||emailAction==='cancel') return await handleOrderEmailAction(req,res,emailAction);
     const body=req.body||{};
