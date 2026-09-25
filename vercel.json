@@ -96,10 +96,6 @@
       "destination": "https://miele-shop-experience-v2.onrender.com/api/phone-normalize"
     },
     {
-      "source": "/api/order-notification",
-      "destination": "https://miele-shop-experience-v2.onrender.com/api/order-notification"
-    },
-    {
       "source": "/api/site-translate",
       "destination": "https://miele-shop-experience-v2.onrender.com/api/site-translate"
     },
