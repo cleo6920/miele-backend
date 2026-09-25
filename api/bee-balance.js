@@ -239,7 +239,7 @@ async function createTestCestoOrder(code,permanent,body){
   const resendKey=String(process.env.RESEND_API_KEY||'').trim();
   const notifyTo=String(process.env.ORDER_EMAIL_TO||'').trim();
   if(!resendKey||!notifyTo) throw new Error('Ordine creato ma email di notifica non configurata.');
-  const notifyFrom=String(process.env.ORDER_EMAIL_FROM||'La Fabbrica delle Api <onboarding@resend.dev>').trim();
+  const notifyFrom='La Fabbrica delle Api <onboarding@resend.dev>';
   const subject='TEST · Cesto Punti Ape '+orderNumber+' · '+shipping.name;
   const text=[
     'LA FABBRICA DELLE API',
