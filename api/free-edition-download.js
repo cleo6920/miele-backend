@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { callBeeDataApi } = require('../bee-wallet-client');
-const { ensureWalletCodeForOrder, attachContactToOrder, lookupWallet } = require('../bee-wallet-public');
+const { attachContactToOrder, lookupWallet, hasFreeEditionAward } = require('../bee-wallet-public');
 
 const EDITION_ID='api-oggi-01';
 const PRODUCT_ID='alveo-digitale-api-oggi-01';
@@ -59,58 +59,59 @@ module.exports=async(req,res)=>{
 
     const claimId=clean(body.claimId,180)||crypto.randomUUID();
     const orderId='FREE-'+EDITION_ID.toUpperCase()+'-'+hash(claimId).toUpperCase();
+    const pointEligible=Boolean(contact.email||contact.phone);
     let pointsAwarded=false;
+    let pointAlreadyAwarded=false;
     let pointsPending=false;
     let pointsError='';
     let walletCode='';
     let walletBalance=null;
 
-    try{
-      const existing=await callBeeDataApi('get_purchase',{orderId});
-      if(existing && existing.ok!==false && (existing.order||existing.purchase||existing.data)){
-        pointsAwarded=true;
-      }else{
-        const pointItem={
-          productId:PRODUCT_ID,
-          productName:'Il mondo delle api oggi · Numero 01',
-          price:0,
-          quantity:1,
-          pointsPerUnit:1,
-          bonusPerUnit:1,
-          totalPoints:1,
-          calculation:'Edizione Aperta · 1 Punto Ape al download'
-        };
-        const result=await callBeeDataApi('create_purchase',{
-          orderId,
-          couponCode:'',
-          mode:'FREE_DOWNLOAD',
-          customer:contact,
-          items:[pointItem],
-          goodsTotal:0,
-          shipping:0,
-          total:0,
-          beePoints:1,
-          notes:'Download gratuito '+EDITION_ID+' · lingua '+language
-        });
-        if(result && result.ok!==false) pointsAwarded=true;
-        else {pointsPending=true;pointsError=clean(result&&result.error,250);}
+    if(pointEligible){
+      try{
+        pointAlreadyAwarded=await hasFreeEditionAward({email:contact.email,phone:contact.phone},EDITION_ID);
+        if(!pointAlreadyAwarded){
+          const existing=await callBeeDataApi('get_purchase',{orderId});
+          if(existing && existing.ok!==false && (existing.order||existing.purchase||existing.data)){
+            pointsAwarded=true;
+          }else{
+            const pointItem={
+              productId:PRODUCT_ID,
+              productName:'Il mondo delle api oggi · Numero 01',
+              price:0,
+              quantity:1,
+              pointsPerUnit:1,
+              bonusPerUnit:1,
+              totalPoints:1,
+              calculation:'Edizione Aperta · 1 Punto Ape al download'
+            };
+            const result=await callBeeDataApi('create_purchase',{
+              orderId,
+              couponCode:'',
+              mode:'FREE_DOWNLOAD',
+              customer:contact,
+              items:[pointItem],
+              goodsTotal:0,
+              shipping:0,
+              total:0,
+              beePoints:1,
+              notes:'Download gratuito '+EDITION_ID+' · lingua '+language
+            });
+            if(result && result.ok!==false) pointsAwarded=true;
+            else {pointsPending=true;pointsError=clean(result&&result.error,250);}
+          }
+        }
+      }catch(error){
+        pointsPending=true;
+        pointsError=clean(error&&error.message,250);
       }
-    }catch(error){
-      pointsPending=true;
-      pointsError=clean(error&&error.message,250);
     }
 
-    if(pointsAwarded){
+    if(pointEligible){
       try{
-        if(contact.email||contact.phone){
-          await attachContactToOrder(orderId,{email:contact.email,phone:contact.phone});
-          const wallet=await lookupWallet({email:contact.email,phone:contact.phone});
-          if(wallet?.found) walletBalance=wallet.balance;
-        }else{
-          walletCode=await ensureWalletCodeForOrder(orderId);
-          const wallet=walletCode?await lookupWallet({code:walletCode}):null;
-          if(wallet?.found) walletBalance=wallet.balance;
-        }
+        if(pointsAwarded) await attachContactToOrder(orderId,{email:contact.email,phone:contact.phone});
+        const wallet=await lookupWallet({email:contact.email,phone:contact.phone});
+        if(wallet?.found) walletBalance=wallet.balance;
       }catch(error){
         console.warn('[Edizioni Aperte] wallet helper',error?.message||error);
       }
@@ -170,8 +171,10 @@ module.exports=async(req,res)=>{
       language,
       downloadUrl:'/downloads/il-mondo-delle-api-oggi-01-'+language+'.pdf',
       fileName:'Il_mondo_delle_api_oggi_Numero_01_'+language.toUpperCase()+'.pdf',
-      points:1,
+      points:pointEligible?1:0,
+      pointEligible,
       pointsAwarded,
+      pointAlreadyAwarded,
       pointsPending,
       pointsError:pointsPending?'Il punto è stato registrato come da sincronizzare.':'',
       orderId,
