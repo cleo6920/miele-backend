@@ -79,7 +79,7 @@ async function finalize(){
         digitalDownload.hidden=false;
       }
 
-      if(order){
+      if(order && qs.get('mail')==='pending'){
         const marker='fda-paid-xpay-notified-'+String(vd.codTrans||'');
         if(localStorage.getItem(marker)!=='1'){
           try{
@@ -89,7 +89,10 @@ async function finalize(){
             });
             const nd=await nr.json().catch(()=>null);
             if(nr.ok&&nd?.ok) localStorage.setItem(marker,'1');
-          }catch(_){}
+            else throw new Error(T.notify);
+          }catch(_){
+            status.className='status warn';status.textContent=T.notify;retry.hidden=false;return;
+          }
         }
       }
       localStorage.removeItem('fda-shop-v2-cart');
