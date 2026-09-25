@@ -347,7 +347,19 @@ async function claimTestReward(){
       })
     });
     const data=await r.json().catch(()=>null);
-    if(!r.ok||!data?.ok)throw new Error(data?.error||'Ordine Cesto non disponibile.');
+    if(!r.ok||!data?.ok){
+      const errMsg=data?.error||'Ordine Cesto non disponibile.';
+      let fieldId='';
+      if(/telefono|phone/i.test(errMsg))fieldId='shipPhone';
+      else if(/CAP|postal/i.test(errMsg))fieldId='shipPostal';
+      else if(/Provincia|province|state/i.test(errMsg))fieldId='shipState';
+      else if(/Comune|city/i.test(errMsg))fieldId='shipCity';
+      else if(/indirizzo|address|via/i.test(errMsg))fieldId='shipAddress';
+      else if(/email/i.test(errMsg))fieldId='shipEmail';
+      showValidationError(errMsg,fieldId);
+      btn.disabled=false;btn.textContent=old;
+      return;
+    }
     const b=Math.max(0,Number(data.balance||0));
     document.getElementById('balance').textContent=b;
     document.getElementById('bar').style.width=Math.min(100,b)+'%';
