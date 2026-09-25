@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Area riservata · La Fabbrica delle Api</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--g:#123d30;--g2:#1c5b45;--gold:#e7ad2f;--cream:#fffaf0;--ink:#17221d;--line:#e6dcc8}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#fffaf0,#f6efe2);color:var(--ink);min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:28px 18px 50px}
+.brand{text-align:center;margin:10px 0 26px}.brand h1{margin:0;color:var(--g);font-size:30px}.brand p{margin:7px 0 0;color:#66736d}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 12px 40px rgba(30,55,45,.09)}
+label{display:block;font-weight:800;margin:14px 0 7px}input{width:100%;padding:15px 16px;border:1px solid #cfc7b8;border-radius:13px;font-size:17px}
+button{width:100%;margin-top:16px;padding:15px 18px;border:0;border-radius:13px;background:var(--g);color:#fff;font-weight:900;font-size:17px;cursor:pointer}
+button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:700;color:#9a3b2f}.ok{color:var(--g)}
+.dashboard{display:none}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:18px}
+.tile{border:1px solid var(--line);border-radius:18px;padding:18px;background:var(--cream)}.tile h3{margin:0 0 8px;color:var(--g)}.tile p{margin:0;color:#66736d;line-height:1.45}
+.badge{display:inline-block;margin-top:10px;padding:6px 9px;border-radius:999px;background:#efe6d2;font-size:12px;font-weight:900}
+.back{display:inline-block;margin:0 0 18px;color:var(--g);font-weight:800;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="/">← Torna al sito</a>
+<div class="brand"><h1>Area riservata</h1><p>La Fabbrica delle Api</p></div>
+
+<section class="card" id="loginCard">
+  <h2 style="margin-top:0">Accesso</h2>
+  <p>Questa sezione è riservata alla gestione interna.</p>
+  <label for="password">Password</label>
+  <input id="password" type="password" autocomplete="current-password">
+  <button id="loginBtn" type="button">Accedi</button>
+  <div id="loginMsg" class="msg"></div>
+</section>
+
+<section class="card dashboard" id="dashboard">
+  <h2 style="margin-top:0">Gestione</h2>
+  <p>Accesso effettuato. Le funzioni operative verranno aggiunte qui senza modificare il sito pubblico.</p>
+  <div class="grid">
+    <div class="tile"><h3>🐝 Codici Punti Ape</h3><p>Generazione codici per vendite fisiche alla Galena e ai mercatini.</p><span class="badge">prossimo passo</span></div>
+    <div class="tile"><h3>📦 Stock prodotti</h3><p>Controllo e aggiornamento delle quantità disponibili.</p><span class="badge">in preparazione</span></div>
+    <div class="tile"><h3>🧾 Ordini</h3><p>Consultazione ordini online e cesti riscattati.</p><span class="badge">in preparazione</span></div>
+  </div>
+  <button id="logoutBtn" class="alt" type="button">Esci dall'area riservata</button>
+</section>
+</div>
+<script>
+const loginCard=document.getElementById('loginCard'),dashboard=document.getElementById('dashboard'),msg=document.getElementById('loginMsg');
+async function api(action,body={}){const r=await fetch('/api/bee-balance?adminAction='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'});const d=await r.json().catch(()=>({}));return {r,d};}
+function showDash(){loginCard.style.display='none';dashboard.style.display='block'}
+function showLogin(){dashboard.style.display='none';loginCard.style.display='block'}
+(async()=>{try{const {d}=await api('status');if(d.authenticated)showDash();else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';}catch(_){}})();
+document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash();}else msg.textContent=d.error||'Accesso non riuscito.';});
+document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginBtn').click();});
+document.getElementById('logoutBtn').addEventListener('click',async()=>{await api('logout');showLogin();});
+</script>
+</body>
+</html>
