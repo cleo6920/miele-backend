@@ -298,8 +298,10 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
       const response=await fetch('/api/free-edition-download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({editionId:'api-oggi-01',language:downloadLanguage,claimId:claimId(),customer:{name,email,phone}})});
       const data=await response.json().catch(()=>null);
       if(!response.ok||!data?.downloadUrl)throw new Error(data?.error||'Download non disponibile.');
-      const a=document.createElement('a');a.href=data.downloadUrl+'?download='+Date.now();a.download=data.fileName||'Il_mondo_delle_api_oggi_Numero_01.pdf';document.body.appendChild(a);a.click();a.remove();
+      btn.textContent='Scarica di nuovo';
+      btn.disabled=false;
       const base=data.pointsAwarded?'Download avviato · +1 Punto Ape accreditato.':'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
+      const a=document.createElement('a');a.href=data.downloadUrl+'?download='+Date.now();a.download=data.fileName||'Il_mondo_delle_api_oggi_Numero_01.pdf';document.body.appendChild(a);setTimeout(()=>{a.click();a.remove();},60);
       if(data.walletCode){
         status.innerHTML='<div class="api-wallet-result"><strong>'+base+'</strong><br><br>🔐 Il tuo Codice Punti Ape è:<br><strong style="font-size:20px">'+data.walletCode+'</strong><br>Conservalo: ti servirà per controllare il saldo senza email o telefono.<br><a href="'+data.walletCardUrl+'">Scarica promemoria PDF</a><a class="alt" href="/punti-ape">Controlla il saldo</a></div>';
       }else{
