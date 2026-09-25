@@ -188,6 +188,72 @@ function createPaymentRedirectUrl({ amountCents, email, description, note1, note
   };
 }
 
+function euroText(value) {
+  return Number(value || 0).toFixed(2).replace('.', ',') + ' €';
+}
+
+function orderIdFromNotes(notes, fallback) {
+  const m = String(notes || '').match(/(?:^|\s)ORDER:([A-Z0-9-]+)/i);
+  return clean(m && m[1], 120) || clean(fallback, 120);
+}
+
+async function sendPaidOrderEmail(fields) {
+  const key = String(process.env.RESEND_API_KEY || '').trim();
+  const to = String(process.env.ORDER_EMAIL_TO || '').trim();
+  if (!key || !to) throw new Error('Email ordine non configurata.');
+
+  const { secret } = config();
+  const codTrans = clean(fields && fields.codTrans, 30);
+  const payload = decodePurchase(fields && fields[PURCHASE_PARAM], secret);
+  if (payload.c !== codTrans) throw new Error('Dati ordine XPay non corrispondenti per email.');
+
+  const u = payload.u || {};
+  const orderId = orderIdFromNotes(payload.o, codTrans);
+  const items = Array.isArray(payload.i) ? payload.i : [];
+  const text = [
+    'LA FABBRICA DELLE API',
+    'NUOVO ORDINE PAGATO',
+    '',
+    'Codice ordine: ' + orderId,
+    'Transazione Nexi: ' + codTrans,
+    '',
+    'DATI ACQUIRENTE',
+    'Cliente: ' + (clean(u.n, 100) || '—'),
+    'Email: ' + (clean(u.e, 254) || '—'),
+    'Telefono: ' + (clean(u.p, 50) || '—'),
+    'Indirizzo: ' + [clean(u.a,150), clean(u.z,20), clean(u.c,80), clean(u.s,30)].filter(Boolean).join(', '),
+    '',
+    'PRODOTTI',
+    ...items.map(item => '- ' + (clean(item && item.n,180) || 'Prodotto') + ' · q.tà ' + Math.max(1, Number(item && item.q) || 1) + ' · ' + euroText((Number(item && item.a)||0) * Math.max(1, Number(item && item.q)||1))),
+    '',
+    'Prodotti: ' + euroText(payload.g),
+    'Spedizione: ' + euroText(payload.s),
+    'Totale PAGATO: ' + euroText(payload.t),
+    'Pagamento: Nexi XPay · CONFERMATO',
+    'Note: ' + (clean(payload.o,400) || '—')
+  ].join('\n');
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + key,
+      'Content-Type': 'application/json',
+      'Idempotency-Key': 'xpay-paid-' + codTrans
+    },
+    body: JSON.stringify({
+      from: 'La Fabbrica delle Api <onboarding@resend.dev>',
+      to: [to],
+      subject: 'ORDINE PAGATO · ' + orderId + ' · ' + (clean(u.n,100) || 'Cliente') + ' · ' + euroText(payload.t),
+      text,
+      ...(clean(u.e,254) ? { reply_to: clean(u.e,254) } : {})
+    })
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok) throw new Error('Resend ' + response.status + ': ' + (data && (data.message || data.error) || 'errore invio'));
+  console.log('[XPay] Email ordine pagato inviata per ' + codTrans + '.');
+  return true;
+}
+
 function escapeHtml(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
@@ -376,8 +442,15 @@ async function returnHandler(req, res) {
     try {
       await persistPaidPurchase(fields);
       console.log(`[XPay] Pagamento confermato e Saldo Api registrato: ${codTrans}.`);
+      let mailPending = false;
+      try {
+        await sendPaidOrderEmail(fields);
+      } catch (mailError) {
+        mailPending = true;
+        console.error(`[XPay] Pagamento ${codTrans} riuscito ma email ordine non inviata:`, mailError && mailError.message ? mailError.message : mailError);
+      }
       res.statusCode = 302;
-      res.setHeader('Location', `${base}/success.html?xpay=ok&codTrans=${encodeURIComponent(codTrans)}${successQuery}`);
+      res.setHeader('Location', `${base}/success.html?xpay=ok&codTrans=${encodeURIComponent(codTrans)}${successQuery}${mailPending ? '&mail=pending' : '&mail=sent'}`);
       return res.end();
     } catch (error) {
       console.error(`[XPay] Pagamento ${codTrans} riuscito ma Saldo Api non registrato al ritorno:`, error && error.message ? error.message : error);
@@ -408,6 +481,11 @@ async function notifyHandler(req, res) {
     } catch (error) {
       console.error(`[XPay] Notifica valida ma registrazione Saldo Api fallita per ${codTrans}:`, error && error.message ? error.message : error);
       return res.status(500).send('Registrazione ordine non completata');
+    }
+    try {
+      await sendPaidOrderEmail(fields);
+    } catch (mailError) {
+      console.error(`[XPay] Notifica valida ma email ordine non inviata per ${codTrans}:`, mailError && mailError.message ? mailError.message : mailError);
     }
   }
 
