@@ -158,18 +158,18 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
       <input type="hidden" id="apiDirectLanguage" value="">
     </div>
     <div class="api-wallet-guide">
-      <div class="api-wallet-option easy"><strong>📧📱 Più semplice</strong>Lascia <b>email oppure telefono</b>: potrai controllare il saldo usando quel contatto.</div>
-      <div class="api-wallet-option code"><strong>🔐 Senza contatti</strong>Lascia email e telefono vuoti: dopo il download riceverai un <b>Codice Punti Ape personale</b> e un PDF promemoria.</div>
+      <div class="api-wallet-option easy"><strong>🎁 Download sempre gratuito</strong>Puoi scaricare il PDF anche senza lasciare email o telefono.</div>
+      <div class="api-wallet-option code"><strong>🐝 Vuoi anche 1 Punto Ape?</strong>Lascia <b>email oppure telefono</b>: ricevi <b>+1 Punto Ape</b> per questa edizione e potrai ritrovare il saldo con quel contatto.</div>
     </div>
     <div class="api-direct-download-form">
       <label>Nome e cognome <span>facoltativo</span><input id="apiDirectName" autocomplete="name"></label>
       <label>Email <span>facoltativa</span><input id="apiDirectEmail" type="email" autocomplete="email"></label>
       <label>Telefono <span>facoltativo</span><input id="apiDirectPhone" inputmode="tel" autocomplete="tel"></label>
     </div>
-    <div style="background:#fff0ae;border-radius:16px;padding:13px 15px;font-weight:900">🐝 +1 Punto Ape solo quando avvii davvero il download.</div>
+    <div style="background:#fff0ae;border-radius:16px;padding:13px 15px;font-weight:900">🐝 <b>+1 Punto Ape solo con email oppure telefono.</b> Senza contatti il download resta gratuito, ma non vengono assegnati punti.</div>
     <div id="api-direct-download-status"></div>
-    <button id="api-direct-download-start" type="button">Scarica gratis e ottieni 1 Punto Ape →</button>
-    <small style="display:block;text-align:center;margin-top:9px;color:#758079">Nessun costo. Nessun dato obbligatorio.</small>
+    <button id="api-direct-download-start" type="button">Scarica gratis →</button>
+    <small style="display:block;text-align:center;margin-top:9px;color:#758079">Nessun costo. Email e telefono restano facoltativi.</small>
   </div>
 </div>
 
@@ -300,12 +300,12 @@ a{text-decoration:none}.top{background:var(--green);color:#fff}.topin{max-width:
       if(!response.ok||!data?.downloadUrl)throw new Error(data?.error||'Download non disponibile.');
       btn.textContent='Scarica di nuovo';
       btn.disabled=false;
-      const base=data.pointsAwarded?'Download avviato · +1 Punto Ape accreditato.':'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
+      const base=!data.pointEligible?'Download avviato gratuitamente · nessun Punto Ape perché non hai lasciato email o telefono.':data.pointAlreadyAwarded?'Download avviato · avevi già ricevuto il Punto Ape per questa edizione.':data.pointsAwarded?'Download avviato · +1 Punto Ape accreditato.':'Download avviato · +1 Punto Ape registrato per la sincronizzazione.';
       const a=document.createElement('a');a.href=data.downloadUrl+'?download='+Date.now();a.download=data.fileName||'Il_mondo_delle_api_oggi_Numero_01.pdf';document.body.appendChild(a);setTimeout(()=>{a.click();a.remove();},60);
-      if(data.walletCode){
-        status.innerHTML='<div class="api-wallet-result"><strong>'+base+'</strong><br><br>🔐 Il tuo Codice Punti Ape è:<br><strong style="font-size:20px">'+data.walletCode+'</strong><br>Conservalo: ti servirà per controllare il saldo senza email o telefono.<br><a href="'+data.walletCardUrl+'">Scarica promemoria PDF</a><a class="alt" href="/punti-ape">Controlla il saldo</a></div>';
-      }else{
+      if(data.pointEligible){
         status.innerHTML='<div class="api-wallet-result"><strong>'+base+'</strong><br>Potrai ritrovare il saldo con l’email o il telefono che hai indicato.<br><a href="/punti-ape">Vedi il mio Saldo Punti Ape</a></div>';
+      }else{
+        status.innerHTML='<div class="api-wallet-result"><strong>'+base+'</strong></div>';
       }
       btn.textContent='Scarica di nuovo';
     }catch(err){status.textContent=err?.message||'Non è stato possibile avviare il download.';btn.textContent=old;}
