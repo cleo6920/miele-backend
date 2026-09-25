@@ -236,20 +236,49 @@ async function createTestCestoOrder(code,permanent,body){
       })
     ]
   );
-  const notify=await fetch('https://miele-shop-experience-v2.onrender.com/api/cesto-notification',{
+  const resendKey=String(process.env.RESEND_API_KEY||'').trim();
+  const notifyTo=String(process.env.ORDER_EMAIL_TO||'').trim();
+  if(!resendKey||!notifyTo) throw new Error('Ordine creato ma email di notifica non configurata.');
+  const notifyFrom=String(process.env.ORDER_EMAIL_FROM||'La Fabbrica delle Api <onboarding@resend.dev>').trim();
+  const subject='TEST · Cesto Punti Ape '+orderNumber+' · '+shipping.name;
+  const text=[
+    'LA FABBRICA DELLE API',
+    'ORDINE CESTO PUNTI APE - MODALITA TEST',
+    '',
+    'Ordine: '+orderNumber,
+    'Codice: '+code,
+    'Punti utilizzati: 100',
+    'Stato: DA PREPARARE',
+    '',
+    'CLIENTE E SPEDIZIONE',
+    'Nome: '+shipping.name,
+    'Email: '+shipping.email,
+    'Telefono: '+shipping.phone,
+    'Indirizzo: '+shipping.address,
+    'CAP: '+shipping.postalCode,
+    'Comune: '+shipping.city,
+    'Provincia: '+shipping.state,
+    'Paese: '+shipping.country,
+    'Note: '+(shipping.notes||'—'),
+    '',
+    '5 PRODOTTI SCELTI',
+    ...giftObjects.map((g,i)=>(i+1)+'. '+g.name),
+    '',
+    'Pagamento: 100 Punti Ape',
+    'Spedizione: GRATUITA',
+    'Totale da pagare: €0,00'
+  ].join('\n');
+  const notify=await fetch('https://api.resend.com/emails',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      testMode:true,
-      orderNumber,
-      code,
-      pointsSpent:100,
-      giftProducts:giftObjects,
-      shipping
-    })
+    headers:{
+      'Authorization':'Bearer '+resendKey,
+      'Content-Type':'application/json',
+      'Idempotency-Key':'cesto-'+orderNumber
+    },
+    body:JSON.stringify({from:notifyFrom,to:[notifyTo],reply_to:shipping.email,subject,text})
   });
   const notifyData=await notify.json().catch(()=>null);
-  if(!notify.ok) throw new Error((notifyData&&notifyData.error)||'Ordine creato ma email di notifica non inviata.');
+  if(!notify.ok) throw new Error('Ordine creato ma email di notifica non inviata.');
   if(!permanent) await useOnce();
   return {orderNumber,giftObjects:giftObjects.map(g=>({id:g.id,name:cestoGiftName(g.id,lang)})),shipping,emailSent:true,balance:permanent?100:0,language:lang};
 }
