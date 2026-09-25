@@ -76,6 +76,10 @@
       "destination": "/punti-ape.html"
     },
     {
+      "source": "/area-riservata",
+      "destination": "/area-riservata.html"
+    },
+    {
       "source": "/images/:path*",
       "destination": "https://miele-shop-experience-v2.onrender.com/images/:path*"
     },
