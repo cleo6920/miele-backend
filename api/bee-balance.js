@@ -1,4 +1,5 @@
-const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');\nconst {callBeeDataApi}=require('../bee-wallet-client');
+const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');
+const {callBeeDataApi}=require('../bee-wallet-client');
 const {Pool}=require('pg');
 const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
 let testPool;
