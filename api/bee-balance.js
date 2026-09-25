@@ -360,6 +360,14 @@ module.exports=async(req,res)=>{
     });
   }catch(error){
     console.error('[Saldo Api] lookup error',error);
+    const message=String(error&&error.message||'');
+    const validationPatterns=[
+      /telefono/i,/CAP/i,/Provincia/i,/Comune/i,/Indirizzo/i,/Email non valida/i,
+      /Completa tutti i dati obbligatori/i,/Scegli esattamente 5 prodotti/i,/Prodotto cesto non valido/i
+    ];
+    if(validationPatterns.some(rx=>rx.test(message))){
+      return res.status(422).json({ok:false,error:message});
+    }
     return res.status(500).json({ok:false,error:'Non è stato possibile controllare il saldo. Riprova tra poco.'});
   }
 };
