@@ -82,6 +82,67 @@ function cestoLang(v){const x=String(v||'it').toLowerCase();return CESTO_LANGS.h
 function cestoGiftName(id,lang){return lang==='it'?(TEST_GIFTS.get(id)||id):(CESTO_GIFT_NAMES[lang]?.[id]||TEST_GIFTS.get(id)||id);}
 
 function cleanField(v,max=180){return String(v||'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max);}
+function euroMail(v){return Number(v||0).toFixed(2).replace('.',',')+' €';}
+async function sendAdminResend({subject,text,replyTo,idempotency}){
+  const key=String(process.env.RESEND_API_KEY||'').trim();
+  const to=String(process.env.ORDER_EMAIL_TO||'').trim();
+  if(!key||!to)throw new Error('Servizio email non configurato.');
+  const r=await fetch('https://api.resend.com/emails',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json','Idempotency-Key':idempotency},
+    body:JSON.stringify({from:'La Fabbrica delle Api <onboarding@resend.dev>',to:[to],reply_to:replyTo,subject,text})
+  });
+  const data=await r.json().catch(()=>null);
+  if(!r.ok){console.error('[Email Ordini] Resend',r.status,data?.message||data?.error||'unknown');throw new Error('Email non inviata.');}
+}
+function normalOrderFromBody(body){
+  const b=body||{}, u=b.customer||{};
+  const id=cleanField(b.id,80);
+  if(!/^API-\d{8}-\d{5,8}$/.test(id))throw new Error('Codice ordine non valido.');
+  const email=cleanField(u.email,180).toLowerCase();
+  if(!cleanField(u.name,120)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error('Dati cliente non validi.');
+  const items=Array.isArray(b.items)?b.items.slice(0,40):[];
+  if(!items.length)throw new Error('Prodotti ordine non validi.');
+  return {
+    id,
+    customer:{
+      name:cleanField(u.name,120),email,phone:cleanField(u.phone,80),
+      address:cleanField(u.address,180),cap:cleanField(u.cap,20),city:cleanField(u.city,120),
+      province:cleanField(u.province,40),country:cleanField(u.country,8)
+    },
+    items:items.map(x=>({name:cleanField(x?.name,180),size:cleanField(x?.size,120),qty:Math.max(1,Math.floor(Number(x?.qty||1))),price:Number(x?.price||0)})),
+    notes:cleanField(b.notes,1000),delivery:cleanField(b.delivery,30),shippingReason:cleanField(b.shippingReason,300),
+    goodsTotal:Number(b.goodsTotal||0),shipping:Number(b.shipping||0),total:Number(b.total||0),points:Number(b.points||0),
+    paymentProvider:cleanField(b.paymentProvider,80),paymentId:cleanField(b.paymentId,100)
+  };
+}
+async function handleOrderEmailAction(req,res,action){
+  const o=normalOrderFromBody(req.body);
+  if(action==='cancel'){
+    const reason=cleanField(req.body?.cancelReason||req.body?.reason||'Pagamento annullato o non completato',160);
+    const text=[
+      'LA FABBRICA DELLE API','ACQUISTO ANNULLATO / NON COMPLETATO','',
+      'Codice ordine: '+o.id,'Cliente: '+o.customer.name,'Email: '+o.customer.email,'Telefono: '+o.customer.phone,
+      'Totale previsto: '+euroMail(o.total),'Motivo: '+reason,'','Prodotti:',
+      ...o.items.map(x=>'- '+x.name+(x.size?' · '+x.size:'')+' · q.tà '+x.qty),
+      '','Nessun pagamento completato da questa notifica.'
+    ].join('\n');
+    await sendAdminResend({subject:'ACQUISTO ANNULLATO · '+o.id+' · '+o.customer.name,text,replyTo:o.customer.email,idempotency:'cancel-'+o.id});
+    return res.json({ok:true,orderId:o.id,emailSent:true,cancelled:true});
+  }
+  const text=[
+    'LA FABBRICA DELLE API','NUOVO ORDINE RICEVUTO','',
+    'Codice: '+o.id,'','DATI ACQUIRENTE',o.customer.name,o.customer.email,o.customer.phone,
+    'Indirizzo: '+o.customer.address+', '+o.customer.cap+' '+o.customer.city+(o.customer.province?' ('+o.customer.province+')':''),
+    'Paese: '+o.customer.country,'','PRODOTTI',
+    ...o.items.map(x=>'- '+x.name+(x.size?' · '+x.size:'')+' | q.tà '+x.qty+' | '+euroMail(x.price*x.qty)),
+    '','Consegna: '+(o.delivery||'—'),'Dettaglio spedizione: '+(o.shippingReason||'—'),'Note: '+(o.notes||'—'),
+    'Prodotti: '+euroMail(o.goodsTotal),'Spedizione: '+euroMail(o.shipping),'Totale: '+euroMail(o.total),'Punti Ape: '+o.points,
+    ...(o.paymentProvider?['Pagamento: '+o.paymentProvider+(o.paymentId?' · '+o.paymentId:'')]:[])
+  ].join('\n');
+  await sendAdminResend({subject:'Nuovo ordine '+o.id+' · '+o.customer.name+' · '+euroMail(o.total),text,replyTo:o.customer.email,idempotency:'order-'+o.id});
+  return res.json({ok:true,orderId:o.id,emailSent:true});
+}
 function normalizePlace(v){
   return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
 }
@@ -362,6 +423,8 @@ module.exports=async(req,res)=>{
   }
   if(req.method!=='POST') return res.status(405).json({ok:false,error:'Metodo non consentito.'});
   try{
+    const emailAction=cleanField(req.query?.emailAction,30).toLowerCase();
+    if(emailAction==='order'||emailAction==='cancel') return await handleOrderEmailAction(req,res,emailAction);
     const body=req.body||{};
     const email=normalizeEmail(body.email);
     const phone=normalizePhone(body.phone);
