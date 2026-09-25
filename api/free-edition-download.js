@@ -124,12 +124,50 @@ module.exports=async(req,res)=>{
 
     if(contact.name||contact.email||contact.phone){
       try{
-        await fetch('https://miele-shop-experience-v2.onrender.com/api/free-edition-notification',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({editionId:EDITION_ID,language,customer:contact,orderId})
-        });
-      }catch(_){}
+        const resendKey=String(process.env.RESEND_API_KEY||'').trim();
+        const notifyTo=String(process.env.ORDER_EMAIL_TO||'').trim();
+        if(resendKey&&notifyTo){
+          const subject='Download gratuito · Il mondo delle api oggi · Numero 01';
+          const text=[
+            'LA FABBRICA DELLE API - EDIZIONI APERTE',
+            '',
+            'Download: Il mondo delle api oggi · Numero 01',
+            'Codice: '+orderId,
+            'Lingua: '+language.toUpperCase(),
+            '',
+            'CONTATTI LASCIATI VOLONTARIAMENTE',
+            'Nome: '+(contact.name||'—'),
+            'Email: '+(contact.email||'—'),
+            'Telefono: '+(contact.phone||'—'),
+            '',
+            'Punto Ape: '+(pointsAwarded?'registrato':'da sincronizzare')
+          ].join('\n');
+          const payload={
+            from:'La Fabbrica delle Api <onboarding@resend.dev>',
+            to:[notifyTo],
+            subject,
+            text
+          };
+          if(contact.email) payload.reply_to=contact.email;
+          const mailResponse=await fetch('https://api.resend.com/emails',{
+            method:'POST',
+            headers:{
+              'Authorization':'Bearer '+resendKey,
+              'Content-Type':'application/json',
+              'Idempotency-Key':'free-edition-'+orderId
+            },
+            body:JSON.stringify(payload)
+          });
+          const mailData=await mailResponse.json().catch(()=>null);
+          if(!mailResponse.ok){
+            console.error('[Edizioni Aperte] Resend',mailResponse.status,mailData?.message||mailData?.error||'unknown');
+          }
+        }else{
+          console.warn('[Edizioni Aperte] Email non configurata su Vercel.');
+        }
+      }catch(error){
+        console.warn('[Edizioni Aperte] Notifica email',error?.message||error);
+      }
     }
 
     return res.json({
