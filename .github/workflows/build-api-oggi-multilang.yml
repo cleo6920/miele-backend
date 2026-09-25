@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/build_api_oggi_multilang.py'
+      - 'scripts/api_oggi_translations/*.tsv'
       - 'downloads/il-mondo-delle-api-oggi-01.pdf'
       - '.github/workflows/build-api-oggi-multilang.yml'
   workflow_dispatch:
@@ -20,7 +21,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: python -m pip install --disable-pip-version-check pymupdf pillow requests langdetect
+        run: python -m pip install --disable-pip-version-check pymupdf pillow langdetect
       - name: Build translated PDFs and previews
         run: python scripts/build_api_oggi_multilang.py
       - name: Validate outputs
