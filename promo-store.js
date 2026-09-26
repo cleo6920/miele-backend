@@ -19,6 +19,7 @@ async function ensureTable(){
       kind text not null,
       value_cents integer not null default 0,
       target_total_cents integer,
+      percent_off numeric,
       max_uses integer,
       uses integer not null default 0,
       active boolean not null default true,
@@ -27,6 +28,7 @@ async function ensureTable(){
       used_at timestamptz
     )
   `);
+  await p.query("alter table shop_promo_codes add column if not exists percent_off numeric");
   await p.query("create index if not exists shop_promo_codes_created_idx on shop_promo_codes(created_at desc)");
 }
 async function createTestCode(targetTotalCents=10){
@@ -54,6 +56,33 @@ async function listTestCodes(limit=20){
   );
   return r.rows;
 }
+async function createPromoCode({mode='fixed',value=0,maxUses=null,note=''}) {
+  await ensureTable();
+  const kind=mode==='percent'?'percent':'fixed';
+  const cents=kind==='fixed'?Math.max(1,Math.min(1000000,Math.round(Number(value)||0))):0;
+  const percent=kind==='percent'?Math.max(1,Math.min(100,Number(value)||0)):null;
+  const usesLimit=maxUses===null||maxUses===''?null:Math.max(1,Math.min(100000,Math.round(Number(maxUses)||1)));
+  for(let i=0;i<10;i++){
+    const raw=crypto.randomBytes(5).toString('hex').toUpperCase();
+    const code='PROMO-'+raw.slice(0,5)+'-'+raw.slice(5);
+    try{
+      const r=await db().query(
+        "insert into shop_promo_codes(code,kind,value_cents,percent_off,max_uses,note) values($1,$2,$3,$4,$5,$6) returning *",
+        [code,kind,cents,percent,usesLimit,clean(note,200)]
+      );
+      return r.rows[0];
+    }catch(e){if(e&&e.code==='23505')continue;throw e;}
+  }
+  throw new Error('Impossibile generare il codice promozionale.');
+}
+async function listPromoCodes(limit=50){
+  await ensureTable();
+  const r=await db().query(
+    "select code,kind,value_cents,percent_off,max_uses,uses,active,note,created_at,used_at from shop_promo_codes where kind in ('fixed','percent') order by created_at desc limit $1",
+    [Math.max(1,Math.min(200,Number(limit)||50))]
+  );
+  return r.rows;
+}
 async function getPromo(code){
   await ensureTable();
   const c=normalizeCode(code);
@@ -75,6 +104,13 @@ async function applyPromo(code,subtotalCents,shippingCents){
     const target=Math.max(1,Math.round(Number(promo.target_total_cents)||10));
     final=Math.min(original,target);
     discount=Math.max(0,original-final);
+  }else if(promo.kind==='fixed'){
+    discount=Math.min(goods,Math.max(0,Math.round(Number(promo.value_cents)||0)));
+    final=Math.max(1,original-discount);
+  }else if(promo.kind==='percent'){
+    const pct=Math.max(0,Math.min(100,Number(promo.percent_off)||0));
+    discount=Math.min(goods,Math.round(goods*pct/100));
+    final=Math.max(1,original-discount);
   }else{
     throw new Error('Tipo di codice promozionale non supportato.');
   }
@@ -96,4 +132,4 @@ async function consumePromo(code){
   );
   return Boolean(r.rows[0]);
 }
-module.exports={createTestCode,listTestCodes,applyPromo,consumePromo,normalizeCode};
+module.exports={createTestCode,listTestCodes,createPromoCode,listPromoCodes,applyPromo,consumePromo,normalizeCode};
