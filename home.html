@@ -154,36 +154,42 @@ section[id]{scroll-margin-top:92px}
 .product-box h3{margin:0 0 8px}.product-box p{margin:0;color:#687067}
 .product-box .go{display:block;margin-top:18px;font-size:13px;font-weight:800;color:#8a5b0b}
 /* Ape Telù · mascotte della Fabbrica delle Api */
-.ape-telu-home{position:relative;overflow:hidden;background:#fff8e8;padding:58px 0 62px}
-.ape-telu-home::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(231,174,45,.13);right:-160px;top:-190px}
-.ape-telu-home::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(18,57,45,.07);left:-120px;bottom:-150px}
-.ape-telu-shell{position:relative;z-index:1;display:grid;grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr);gap:38px;align-items:stretch}
-.ape-telu-character{position:relative;min-height:420px;border-radius:34px;background:linear-gradient(145deg,#173c2f,#0b2a21);color:#fff;padding:34px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 22px 55px rgba(20,47,37,.18)}
-.ape-telu-character::after{content:"";position:absolute;inset:18px;border:1px solid rgba(255,221,126,.22);border-radius:25px;pointer-events:none}
-.ape-telu-badge{position:relative;z-index:1;display:inline-flex;width:max-content;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#f2bd46;color:#17362a;font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
-.ape-telu-face{position:relative;z-index:1;display:grid;place-items:center;width:150px;height:150px;margin:18px auto 10px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#fff9df 0 12%,#f6c64e 13% 58%,#d89518 59% 100%);font-size:78px;box-shadow:0 18px 40px rgba(0,0,0,.22);animation:apeTeluFloat 4.2s ease-in-out infinite}
-.ape-telu-character h3{position:relative;z-index:1;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.02;margin:8px 0 7px;color:#ffe08c}
-.ape-telu-character p{position:relative;z-index:1;margin:0;color:#eaf1ed;font-size:16px;line-height:1.55}
-.ape-telu-content{background:#fff;border:1px solid #eadbb7;border-radius:34px;padding:38px 40px;box-shadow:0 18px 46px rgba(65,45,9,.10)}
+.ape-telu-home{position:relative;overflow:hidden;background:#fff8e8;padding:52px 0 58px}
+.ape-telu-home::before{content:"";position:absolute;width:440px;height:440px;border-radius:50%;background:rgba(231,174,45,.12);right:-180px;top:-220px}
+.ape-telu-shell{position:relative;z-index:1;display:grid;grid-template-columns:minmax(285px,.82fr) minmax(0,1.48fr);gap:0;background:#fff;border:1px solid #ead8ac;border-radius:34px;overflow:hidden;box-shadow:0 22px 55px rgba(64,45,11,.13)}
+.ape-telu-character{position:relative;overflow:hidden;min-height:0;background:
+ radial-gradient(circle at 18% 20%,rgba(255,255,255,.50) 0 4px,transparent 5px),
+ linear-gradient(145deg,#f7d77a 0%,#efb83a 58%,#dda01d 100%);color:#17382b;padding:28px 28px 30px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.ape-telu-character::before{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(255,255,255,.34);border-radius:46% 54% 45% 55%;left:-100px;top:-105px;transform:rotate(18deg)}
+.ape-telu-character::after{content:"";position:absolute;width:230px;height:230px;border:1px solid rgba(23,56,43,.10);border-radius:50%;right:-115px;bottom:-120px}
+.ape-telu-badge{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;border-radius:999px;background:#17382b;color:#fff7dc;font-size:10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 8px 20px rgba(23,56,43,.13)}
+.ape-telu-speech{position:relative;z-index:2;margin:18px 0 0;background:#fffdf6;border:1px solid rgba(23,56,43,.13);border-radius:18px 18px 18px 5px;padding:10px 14px;font-family:Georgia,'Times New Roman',serif;font-size:17px;font-weight:700;color:#17382b;box-shadow:0 10px 22px rgba(69,46,5,.10)}
+.ape-telu-mascot{position:relative;z-index:2;width:min(100%,230px);margin:7px auto 4px;animation:apeTeluFloat 4.2s ease-in-out infinite;filter:drop-shadow(0 16px 14px rgba(61,42,7,.18))}
+.ape-telu-mascot svg{display:block;width:100%;height:auto}
+.ape-telu-character h3{position:relative;z-index:2;font-family:Georgia,'Times New Roman',serif;font-size:35px;line-height:1;margin:3px 0 7px;color:#17382b}
+.ape-telu-character p{position:relative;z-index:2;margin:0;max-width:280px;color:#314a40;font-size:14px;line-height:1.48;font-weight:700}
+.ape-telu-content{padding:34px 38px 36px;background:#fff}
 .ape-telu-content .eyebrow{color:#9a6412}
-.ape-telu-content h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(42px,5.4vw,70px);line-height:.98;margin:10px 0 14px;color:#17382b;letter-spacing:-.025em}
-.ape-telu-lead{font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.25;color:#7a5214;margin:0 0 14px}
-.ape-telu-intro{font-size:17px;line-height:1.65;color:#435048;margin:0 0 24px;max-width:760px}
-.ape-telu-talents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 24px}
-.ape-telu-talent{border-radius:18px;background:#f7f1e3;padding:16px 17px;border:1px solid #eadfc8}
-.ape-telu-talent strong{display:block;color:#15382b;font-size:15px;margin-bottom:4px}
-.ape-telu-talent span{display:block;color:#5b635d;font-size:14px;line-height:1.45}
-.ape-telu-try{margin-top:8px;padding-top:20px;border-top:1px solid #e7deca}
-.ape-telu-try b{display:block;color:#17382b;margin-bottom:10px}
-.ape-telu-prompts{display:flex;gap:9px;flex-wrap:wrap}
-.ape-telu-prompt{border:1px solid #d8c79b;background:#fffaf1;color:#5d4615;border-radius:999px;padding:9px 12px;font-size:13px;font-weight:800}
-.ape-telu-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}
-.ape-telu-talk{border:0;cursor:pointer;background:#17382b;color:#fff;border-radius:999px;padding:14px 21px;font-weight:950;font-size:15px;box-shadow:0 10px 22px rgba(23,56,43,.18)}
+.ape-telu-content h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(39px,4.8vw,62px);line-height:.98;margin:9px 0 12px;color:#17382b;letter-spacing:-.025em}
+.ape-telu-lead{font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.25;color:#7a5214;margin:0 0 12px}
+.ape-telu-intro{font-size:16px;line-height:1.58;color:#435048;margin:0 0 20px;max-width:760px}
+.ape-telu-talents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 20px}
+.ape-telu-talent{border-radius:16px;background:#f8f3e8;padding:13px 14px;border:1px solid #eadfc8}
+.ape-telu-talent strong{display:block;color:#15382b;font-size:14px;margin-bottom:3px}
+.ape-telu-talent span{display:block;color:#5b635d;font-size:13px;line-height:1.38}
+.ape-telu-try{margin-top:4px;padding-top:17px;border-top:1px solid #e7deca}
+.ape-telu-try b{display:block;color:#17382b;margin-bottom:9px;font-size:14px}
+.ape-telu-prompts{display:flex;gap:8px;flex-wrap:wrap}
+.ape-telu-prompt{border:1px solid #d8c79b;background:#fffaf1;color:#5d4615;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:800}
+button.ape-telu-prompt{cursor:pointer;font-family:inherit}
+button.ape-telu-prompt:hover{background:#f4e8c8;border-color:#cda640}
+.ape-telu-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.ape-telu-talk{border:0;cursor:pointer;background:#17382b;color:#fff;border-radius:999px;padding:13px 19px;font-weight:950;font-size:14px;box-shadow:0 10px 22px rgba(23,56,43,.18)}
 .ape-telu-talk:hover{transform:translateY(-1px)}
-.ape-telu-note{font-size:13px;color:#777066;font-weight:700}
-@keyframes apeTeluFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
-@media(max-width:860px){.ape-telu-shell{grid-template-columns:1fr}.ape-telu-character{min-height:330px}.ape-telu-face{width:126px;height:126px;font-size:64px}.ape-telu-talents{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.ape-telu-home{padding:42px 0}.ape-telu-character,.ape-telu-content{border-radius:26px;padding:26px 22px}.ape-telu-talents{grid-template-columns:1fr}.ape-telu-content h2{font-size:44px}.ape-telu-lead{font-size:21px}.ape-telu-prompts{display:grid}.ape-telu-prompt{border-radius:14px}}
+.ape-telu-note{font-size:12px;color:#777066;font-weight:700}
+@keyframes apeTeluFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}
+@media(max-width:860px){.ape-telu-shell{grid-template-columns:1fr}.ape-telu-character{padding:26px 24px}.ape-telu-mascot{width:190px}.ape-telu-talents{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.ape-telu-home{padding:40px 0}.ape-telu-shell{border-radius:26px}.ape-telu-character,.ape-telu-content{padding:24px 20px}.ape-telu-talents{grid-template-columns:1fr}.ape-telu-content h2{font-size:42px}.ape-telu-lead{font-size:20px}.ape-telu-prompts{display:grid}.ape-telu-prompt{border-radius:14px;text-align:left}}
 
 .conversation{background:#dfa92f;padding:74px 0}
 .conversation-inner{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center}
@@ -239,12 +245,45 @@ section[id]{scroll-margin-top:92px}
 <section class="ape-telu-home" id="ape-telu">
   <div class="wrap ape-telu-shell">
     <aside class="ape-telu-character" aria-label="Ape Telù, mascotte della Fabbrica delle Api">
-      <span class="ape-telu-badge">🐝 La mascotte della Fabbrica delle Api</span>
-      <div class="ape-telu-face" aria-hidden="true">🐝</div>
-      <div>
-        <h3>Ape Telù</h3>
-        <p>Una voce amica nel mondo delle api. Curiosa, semplice e sempre pronta ad accompagnarti.</p>
+      <span class="ape-telu-badge">La mascotte della Fabbrica delle Api</span>
+      <div class="ape-telu-speech">Ciao! Sono Ape Telù.</div>
+
+      <div class="ape-telu-mascot" aria-hidden="true">
+        <svg viewBox="0 0 260 210" role="img" aria-label="Ape Telù">
+          <defs>
+            <linearGradient id="teluBody" x1="0" x2="1">
+              <stop offset="0" stop-color="#f7c849"/>
+              <stop offset="1" stop-color="#edae22"/>
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round">
+            <path d="M110 47 C100 26 85 23 78 31"/>
+            <path d="M150 47 C160 26 175 23 182 31"/>
+          </g>
+          <circle cx="76" cy="30" r="6" fill="#17382b"/>
+          <circle cx="184" cy="30" r="6" fill="#17382b"/>
+          <ellipse cx="76" cy="99" rx="49" ry="30" transform="rotate(-28 76 99)" fill="#fffdf5" opacity=".92" stroke="#d8c79b" stroke-width="3"/>
+          <ellipse cx="184" cy="99" rx="49" ry="30" transform="rotate(28 184 99)" fill="#fffdf5" opacity=".92" stroke="#d8c79b" stroke-width="3"/>
+          <ellipse cx="130" cy="119" rx="60" ry="72" fill="url(#teluBody)" stroke="#17382b" stroke-width="5"/>
+          <path d="M83 100 Q130 118 177 100" stroke="#17382b" stroke-width="17" fill="none"/>
+          <path d="M76 133 Q130 151 184 133" stroke="#17382b" stroke-width="17" fill="none"/>
+          <ellipse cx="130" cy="75" rx="45" ry="37" fill="#f9d05b"/>
+          <circle cx="112" cy="72" r="6" fill="#17382b"/>
+          <circle cx="148" cy="72" r="6" fill="#17382b"/>
+          <circle cx="110" cy="70" r="2" fill="#fff"/>
+          <circle cx="146" cy="70" r="2" fill="#fff"/>
+          <path d="M116 88 Q130 99 144 88" fill="none" stroke="#17382b" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="101" cy="84" r="5" fill="#e99858" opacity=".55"/>
+          <circle cx="159" cy="84" r="5" fill="#e99858" opacity=".55"/>
+          <path d="M78 126 Q55 137 48 158" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
+          <path d="M182 126 Q205 137 212 158" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
+          <path d="M102 182 Q93 194 82 197" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
+          <path d="M158 182 Q167 194 178 197" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
+        </svg>
       </div>
+
+      <h3>Ape Telù</h3>
+      <p>Una voce amica nel mondo delle api. Curiosa, semplice e sempre pronta ad accompagnarti.</p>
     </aside>
 
     <div class="ape-telu-content">
@@ -263,14 +302,14 @@ section[id]{scroll-margin-top:92px}
       <div class="ape-telu-try">
         <b>Puoi iniziare anche con una domanda semplice:</b>
         <div class="ape-telu-prompts">
-          <span class="ape-telu-prompt">“A cosa serve la propoli?”</span>
-          <span class="ape-telu-prompt">“Come si utilizza questo prodotto?”</span>
-          <span class="ape-telu-prompt">“Che differenza c’è tra polline e pappa reale?”</span>
+          <button class="ape-telu-prompt" type="button" onclick="if(!document.getElementById('globalApePanel')?.classList.contains('open'))document.getElementById('apeChatLaunch')?.click();setTimeout(()=>{const i=document.getElementById('globalApeInput');if(i){i.value='A cosa serve la propoli?';i.focus()}},80)">“A cosa serve la propoli?”</button>
+          <button class="ape-telu-prompt" type="button" onclick="if(!document.getElementById('globalApePanel')?.classList.contains('open'))document.getElementById('apeChatLaunch')?.click();setTimeout(()=>{const i=document.getElementById('globalApeInput');if(i){i.value='Come si utilizza questo prodotto?';i.focus()}},80)">“Come si utilizza questo prodotto?”</button>
+          <button class="ape-telu-prompt" type="button" onclick="if(!document.getElementById('globalApePanel')?.classList.contains('open'))document.getElementById('apeChatLaunch')?.click();setTimeout(()=>{const i=document.getElementById('globalApeInput');if(i){i.value='Che differenza c’è tra polline e pappa reale?';i.focus()}},80)">“Che differenza c’è tra polline e pappa reale?”</button>
         </div>
       </div>
 
       <div class="ape-telu-actions">
-        <button class="ape-telu-talk" type="button" onclick="document.getElementById('apeChatLaunch')?.click()">Parla con Ape Telù →</button>
+        <button class="ape-telu-talk" type="button" onclick="if(!document.getElementById('globalApePanel')?.classList.contains('open'))document.getElementById('apeChatLaunch')?.click()">Parla con Ape Telù →</button>
         <span class="ape-telu-note">Puoi tornare a parlarle ogni volta che vuoi.</span>
       </div>
     </div>
