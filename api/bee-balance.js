@@ -2,6 +2,7 @@ const crypto=require('crypto');
 const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');
 const {callBeeDataApi}=require('../bee-wallet-client');
 const {createTestCode,listTestCodes,createPromoCode,listPromoCodes}=require('../promo-store');
+const {listStock,updateStock}=require('../stock-store');
 const {Pool}=require('pg');
 const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
 let testPool;
@@ -141,6 +142,16 @@ async function handleAdminAction(req,res,action){
       const row=await createPromoCode({mode:req.body?.mode,value:req.body?.value,maxUses:req.body?.maxUses,note:req.body?.note});
       return res.json({ok:true,code:row});
     }catch(error){console.error('[Area riservata] create-promo',error);return res.status(500).json({ok:false,error:error?.message||'Non è stato possibile generare il codice promozionale.'});}
+  }
+  if(action==='stock-list'){
+    try{return res.json({ok:true,items:await listStock()});}
+    catch(error){console.error('[Area riservata] stock-list',error);return res.status(500).json({ok:false,error:'Non è stato possibile caricare lo stock.'});}
+  }
+  if(action==='stock-update'){
+    try{
+      const row=await updateStock(req.body?.productId,req.body?.qty,req.body?.enabled);
+      return res.json({ok:true,item:row});
+    }catch(error){console.error('[Area riservata] stock-update',error);return res.status(500).json({ok:false,error:error?.message||'Non è stato possibile aggiornare lo stock.'});}
   }
   if(action==='test-tools'){
     try{
