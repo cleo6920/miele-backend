@@ -471,9 +471,21 @@ async function returnHandler(req, res) {
     }
   }
 
-  console.log(`[XPay] Pagamento non completato: ${codTrans}, esito ${esito || 'KO'}.`);
+  let safeError='';
+  try{
+    const raw=fields.errore;
+    if(raw){
+      const parsed=typeof raw==='string'?JSON.parse(raw):raw;
+      const code=clean(parsed&&parsed.codice,40);
+      const message=clean(parsed&&parsed.messaggio,200);
+      safeError=[code,message].filter(Boolean).join(' · ');
+    }
+  }catch(_){
+    safeError=clean(fields.errore,220);
+  }
+  console.log(`[XPay] Pagamento non completato: ${codTrans}, esito ${esito || 'KO'}${safeError ? ', errore '+safeError : ''}.`);
   res.statusCode = 302;
-  res.setHeader('Location', `${base}/cancel.html?xpay=${encodeURIComponent(esito || 'ko')}`);
+  res.setHeader('Location', `${base}/cancel.html?xpay=${encodeURIComponent(esito || 'ko')}${safeError ? '&reason='+encodeURIComponent(safeError) : ''}`);
   return res.end();
 }
 
