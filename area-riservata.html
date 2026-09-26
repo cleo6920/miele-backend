@@ -20,6 +20,7 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 .back{display:inline-block;margin:0 0 18px;color:var(--g);font-weight:800;text-decoration:none}
 .orders{margin-top:22px}.orders-head{display:flex;gap:10px;align-items:center;justify-content:space-between}.orders-head button{width:auto;margin:0;padding:10px 14px;font-size:14px}
 .order-list{display:grid;gap:12px;margin-top:14px}.order{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff}.order-top{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.order strong{color:var(--g)}.order small{color:#708078}.status{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.status.paid{background:#dff3e8;color:#17613f}.status.cancelled{background:#fde6df;color:#8f3c2c}.order-lines{margin-top:8px;line-height:1.5;color:#4e5b55;font-size:14px}
+.test-tools{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}.test-box{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--cream);margin-top:12px}.code-line{font-family:monospace;font-size:18px;font-weight:900;word-break:break-all;background:#fff;border:1px dashed #c9b98e;border-radius:12px;padding:12px;margin-top:8px}.test-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.test-row label{margin:0;flex:1;min-width:180px}.test-row select{width:100%;padding:12px;border:1px solid #cfc7b8;border-radius:12px;background:#fff;font-size:16px}.test-row button{width:auto;margin:0}.test-codes{display:grid;gap:8px;margin-top:12px}.test-code-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-size:14px}
 </style>
 </head>
 <body>
@@ -41,9 +42,33 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
   <p>Accesso effettuato. Le funzioni operative verranno aggiunte qui senza modificare il sito pubblico.</p>
   <div class="grid">
     <div class="tile"><h3>🐝 Codici Punti Ape</h3><p>Generazione codici per vendite fisiche alla Galena e ai mercatini.</p><span class="badge">prossimo passo</span></div>
+    <div class="tile"><h3>🧪 Test</h3><p>Codice Punti Ape permanente e codici per acquisti reali di pochi centesimi.</p><span class="badge">attivo</span></div>
     <div class="tile"><h3>📦 Stock prodotti</h3><p>Controllo e aggiornamento delle quantità disponibili.</p><span class="badge">in preparazione</span></div>
     <div class="tile"><h3>🧾 Ordini</h3><p>Pagamenti riusciti e operazioni annullate/non completate.</p><span class="badge">attivo</span></div>
   </div>
+  <section class="test-tools">
+    <h3 style="margin:0">🧪 Strumenti di test</h3>
+    <div class="test-box">
+      <strong>Codice Punti Ape permanente · saldo sempre 100</strong>
+      <div class="code-line" id="pointsTestCode">Caricamento…</div>
+    </div>
+    <div class="test-box">
+      <strong>Codice per acquisto reale Nexi</strong>
+      <p style="color:#66736d">Genera un codice monouso che riduce il totale da pagare all'importo scelto. Dopo un pagamento riuscito il codice si disattiva automaticamente.</p>
+      <div class="test-row">
+        <label>Totale reale da pagare
+          <select id="testTargetCents">
+            <option value="1">0,01 €</option>
+            <option value="10" selected>0,10 €</option>
+            <option value="50">0,50 €</option>
+          </select>
+        </label>
+        <button id="generateTestPromo" type="button">Genera codice test</button>
+      </div>
+      <div id="testPromoMsg" class="msg"></div>
+      <div class="test-codes" id="testPromoCodes"></div>
+    </div>
+  </section>
   <section class="orders">
     <div class="orders-head"><h3 style="margin:0">Ordini recenti</h3><button id="refreshOrders" type="button">Aggiorna</button></div>
     <div id="ordersMsg" class="msg"></div>
@@ -55,7 +80,7 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 <script>
 const loginCard=document.getElementById('loginCard'),dashboard=document.getElementById('dashboard'),msg=document.getElementById('loginMsg');
 async function api(action,body={}){const r=await fetch('/api/bee-balance?adminAction='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'});const d=await r.json().catch(()=>({}));return {r,d};}
-function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders()}
+function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders();loadTestTools()}
 function showLogin(){dashboard.style.display='none';loginCard.style.display='block'}
 (async()=>{try{const {d}=await api('status');if(d.authenticated)showDash();else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';}catch(_){}})();
 document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash();}else msg.textContent=d.error||'Accesso non riuscito.';});
@@ -92,6 +117,26 @@ async function loadOrders(){
   ].sort((a,b)=>b.at-a.at).slice(0,100);
   box.innerHTML=merged.length?merged.map(v=>v.kind==='paid'?paidCard(v.x):cancelledCard(v.x)).join(''):'<p>Nessun ordine registrato.</p>';
 }
+async function loadTestTools(){
+  const codeEl=document.getElementById('pointsTestCode'),list=document.getElementById('testPromoCodes');
+  const {r,d}=await api('test-tools');
+  if(!r.ok){if(codeEl)codeEl.textContent=d.error||'Errore';return;}
+  if(codeEl)codeEl.textContent=d.pointsCode||'—';
+  if(list){
+    const rows=Array.isArray(d.testPromoCodes)?d.testPromoCodes:[];
+    list.innerHTML=rows.length?rows.map(x=>'<div class="test-code-item"><strong>'+esc(x.code)+'</strong> · '+euro(Number(x.target_total_cents||0)/100)+' · '+(x.active?'utilizzabile':'usato/disattivato')+'</div>').join(''):'<div>Nessun codice test generato.</div>';
+  }
+}
+document.getElementById('generateTestPromo').addEventListener('click',async()=>{
+  const btn=document.getElementById('generateTestPromo'),m=document.getElementById('testPromoMsg');
+  btn.disabled=true;m.textContent='Generazione…';
+  const targetCents=Number(document.getElementById('testTargetCents').value||10);
+  const {r,d}=await api('create-test-promo',{targetCents});
+  btn.disabled=false;
+  if(!r.ok){m.textContent=d.error||'Errore nella generazione.';return;}
+  m.innerHTML='<span class="ok">Codice creato: <strong>'+esc(d.code)+'</strong> · totale da pagare '+euro(Number(d.targetCents||0)/100)+'</span>';
+  loadTestTools();
+});
 document.getElementById('refreshOrders').addEventListener('click',loadOrders);
 document.getElementById('logoutBtn').addEventListener('click',async()=>{await api('logout');showLogin();});
 </script>
