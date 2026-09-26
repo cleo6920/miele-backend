@@ -1,4 +1,5 @@
 const xpayGateway = require('../xpay-gateway');
+const {applyPromo,normalizeCode}=require('../promo-store');
 
 function cleanText(value, maxLength = 200) {
   return String(value || '').trim().slice(0, maxLength);
@@ -85,7 +86,26 @@ module.exports = async (req, res) => {
       (sum, item) => sum + (Math.round(item.amount * 100) * item.quantity),
       0
     );
-    const totalCents = goodsCents + shippingCents;
+    const rawTotalCents = goodsCents + shippingCents;
+    const promoCode=normalizeCode(body.promoCode||'');
+    let promo=null;
+    let totalCents=rawTotalCents;
+    if(promoCode){
+      promo=await applyPromo(promoCode,goodsCents,shippingCents);
+      totalCents=promo.totalCents;
+    }
+    if(body.validatePromo===true){
+      return res.status(200).json({
+        ok:true,
+        promo:promo?{
+          code:promo.code,
+          testMode:promo.testMode,
+          originalTotal:Number((promo.originalTotalCents/100).toFixed(2)),
+          discount:Number((promo.discountCents/100).toFixed(2)),
+          total:Number((promo.totalCents/100).toFixed(2))
+        }:null
+      });
+    }
     const itemSummary = sanitizedItems
       .map((item) => item.quantity + 'x ' + item.name)
       .join(' | ')
@@ -113,7 +133,10 @@ module.exports = async (req, res) => {
         items: purchaseItems,
         goodsTotal: goodsCents / 100,
         shipping: shippingCents / 100,
+        discount: promo ? promo.discountCents / 100 : 0,
         total: totalCents / 100,
+        promoCode: promo ? promo.code : '',
+        promoTestMode: Boolean(promo&&promo.testMode),
         customer: safeCustomer,
         language: orderLanguage,
         notes: cleanText(body.notes, 500)
