@@ -167,25 +167,25 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
 .ape-telu-halo::before,.ape-telu-halo::after{content:"";position:absolute;border:1px solid rgba(23,56,43,.12);border-radius:48% 52% 45% 55%}
 .ape-telu-halo::before{inset:28px;transform:rotate(14deg)}
 .ape-telu-halo::after{inset:62px;transform:rotate(-11deg)}
-.ape-telu-mascot{position:relative;z-index:2;width:min(100%,360px);filter:drop-shadow(0 24px 18px rgba(70,46,0,.18));transition:transform .2s ease,filter .2s ease}
-.ape-telu-home.telu-live .ape-telu-mascot{animation:teluBeeArrive 1.55s cubic-bezier(.18,.86,.28,1.08) both,apeTeluFloat 4.2s ease-in-out 1.62s infinite}
+.ape-telu-mascot{position:relative;z-index:2;width:min(100%,360px);opacity:0;transform:translate3d(-240px,70px,0) rotate(-18deg) scale(.62);filter:drop-shadow(0 24px 18px rgba(70,46,0,.18));transition:filter .2s ease}
+.ape-telu-home.telu-live .ape-telu-mascot{animation:teluBeeArrive 2.15s cubic-bezier(.16,.82,.24,1.08) .35s both,apeTeluFloat 4.2s ease-in-out 2.6s infinite}
 .ape-telu-visual:hover .ape-telu-mascot{filter:drop-shadow(0 28px 20px rgba(70,46,0,.24))}
 .ape-telu-visual:focus-visible{outline:3px solid #17382b;outline-offset:8px;border-radius:32px}
 .ape-telu-mascot svg{display:block;width:100%;height:auto}
 .ape-telu-bubble{position:absolute;z-index:4;background:#fff;border:1px solid #e8d7ad;border-radius:22px;padding:12px 16px;box-shadow:0 14px 34px rgba(63,44,9,.12);font-family:Georgia,'Times New Roman',serif;color:#17382b;font-weight:700;line-height:1.35;opacity:0;pointer-events:none}
 .ape-telu-bubble::after{content:"";position:absolute;width:14px;height:14px;background:#fff;border-right:1px solid #e8d7ad;border-bottom:1px solid #e8d7ad;transform:rotate(45deg);bottom:-8px}
 .ape-telu-bubble.intro-one{left:2%;top:12%;font-size:19px}
-.ape-telu-home.telu-live .ape-telu-bubble.intro-one{animation:teluTalkOne 7.4s ease both}
+.ape-telu-home.telu-live .ape-telu-bubble.intro-one{animation:teluTalkOne 8.8s ease 1.9s both}
 .ape-telu-bubble.intro-one::after{left:28px}
 .ape-telu-bubble.intro-two{right:-1%;top:25%;max-width:220px;font-size:15px}
-.ape-telu-home.telu-live .ape-telu-bubble.intro-two{animation:teluTalkTwo 7.4s ease both}
+.ape-telu-home.telu-live .ape-telu-bubble.intro-two{animation:teluTalkTwo 8.8s ease 1.9s both}
 .ape-telu-bubble.intro-two::after{right:30px}
 .ape-telu-bubble.intro-three{left:50%;bottom:7%;transform:translateX(-50%);width:max-content;max-width:88%;font-size:17px;text-align:center;background:#17382b;color:#fff8dc;border-color:#17382b;pointer-events:auto}
-.ape-telu-home.telu-live .ape-telu-bubble.intro-three{animation:teluTalkThree 7.4s ease both}
+.ape-telu-home.telu-live .ape-telu-bubble.intro-three{animation:teluTalkThree 8.8s ease 1.9s both}
 .ape-telu-bubble.intro-three::after{left:50%;margin-left:-7px;background:#17382b;border-color:#17382b}
 .ape-telu-bubble.intro-three strong{color:#f4c552}
 .ape-telu-tap-ring{position:absolute;z-index:1;width:380px;height:380px;border:2px solid rgba(23,56,43,.20);border-radius:50%;opacity:0;pointer-events:none}
-.ape-telu-home.telu-live .ape-telu-tap-ring{animation:teluTapPulse 2.2s ease 6.4s infinite}
+.ape-telu-home.telu-live .ape-telu-tap-ring{animation:teluTapPulse 2.2s ease 9s infinite}
 .ape-telu-copy{position:relative}
 .ape-telu-kicker{display:inline-block;margin-bottom:10px;font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:#a66b10}
 .ape-telu-copy h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(48px,5.8vw,78px);line-height:.96;margin:0 0 18px;color:#12392d;letter-spacing:-.035em}
@@ -209,19 +209,22 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
 .ape-telu-note{font-size:13px;color:#6e6a61;font-weight:700}
 @keyframes teluArrive{0%{opacity:0;transform:translate3d(-70px,28px,0) scale(.88)}65%{opacity:1;transform:translate3d(8px,-5px,0) scale(1.02)}100%{opacity:1;transform:none}}
 @keyframes teluBeeArrive{
-  0%{opacity:0;transform:translate3d(-150px,90px,0) rotate(-14deg) scale(.72)}
-  35%{opacity:1;transform:translate3d(-42px,-18px,0) rotate(7deg) scale(.92)}
-  62%{transform:translate3d(14px,8px,0) rotate(-4deg) scale(1.03)}
-  82%{transform:translate3d(-6px,-5px,0) rotate(2deg) scale(.99)}
+  0%{opacity:0;transform:translate3d(-240px,70px,0) rotate(-18deg) scale(.62)}
+  18%{opacity:.55;transform:translate3d(-170px,20px,0) rotate(11deg) scale(.74)}
+  42%{opacity:1;transform:translate3d(-88px,-28px,0) rotate(-8deg) scale(.88)}
+  64%{transform:translate3d(-24px,14px,0) rotate(6deg) scale(.97)}
+  82%{transform:translate3d(10px,-8px,0) rotate(-3deg) scale(1.03)}
+  94%{transform:translate3d(-4px,3px,0) rotate(1deg) scale(.995)}
   100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1)}
 }
 @keyframes teluHaloArrive{0%{opacity:.2;transform:scale(.72)}65%{opacity:.88;transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+@keyframes teluBeeArriveReduced{0%{opacity:0;transform:translate3d(-85px,18px,0) scale(.88)}100%{opacity:1;transform:translate3d(0,0,0) scale(1)}}
 @keyframes teluTalkOne{0%,8%{opacity:0;transform:translateY(8px) scale(.96)}12%,31%{opacity:1;transform:none}36%,100%{opacity:0;transform:translateY(-5px) scale(.98)}}
 @keyframes teluTalkTwo{0%,34%{opacity:0;transform:translateY(8px) scale(.96)}39%,59%{opacity:1;transform:none}64%,100%{opacity:0;transform:translateY(-5px) scale(.98)}}
 @keyframes teluTalkThree{0%,61%{opacity:0;transform:translateX(-50%) translateY(8px) scale(.96)}67%,100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
 @keyframes teluTapPulse{0%{opacity:0;transform:scale(.86)}20%{opacity:.34}70%{opacity:0;transform:scale(1.10)}100%{opacity:0;transform:scale(1.10)}}
 @keyframes apeTeluFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
-@media(prefers-reduced-motion:reduce){.ape-telu-home.telu-live .ape-telu-visual{animation:none;opacity:1}.ape-telu-home.telu-live .ape-telu-mascot{animation:none}.ape-telu-home.telu-live .ape-telu-tap-ring{animation:none}.ape-telu-home.telu-live .ape-telu-bubble.intro-one{animation:teluTalkOne 7.4s linear both}.ape-telu-home.telu-live .ape-telu-bubble.intro-two{animation:teluTalkTwo 7.4s linear both}.ape-telu-home.telu-live .ape-telu-bubble.intro-three{animation:teluTalkThree 7.4s linear both}}
+@media(prefers-reduced-motion:reduce){.ape-telu-home.telu-live .ape-telu-visual{animation:none;opacity:1}.ape-telu-home.telu-live .ape-telu-mascot{animation:teluBeeArriveReduced 1.35s ease .2s both}.ape-telu-home.telu-live .ape-telu-tap-ring{animation:none}.ape-telu-home.telu-live .ape-telu-bubble.intro-one{animation:teluTalkOne 8.8s linear 1.2s both}.ape-telu-home.telu-live .ape-telu-bubble.intro-two{animation:teluTalkTwo 8.8s linear 1.2s both}.ape-telu-home.telu-live .ape-telu-bubble.intro-three{animation:teluTalkThree 8.8s linear 1.2s both}}
 
 @media(max-width:920px){.ape-telu-stage{grid-template-columns:1fr;gap:24px}.ape-telu-visual{min-height:450px}.ape-telu-halo{width:360px;height:360px}.ape-telu-mascot{width:300px}.ape-telu-bubble.intro-one{left:10%;top:9%}.ape-telu-bubble.intro-two{right:8%;top:26%}.ape-telu-bubble.intro-three{bottom:5%;font-size:16px}.ape-telu-tap-ring{width:325px;height:325px}}
 @media(max-width:660px){.ape-telu-home{padding:48px 0}.ape-telu-visual{min-height:390px}.ape-telu-halo{width:310px;height:310px}.ape-telu-mascot{width:255px}.ape-telu-bubble.intro-one{left:0;top:5%;font-size:16px}.ape-telu-bubble.intro-two{right:0;top:23%;font-size:13px;max-width:165px}.ape-telu-bubble.intro-three{bottom:3%;font-size:14px;max-width:94%;width:auto}.ape-telu-tap-ring{width:285px;height:285px}.ape-telu-copy h2{font-size:48px}.ape-telu-lead{font-size:21px}.ape-telu-points{grid-template-columns:1fr}.ape-telu-point{min-height:0}.ape-telu-conversation{padding:16px}.ape-telu-suggestions{display:grid}.ape-telu-prompt{text-align:left}}
