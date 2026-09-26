@@ -1,7 +1,7 @@
 const crypto=require('crypto');
 const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');
 const {callBeeDataApi}=require('../bee-wallet-client');
-const {createTestCode,listTestCodes}=require('../promo-store');
+const {createTestCode,listTestCodes,createPromoCode,listPromoCodes}=require('../promo-store');
 const {Pool}=require('pg');
 const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
 let testPool;
@@ -64,6 +64,30 @@ async function recordAdminOrderEvent(eventType,orderId,payload){
     console.warn('[Area riservata] impossibile registrare evento ordine',error?.message||error);
   }
 }
+async function createAdminPointsCode(points,note=''){
+  const value=Math.max(1,Math.min(1000,Math.round(Number(points)||1)));
+  const p=getTestPool();
+  for(let i=0;i<10;i++){
+    const raw=crypto.randomBytes(5).toString('hex').toUpperCase();
+    const code='APE-'+raw.slice(0,5)+'-'+raw.slice(5);
+    try{
+      const r=await p.query(
+        "insert into bee_coupons(code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id) values($1,$2,$2,'ATTIVO','ADMIN_PHYSICAL',$3,null) returning code,points_total,points_remaining,status,source_kind,created_at",
+        [code,value,cleanField(note,160)||null]
+      );
+      return r.rows[0];
+    }catch(e){if(e&&e.code==='23505')continue;throw e;}
+  }
+  throw new Error('Impossibile generare il codice Punti Ape.');
+}
+async function listAdminPointsCodes(limit=60){
+  const r=await getTestPool().query(
+    "select code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id,created_at,used_at from bee_coupons where source_kind='ADMIN_PHYSICAL' order by created_at desc limit $1",
+    [Math.max(1,Math.min(200,Number(limit)||60))]
+  );
+  return r.rows||[];
+}
+
 async function adminOrdersSnapshot(){
   await ensureAdminOrderEventsTable();
   const p=getTestPool();
@@ -97,6 +121,26 @@ async function handleAdminAction(req,res,action){
       console.error('[Area riservata] ordini',error);
       return res.status(500).json({ok:false,error:'Non è stato possibile caricare gli ordini.'});
     }
+  }
+  if(action==='points-codes'){
+    try{return res.json({ok:true,codes:await listAdminPointsCodes(80)});}
+    catch(error){console.error('[Area riservata] points-codes',error);return res.status(500).json({ok:false,error:'Non è stato possibile caricare i codici Punti Ape.'});}
+  }
+  if(action==='create-points-code'){
+    try{
+      const row=await createAdminPointsCode(req.body?.points,req.body?.note);
+      return res.json({ok:true,code:row});
+    }catch(error){console.error('[Area riservata] create-points-code',error);return res.status(500).json({ok:false,error:'Non è stato possibile generare il codice Punti Ape.'});}
+  }
+  if(action==='promo-codes'){
+    try{return res.json({ok:true,codes:await listPromoCodes(80)});}
+    catch(error){console.error('[Area riservata] promo-codes',error);return res.status(500).json({ok:false,error:'Non è stato possibile caricare i codici promozionali.'});}
+  }
+  if(action==='create-promo'){
+    try{
+      const row=await createPromoCode({mode:req.body?.mode,value:req.body?.value,maxUses:req.body?.maxUses,note:req.body?.note});
+      return res.json({ok:true,code:row});
+    }catch(error){console.error('[Area riservata] create-promo',error);return res.status(500).json({ok:false,error:error?.message||'Non è stato possibile generare il codice promozionale.'});}
   }
   if(action==='test-tools'){
     try{
