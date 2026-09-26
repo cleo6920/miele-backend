@@ -160,18 +160,25 @@ linear-gradient(30deg,transparent 24%,rgba(198,151,40,.10) 25%,rgba(198,151,40,.
 linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,.08) 26%,transparent 27%,transparent 74%,rgba(198,151,40,.08) 75%,rgba(198,151,40,.08) 76%,transparent 77%);background-size:70px 118px}
 .ape-telu-wrap{position:relative;z-index:1}
 .ape-telu-stage{position:relative;display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.14fr);gap:54px;align-items:center}
-.ape-telu-visual{position:relative;min-height:560px;display:flex;align-items:center;justify-content:center}
+.ape-telu-visual{position:relative;min-height:560px;display:flex;align-items:center;justify-content:center;width:100%;border:0;padding:0;background:transparent;color:inherit;font:inherit;text-align:inherit;cursor:pointer;isolation:isolate;animation:teluArrive .95s cubic-bezier(.2,.8,.2,1) both}
 .ape-telu-halo{position:absolute;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle at 38% 30%,#ffe9a7 0 18%,#f6c74b 46%,#e8a820 100%);box-shadow:0 28px 70px rgba(111,71,0,.16)}
 .ape-telu-halo::before,.ape-telu-halo::after{content:"";position:absolute;border:1px solid rgba(23,56,43,.12);border-radius:48% 52% 45% 55%}
 .ape-telu-halo::before{inset:28px;transform:rotate(14deg)}
 .ape-telu-halo::after{inset:62px;transform:rotate(-11deg)}
-.ape-telu-mascot{position:relative;z-index:2;width:min(100%,360px);animation:apeTeluFloat 4.2s ease-in-out infinite;filter:drop-shadow(0 24px 18px rgba(70,46,0,.18))}
+.ape-telu-mascot{position:relative;z-index:2;width:min(100%,360px);animation:apeTeluFloat 4.2s ease-in-out 1s infinite;filter:drop-shadow(0 24px 18px rgba(70,46,0,.18));transition:transform .2s ease,filter .2s ease}
+.ape-telu-visual:hover .ape-telu-mascot{filter:drop-shadow(0 28px 20px rgba(70,46,0,.24))}
+.ape-telu-visual:focus-visible{outline:3px solid #17382b;outline-offset:8px;border-radius:32px}
 .ape-telu-mascot svg{display:block;width:100%;height:auto}
-.ape-telu-bubble{position:absolute;z-index:3;background:#fff;border:1px solid #e8d7ad;border-radius:22px;padding:12px 16px;box-shadow:0 14px 34px rgba(63,44,9,.12);font-family:Georgia,'Times New Roman',serif;color:#17382b;font-weight:700}
-.ape-telu-bubble.hello{left:2%;top:15%;font-size:19px}
-.ape-telu-bubble.help{right:-2%;bottom:17%;font-size:14px;max-width:185px;line-height:1.35}
-.ape-telu-bubble::after{content:"";position:absolute;width:14px;height:14px;background:#fff;border-right:1px solid #e8d7ad;border-bottom:1px solid #e8d7ad;transform:rotate(45deg);bottom:-8px;left:28px}
-.ape-telu-bubble.help::after{left:auto;right:28px}
+.ape-telu-bubble{position:absolute;z-index:4;background:#fff;border:1px solid #e8d7ad;border-radius:22px;padding:12px 16px;box-shadow:0 14px 34px rgba(63,44,9,.12);font-family:Georgia,'Times New Roman',serif;color:#17382b;font-weight:700;line-height:1.35;opacity:0;pointer-events:none}
+.ape-telu-bubble::after{content:"";position:absolute;width:14px;height:14px;background:#fff;border-right:1px solid #e8d7ad;border-bottom:1px solid #e8d7ad;transform:rotate(45deg);bottom:-8px}
+.ape-telu-bubble.intro-one{left:2%;top:12%;font-size:19px;animation:teluTalkOne 7.4s ease both}
+.ape-telu-bubble.intro-one::after{left:28px}
+.ape-telu-bubble.intro-two{right:-1%;top:25%;max-width:220px;font-size:15px;animation:teluTalkTwo 7.4s ease both}
+.ape-telu-bubble.intro-two::after{right:30px}
+.ape-telu-bubble.intro-three{left:50%;bottom:7%;transform:translateX(-50%);width:max-content;max-width:88%;font-size:17px;text-align:center;background:#17382b;color:#fff8dc;border-color:#17382b;animation:teluTalkThree 7.4s ease both;pointer-events:auto}
+.ape-telu-bubble.intro-three::after{left:50%;margin-left:-7px;background:#17382b;border-color:#17382b}
+.ape-telu-bubble.intro-three strong{color:#f4c552}
+.ape-telu-tap-ring{position:absolute;z-index:1;width:380px;height:380px;border:2px solid rgba(23,56,43,.20);border-radius:50%;opacity:0;animation:teluTapPulse 2.2s ease 6.4s infinite;pointer-events:none}
 .ape-telu-copy{position:relative}
 .ape-telu-kicker{display:inline-block;margin-bottom:10px;font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:#a66b10}
 .ape-telu-copy h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(48px,5.8vw,78px);line-height:.96;margin:0 0 18px;color:#12392d;letter-spacing:-.035em}
@@ -193,9 +200,16 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
 .ape-telu-talk{border:0;cursor:pointer;background:#e7aa24;color:#17382b;border-radius:999px;padding:14px 21px;font-weight:950;font-size:15px;box-shadow:0 12px 24px rgba(133,87,0,.16)}
 .ape-telu-talk:hover{transform:translateY(-1px)}
 .ape-telu-note{font-size:13px;color:#6e6a61;font-weight:700}
+@keyframes teluArrive{0%{opacity:0;transform:translate3d(-70px,28px,0) scale(.88)}65%{opacity:1;transform:translate3d(8px,-5px,0) scale(1.02)}100%{opacity:1;transform:none}}
+@keyframes teluTalkOne{0%,8%{opacity:0;transform:translateY(8px) scale(.96)}12%,31%{opacity:1;transform:none}36%,100%{opacity:0;transform:translateY(-5px) scale(.98)}}
+@keyframes teluTalkTwo{0%,34%{opacity:0;transform:translateY(8px) scale(.96)}39%,59%{opacity:1;transform:none}64%,100%{opacity:0;transform:translateY(-5px) scale(.98)}}
+@keyframes teluTalkThree{0%,61%{opacity:0;transform:translateX(-50%) translateY(8px) scale(.96)}67%,100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+@keyframes teluTapPulse{0%{opacity:0;transform:scale(.86)}20%{opacity:.34}70%{opacity:0;transform:scale(1.10)}100%{opacity:0;transform:scale(1.10)}}
 @keyframes apeTeluFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
-@media(max-width:920px){.ape-telu-stage{grid-template-columns:1fr;gap:24px}.ape-telu-visual{min-height:450px}.ape-telu-halo{width:360px;height:360px}.ape-telu-mascot{width:300px}.ape-telu-bubble.hello{left:12%;top:10%}.ape-telu-bubble.help{right:10%;bottom:12%}}
-@media(max-width:660px){.ape-telu-home{padding:48px 0}.ape-telu-visual{min-height:390px}.ape-telu-halo{width:310px;height:310px}.ape-telu-mascot{width:255px}.ape-telu-bubble.hello{left:0;top:7%;font-size:16px}.ape-telu-bubble.help{right:0;bottom:8%;font-size:12px;max-width:145px}.ape-telu-copy h2{font-size:48px}.ape-telu-lead{font-size:21px}.ape-telu-points{grid-template-columns:1fr}.ape-telu-point{min-height:0}.ape-telu-conversation{padding:16px}.ape-telu-suggestions{display:grid}.ape-telu-prompt{text-align:left}}
+@media(prefers-reduced-motion:reduce){.ape-telu-visual,.ape-telu-mascot,.ape-telu-tap-ring,.ape-telu-bubble{animation:none!important}.ape-telu-bubble.intro-one,.ape-telu-bubble.intro-two{display:none}.ape-telu-bubble.intro-three{opacity:1;transform:translateX(-50%)}}
+
+@media(max-width:920px){.ape-telu-stage{grid-template-columns:1fr;gap:24px}.ape-telu-visual{min-height:450px}.ape-telu-halo{width:360px;height:360px}.ape-telu-mascot{width:300px}.ape-telu-bubble.intro-one{left:10%;top:9%}.ape-telu-bubble.intro-two{right:8%;top:26%}.ape-telu-bubble.intro-three{bottom:5%;font-size:16px}.ape-telu-tap-ring{width:325px;height:325px}}
+@media(max-width:660px){.ape-telu-home{padding:48px 0}.ape-telu-visual{min-height:390px}.ape-telu-halo{width:310px;height:310px}.ape-telu-mascot{width:255px}.ape-telu-bubble.intro-one{left:0;top:5%;font-size:16px}.ape-telu-bubble.intro-two{right:0;top:23%;font-size:13px;max-width:165px}.ape-telu-bubble.intro-three{bottom:3%;font-size:14px;max-width:94%;width:auto}.ape-telu-tap-ring{width:285px;height:285px}.ape-telu-copy h2{font-size:48px}.ape-telu-lead{font-size:21px}.ape-telu-points{grid-template-columns:1fr}.ape-telu-point{min-height:0}.ape-telu-conversation{padding:16px}.ape-telu-suggestions{display:grid}.ape-telu-prompt{text-align:left}}
 
 .conversation{background:#dfa92f;padding:74px 0}
 .conversation-inner{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center}
@@ -251,10 +265,12 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
 <section class="ape-telu-home" id="ape-telu">
   <div class="wrap ape-telu-wrap">
     <div class="ape-telu-stage">
-      <div class="ape-telu-visual" aria-label="Ape Telù, mascotte della Fabbrica delle Api">
+      <button class="ape-telu-visual" type="button" aria-label="Parla con Ape Telù" onclick="if(!document.getElementById('globalApePanel')?.classList.contains('open'))document.getElementById('apeChatLaunch')?.click()">
         <div class="ape-telu-halo" aria-hidden="true"></div>
-        <div class="ape-telu-bubble hello">Ciao, sono Ape Telù.</div>
-        <div class="ape-telu-bubble help">Se hai una curiosità, chiedimi pure.</div>
+        <div class="ape-telu-tap-ring" aria-hidden="true"></div>
+        <div class="ape-telu-bubble intro-one">Ciao! Sono Ape Telù.</div>
+        <div class="ape-telu-bubble intro-two">Non vedo l’ora di sapere cosa ti incuriosisce.</div>
+        <div class="ape-telu-bubble intro-three"><strong>Toccami</strong> e iniziamo a parlare. Qual è la prima cosa che vuoi chiedermi?</div>
 
         <div class="ape-telu-mascot" aria-hidden="true">
           <svg viewBox="0 0 340 310" role="img" aria-label="Ape Telù">
@@ -304,7 +320,7 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
             <circle cx="314" cy="143" r="3" fill="#12392d"/>
           </svg>
         </div>
-      </div>
+      </button>
 
       <div class="ape-telu-copy">
         <span class="ape-telu-kicker">APE TELÙ · LA MASCOTTE DELLA FABBRICA DELLE API</span>
