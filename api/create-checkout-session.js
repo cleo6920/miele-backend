@@ -1,5 +1,6 @@
 const xpayGateway = require('../xpay-gateway');
 const {applyPromo,normalizeCode}=require('../promo-store');
+const {checkStock}=require('../stock-store');
 
 function cleanText(value, maxLength = 200) {
   return String(value || '').trim().slice(0, maxLength);
@@ -121,6 +122,8 @@ module.exports = async (req, res) => {
       amount: item.amount,
       quantity: item.quantity
     }));
+
+    await checkStock(purchaseItems);
 
     const payment = xpayGateway.createPaymentRedirectUrl({
       amountCents: totalCents,
