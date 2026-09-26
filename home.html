@@ -414,7 +414,7 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
   if('IntersectionObserver' in window){
     var armed=true;
     var desktop=window.matchMedia('(min-width: 921px)').matches;
-    var startRatio=desktop?0.22:0.55;
+    var startRatio=desktop?0.46:0.55;
     var observer=new IntersectionObserver(function(entries){
       var entry=entries[0];
       if(!entry)return;
@@ -425,7 +425,7 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
         armed=true;
         section.classList.remove('telu-live');
       }
-    },{threshold:[0,.06,.12,.22,.35,.55,.75],rootMargin:desktop?'0px 0px -16% 0px':'0px 0px -4% 0px'});
+    },{threshold:[0,.06,.18,.32,.46,.55,.75],rootMargin:desktop?'0px 0px -6% 0px':'0px 0px -4% 0px'});
     observer.observe(visual);
   }else{
     restartTelu();
