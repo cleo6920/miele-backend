@@ -78,6 +78,21 @@ function cheapReply(message,lang){
   return {reply:replies[lang]||replies.it,action:{href:'/shop#'+cheapest.anchor,label:'Scopri '+cheapest.name}};
 }
 
+function prestigeReply(message,lang){
+  const q=normalize(message);
+  const prestige=/(piu pregiato|più pregiato|piu prezioso|più prezioso|migliore prodotto|prodotto migliore|most precious|most valuable|best bee product|wertvollste|kostbarste|plus precieux|plus précieux|mas preciado|más preciado)/i.test(q);
+  const beeProduct=/(ape|api|alveare|prodotto|miele|pappa reale|polline|propoli|cera|veleno)/i.test(q);
+  if(!prestige||!beeProduct)return null;
+  const replies={
+    it:'Non esiste un prodotto dell’alveare **oggettivamente “più pregiato”**: dipende dal criterio. Se per “pregiato” intendi **raro e biologicamente particolare**, la **pappa reale** è certamente uno dei prodotti più caratteristici dell’alveare. Viene prodotta dalle **api operaie nutrici**, non dalla regina, e serve soprattutto a nutrire le larve e la regina.\n\nNel nostro shop trovi **Pappa Reale Fresca · 10 g · 6,90 €**. Se invece per “pregiato” intendi il più costoso, il più raro o quello dal gusto più particolare, posso confrontarli con quel criterio.',
+    en:'There is no bee product that is **objectively the “most precious”**: it depends on the criterion. If you mean **rare and biologically distinctive**, royal jelly is certainly one of the hive’s most unusual products. It is produced by **nurse worker bees**, not by the queen, and is used mainly to feed larvae and the queen.\n\nIn our shop you can find **Pappa Reale Fresca · 10 g · €6.90**. If by “precious” you mean the most expensive, rarest or most distinctive in taste, I can compare them using that criterion.',
+    de:'Es gibt kein Bienenprodukt, das **objektiv das wertvollste** ist: Das hängt vom Kriterium ab. Wenn du **selten und biologisch besonders** meinst, gehört Gelée Royale sicher zu den außergewöhnlichsten Produkten des Bienenstocks. Es wird von **Ammenarbeiterinnen**, nicht von der Königin, produziert und dient vor allem der Ernährung der Larven und der Königin.\n\nIn unserem Shop findest du **Pappa Reale Fresca · 10 g · 6,90 €**. Wenn du mit „wertvoll“ das teuerste, seltenste oder geschmacklich besondere Produkt meinst, kann ich sie nach diesem Kriterium vergleichen.',
+    fr:'Il n’existe pas de produit de la ruche **objectivement “le plus précieux”** : cela dépend du critère. Si vous pensez à quelque chose de **rare et biologiquement particulier**, la gelée royale fait certainement partie des produits les plus singuliers de la ruche. Elle est produite par les **abeilles ouvrières nourrices**, et non par la reine, et sert surtout à nourrir les larves et la reine.\n\nDans notre boutique, vous trouvez **Pappa Reale Fresca · 10 g · 6,90 €**. Si par “précieux” vous entendez le plus cher, le plus rare ou le plus particulier au goût, je peux les comparer selon ce critère.',
+    es:'No existe un producto de la colmena **objetivamente “más preciado”**: depende del criterio. Si te refieres a algo **raro y biológicamente especial**, la jalea real es sin duda uno de los productos más particulares de la colmena. La producen las **abejas obreras nodrizas**, no la reina, y sirve sobre todo para alimentar a las larvas y a la reina.\n\nEn nuestra tienda encontrarás **Pappa Reale Fresca · 10 g · 6,90 €**. Si por “preciado” quieres decir el más caro, el más raro o el de sabor más particular, puedo compararlos con ese criterio.'
+  };
+  return {reply:replies[lang]||replies.it,action:{href:'/shop#prodotto-pappa-reale-italiana-bio',label:'Scopri Pappa Reale Fresca'}};
+}
+
 async function handleChat(req,res){
   const lang=language(req.body&&req.body.language);
   const message=clean(req.body&&req.body.message,1800);
@@ -85,6 +100,9 @@ async function handleChat(req,res){
 
   const cheap=cheapReply(message,lang);
   if(cheap)return res.status(200).json({ok:true,reply:cheap.reply,action:cheap.action,source:'vercel-catalog'});
+
+  const prestige=prestigeReply(message,lang);
+  if(prestige)return res.status(200).json({ok:true,reply:prestige.reply,action:prestige.action,source:'vercel-knowledge'});
 
   const apiKey=String(process.env.GROQ_API_KEY||'').trim();
   if(!apiKey){
@@ -107,6 +125,8 @@ async function handleChat(req,res){
     'Esempio vincolante: "che prodotto mi consigli da provare spendendo poco?" è una domanda sul catalogo e NON è fuori tema.',
     'Dichiara fuori tema solo domande chiaramente estranee, per esempio scarpe, politica o automobili.',
     'Non inventare prodotti, prezzi, formati, disponibilità, offerte o caratteristiche.',
+    'Parole come "più pregiato", "migliore", "più buono" o "più adatto" non hanno automaticamente un vincitore oggettivo: chiarisci il criterio oppure spiega che dipende dal criterio.',
+    'La pappa reale viene prodotta dalle api operaie nutrici, non dalla regina. Non dire mai che è una secrezione delle api regine.',
     'Usa soltanto il catalogo qui sotto quando parli dei prodotti dello shop.',
     'Non presentare veleno d’api, alveoterapia, SOS DOL o altri prodotti come cure o trattamenti medici. Per Linea Veleni usa linguaggio cosmetico e da massaggio.',
     'Non dare diagnosi, dosaggi, prescrizioni o indicazioni per sospendere farmaci.',
