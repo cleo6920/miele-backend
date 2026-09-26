@@ -176,7 +176,7 @@ function createPaymentRedirectUrl({ amountCents, email, description, note1, note
     mac: startMac(codTrans, divisa, importo, secret),
     url: `${base}/api/xpay/return`,
     url_back: `${base}/api/xpay/cancel`,
-    urlpost: `${base}/api/xpay/notify`,
+    urlpost: String(process.env.XPAY_NOTIFY_URL || 'https://miele-backend-omega.vercel.app/api/xpay/notify').trim(),
     mail: clean(email, 150),
     languageId: 'ITA',
     descrizione: clean(description || 'Ordine La Fabbrica delle Api', 500),
