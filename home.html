@@ -162,12 +162,13 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
 .ape-telu-stage{position:relative;display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.14fr);gap:54px;align-items:center}
 .ape-telu-visual{position:relative;min-height:560px;display:flex;align-items:center;justify-content:center;width:100%;border:0;padding:0;background:transparent;color:inherit;font:inherit;text-align:inherit;cursor:pointer;isolation:isolate;opacity:0}
 .ape-telu-home.telu-live .ape-telu-visual{animation:teluArrive .95s cubic-bezier(.2,.8,.2,1) both}
-.ape-telu-halo{position:absolute;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle at 38% 30%,#ffe9a7 0 18%,#f6c74b 46%,#e8a820 100%);box-shadow:0 28px 70px rgba(111,71,0,.16)}
+.ape-telu-halo{position:absolute;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle at 38% 30%,#ffe9a7 0 18%,#f6c74b 46%,#e8a820 100%);box-shadow:0 28px 70px rgba(111,71,0,.16);transform:scale(.92);opacity:.78}
+.ape-telu-home.telu-live .ape-telu-halo{animation:teluHaloArrive 1.4s ease-out both}
 .ape-telu-halo::before,.ape-telu-halo::after{content:"";position:absolute;border:1px solid rgba(23,56,43,.12);border-radius:48% 52% 45% 55%}
 .ape-telu-halo::before{inset:28px;transform:rotate(14deg)}
 .ape-telu-halo::after{inset:62px;transform:rotate(-11deg)}
 .ape-telu-mascot{position:relative;z-index:2;width:min(100%,360px);filter:drop-shadow(0 24px 18px rgba(70,46,0,.18));transition:transform .2s ease,filter .2s ease}
-.ape-telu-home.telu-live .ape-telu-mascot{animation:apeTeluFloat 4.2s ease-in-out 1s infinite}
+.ape-telu-home.telu-live .ape-telu-mascot{animation:teluBeeArrive 1.55s cubic-bezier(.18,.86,.28,1.08) both,apeTeluFloat 4.2s ease-in-out 1.62s infinite}
 .ape-telu-visual:hover .ape-telu-mascot{filter:drop-shadow(0 28px 20px rgba(70,46,0,.24))}
 .ape-telu-visual:focus-visible{outline:3px solid #17382b;outline-offset:8px;border-radius:32px}
 .ape-telu-mascot svg{display:block;width:100%;height:auto}
@@ -207,6 +208,14 @@ linear-gradient(150deg,transparent 24%,rgba(198,151,40,.08) 25%,rgba(198,151,40,
 .ape-telu-talk:hover{transform:translateY(-1px)}
 .ape-telu-note{font-size:13px;color:#6e6a61;font-weight:700}
 @keyframes teluArrive{0%{opacity:0;transform:translate3d(-70px,28px,0) scale(.88)}65%{opacity:1;transform:translate3d(8px,-5px,0) scale(1.02)}100%{opacity:1;transform:none}}
+@keyframes teluBeeArrive{
+  0%{opacity:0;transform:translate3d(-150px,90px,0) rotate(-14deg) scale(.72)}
+  35%{opacity:1;transform:translate3d(-42px,-18px,0) rotate(7deg) scale(.92)}
+  62%{transform:translate3d(14px,8px,0) rotate(-4deg) scale(1.03)}
+  82%{transform:translate3d(-6px,-5px,0) rotate(2deg) scale(.99)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1)}
+}
+@keyframes teluHaloArrive{0%{opacity:.2;transform:scale(.72)}65%{opacity:.88;transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
 @keyframes teluTalkOne{0%,8%{opacity:0;transform:translateY(8px) scale(.96)}12%,31%{opacity:1;transform:none}36%,100%{opacity:0;transform:translateY(-5px) scale(.98)}}
 @keyframes teluTalkTwo{0%,34%{opacity:0;transform:translateY(8px) scale(.96)}39%,59%{opacity:1;transform:none}64%,100%{opacity:0;transform:translateY(-5px) scale(.98)}}
 @keyframes teluTalkThree{0%,61%{opacity:0;transform:translateX(-50%) translateY(8px) scale(.96)}67%,100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
