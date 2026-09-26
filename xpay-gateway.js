@@ -3,6 +3,7 @@ const zlib = require('zlib');
 const { callBeeDataApi } = require('./bee-wallet-client');
 const { pointsForItem } = require('./test-purchase-store');
 const {consumePromo}=require('./promo-store');
+const {decrementStock}=require('./stock-store');
 
 const PROD_ENDPOINT = 'https://ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet';
 const PURCHASE_PARAM = 'fdap';
@@ -363,6 +364,7 @@ async function persistPaidPurchase(fields) {
 
   const result = await callBeeDataApi('create_purchase', purchase);
   if (result && result.ok !== false) {
+    try{await decrementStock(items);}catch(e){console.error('[XPay] Stock non aggiornato:',e&&e.message?e.message:e);}
     if(payload.pc){
       try{await consumePromo(payload.pc);}catch(e){console.error('[XPay] Codice promo non marcato come usato:',e&&e.message?e.message:e);}
     }
