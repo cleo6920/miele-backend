@@ -4,6 +4,7 @@ const {callBeeDataApi}=require('../bee-wallet-client');
 const {createTestCode,listTestCodes,createPromoCode,listPromoCodes}=require('../promo-store');
 const {listStock,updateStock}=require('../stock-store');
 const {Pool}=require('pg');
+const {handleApePelu}=require('../ape-pelu-helper');
 const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
 let testPool;
 function getTestPool(){if(!TEST_DB_URL)throw new Error('Database Saldo Api non configurato.');if(!testPool)testPool=new Pool({connectionString:TEST_DB_URL,max:1,idleTimeoutMillis:30000,connectionTimeoutMillis:10000});return testPool;}
@@ -561,6 +562,8 @@ function walletCardPdf(code){
 
 module.exports=async(req,res)=>{
   res.setHeader('Cache-Control','no-store');
+  const apeAction=String(req.query?.apeAction||'').trim().toLowerCase();
+  if(apeAction) return handleApePelu(req,res,apeAction);
   if(req.method==='GET' && String(req.query?.card||'')==='1'){
     const code=normalizeCode(req.query?.code);
     if(!/^APE-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(code)) return res.status(400).send('Codice non valido.');
