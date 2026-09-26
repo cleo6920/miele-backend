@@ -2382,6 +2382,13 @@ function apePelùReply(question,history=[]){
     return '<strong>SOS DOL</strong> viene presentato nella nostra Linea Veleni come prodotto per il massaggio, pensato per accompagnare un gesto mirato e una sensazione di comfort. Non viene presentato come cura o trattamento del dolore.';
   }
 
+  const budgetAdvice=
+    has('spendendo poco','spendere poco','economico','economica','meno caro','meno cara','pochi euro') &&
+    has('prodotto','prodotti','consigli','consiglia','provare','provo','scegli','scelgo','prendo');
+  if(budgetAdvice){
+    return '<strong>Se vuoi provare qualcosa spendendo poco, partirei dal Miele Italiano di Acacia · 40 g · €2,90.</strong><br><br>È il prodotto fisico con il prezzo più basso del catalogo attuale ed è un formato piccolo, quindi adatto anche come primo assaggio. Se vuoi restare sotto i 5 €, posso mostrarti anche le altre alternative disponibili.';
+  }
+
   if(has('prezzo','quanto costa')){
     return 'Posso controllare i prezzi dei <strong>40 prodotti presenti nella Bottega</strong>. Dimmi il nome del prodotto che vuoi verificare e ti indico il prezzo mostrato nel catalogo, senza inventare dati.';
   }
