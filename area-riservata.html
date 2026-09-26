@@ -21,6 +21,9 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 .orders{margin-top:22px}.orders-head{display:flex;gap:10px;align-items:center;justify-content:space-between}.orders-head button{width:auto;margin:0;padding:10px 14px;font-size:14px}
 .order-list{display:grid;gap:12px;margin-top:14px}.order{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff}.order-top{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}.order strong{color:var(--g)}.order small{color:#708078}.status{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.status.paid{background:#dff3e8;color:#17613f}.status.cancelled{background:#fde6df;color:#8f3c2c}.order-lines{margin-top:8px;line-height:1.5;color:#4e5b55;font-size:14px}
 .test-tools{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}.test-box{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--cream);margin-top:12px}.code-line{font-family:monospace;font-size:18px;font-weight:900;word-break:break-all;background:#fff;border:1px dashed #c9b98e;border-radius:12px;padding:12px;margin-top:8px}.test-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.test-row label{margin:0;flex:1;min-width:180px}.test-row select{width:100%;padding:12px;border:1px solid #cfc7b8;border-radius:12px;background:#fff;font-size:16px}.test-row button{width:auto;margin:0}.test-codes{display:grid;gap:8px;margin-top:12px}.test-code-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-size:14px}
+
+.admin-section{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}.admin-box{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--cream);margin-top:12px}.admin-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end}.admin-form label{margin:0}.admin-form input,.admin-form select{width:100%;padding:11px 12px;border:1px solid #cfc7b8;border-radius:12px;background:#fff;font-size:15px}.admin-form button{margin:0}.admin-list{display:grid;gap:8px;margin-top:12px}.admin-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-size:14px}.stock-row{display:grid;grid-template-columns:minmax(180px,1fr) 110px 110px;gap:8px;align-items:center}.stock-row input{padding:9px}.stock-row button{margin:0;padding:9px 10px;font-size:13px}.muted{color:#708078;font-size:13px}@media(max-width:620px){.stock-row{grid-template-columns:1fr}.stock-row button{width:100%}}
+
 </style>
 </head>
 <body>
@@ -41,11 +44,50 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
   <h2 style="margin-top:0">Gestione</h2>
   <p>Accesso effettuato. Le funzioni operative verranno aggiunte qui senza modificare il sito pubblico.</p>
   <div class="grid">
-    <div class="tile"><h3>🐝 Codici Punti Ape</h3><p>Generazione codici per vendite fisiche alla Galena e ai mercatini.</p><span class="badge">prossimo passo</span></div>
+    <div class="tile"><h3>🐝 Codici Punti Ape</h3><p>Generazione codici per vendite fisiche alla Galena e ai mercatini.</p><span class="badge">attivo</span></div>
     <div class="tile"><h3>🧪 Test</h3><p>Codice Punti Ape permanente e codici per acquisti reali di pochi centesimi.</p><span class="badge">attivo</span></div>
-    <div class="tile"><h3>📦 Stock prodotti</h3><p>Controllo e aggiornamento delle quantità disponibili.</p><span class="badge">in preparazione</span></div>
+    <div class="tile"><h3>🏷️ Codici promozionali</h3><p>Sconti in euro o percentuale utilizzabili nello shop.</p><span class="badge">attivo</span></div>
+    <div class="tile"><h3>📦 Stock prodotti</h3><p>Controllo e aggiornamento delle quantità disponibili.</p><span class="badge">attivo</span></div>
     <div class="tile"><h3>🧾 Ordini</h3><p>Pagamenti riusciti e operazioni annullate/non completate.</p><span class="badge">attivo</span></div>
   </div>
+  <section class="admin-section">
+    <h3 style="margin:0">🐝 Codici Punti Ape</h3>
+    <div class="admin-box">
+      <div class="admin-form">
+        <label>Punti del codice<input id="pointsCodeValue" type="number" min="1" max="1000" value="10"></label>
+        <label>Nota facoltativa<input id="pointsCodeNote" placeholder="es. Mercatino Stellata"></label>
+        <button id="createPointsCode" type="button">Genera codice</button>
+      </div>
+      <div id="pointsCodeMsg" class="msg"></div>
+      <div id="pointsCodeList" class="admin-list"></div>
+    </div>
+  </section>
+
+  <section class="admin-section">
+    <h3 style="margin:0">🏷️ Codici promozionali</h3>
+    <div class="admin-box">
+      <div class="admin-form">
+        <label>Tipo<select id="promoMode"><option value="fixed">Sconto in euro</option><option value="percent">Sconto percentuale</option></select></label>
+        <label>Valore<input id="promoValue" type="number" min="1" step="1" value="5"></label>
+        <label>Numero utilizzi<input id="promoMaxUses" type="number" min="1" placeholder="vuoto = senza limite"></label>
+        <label>Nota facoltativa<input id="promoNote" placeholder="es. Fiera / cliente"></label>
+        <button id="createPromoCode" type="button">Genera codice sconto</button>
+      </div>
+      <div class="muted">Per “Sconto in euro”, 5 significa 5,00 €. Per “Percentuale”, 5 significa 5%.</div>
+      <div id="promoCodeMsg" class="msg"></div>
+      <div id="promoCodeList" class="admin-list"></div>
+    </div>
+  </section>
+
+  <section class="admin-section">
+    <h3 style="margin:0">📦 Stock prodotti</h3>
+    <div class="admin-box">
+      <p class="muted">Lascia la quantità vuota se non vuoi ancora gestire il limite numerico. Impostando 0 il prodotto risulta esaurito.</p>
+      <div id="stockMsg" class="msg"></div>
+      <div id="stockList" class="admin-list"></div>
+    </div>
+  </section>
+
   <section class="test-tools">
     <h3 style="margin:0">🧪 Strumenti di test</h3>
     <div class="test-box">
@@ -80,7 +122,7 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 <script>
 const loginCard=document.getElementById('loginCard'),dashboard=document.getElementById('dashboard'),msg=document.getElementById('loginMsg');
 async function api(action,body={}){const r=await fetch('/api/bee-balance?adminAction='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'});const d=await r.json().catch(()=>({}));return {r,d};}
-function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders();loadTestTools()}
+function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders();loadTestTools();loadPointsCodes();loadPromoCodes();loadStock()}
 function showLogin(){dashboard.style.display='none';loginCard.style.display='block'}
 (async()=>{try{const {d}=await api('status');if(d.authenticated)showDash();else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';}catch(_){}})();
 document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash();}else msg.textContent=d.error||'Accesso non riuscito.';});
@@ -116,6 +158,62 @@ async function loadOrders(){
     ...(Array.isArray(d.events)?d.events.map(x=>({kind:'cancelled',at:new Date(x.created_at||0).getTime(),x})):[])
   ].sort((a,b)=>b.at-a.at).slice(0,100);
   box.innerHTML=merged.length?merged.map(v=>v.kind==='paid'?paidCard(v.x):cancelledCard(v.x)).join(''):'<p>Nessun ordine registrato.</p>';
+}
+async function loadPointsCodes(){
+  const list=document.getElementById('pointsCodeList');
+  const {r,d}=await api('points-codes');
+  if(!r.ok){document.getElementById('pointsCodeMsg').textContent=d.error||'Errore';return;}
+  const rows=Array.isArray(d.codes)?d.codes:[];
+  list.innerHTML=rows.length?rows.map(x=>'<div class="admin-item"><strong>'+esc(x.code)+'</strong> · '+esc(x.points_total)+' punti · '+esc(x.status)+(x.source_order_id?' · '+esc(x.source_order_id):'')+'</div>').join(''):'<div class="muted">Nessun codice generato.</div>';
+}
+document.getElementById('createPointsCode').addEventListener('click',async()=>{
+  const m=document.getElementById('pointsCodeMsg');m.textContent='Generazione…';
+  const {r,d}=await api('create-points-code',{points:Number(document.getElementById('pointsCodeValue').value||1),note:document.getElementById('pointsCodeNote').value});
+  if(!r.ok){m.textContent=d.error||'Errore';return;}
+  m.innerHTML='<span class="ok">Creato: <strong>'+esc(d.code.code)+'</strong> · '+esc(d.code.points_total)+' punti</span>';
+  loadPointsCodes();
+});
+
+async function loadPromoCodes(){
+  const list=document.getElementById('promoCodeList');
+  const {r,d}=await api('promo-codes');
+  if(!r.ok){document.getElementById('promoCodeMsg').textContent=d.error||'Errore';return;}
+  const rows=Array.isArray(d.codes)?d.codes:[];
+  list.innerHTML=rows.length?rows.map(x=>{
+    const val=x.kind==='percent'?esc(x.percent_off)+'%':euro(Number(x.value_cents||0)/100);
+    const uses=x.max_uses==null?'senza limite':esc(x.uses)+'/'+esc(x.max_uses);
+    return '<div class="admin-item"><strong>'+esc(x.code)+'</strong> · '+val+' · utilizzi '+uses+' · '+(x.active?'ATTIVO':'DISATTIVATO')+(x.note?' · '+esc(x.note):'')+'</div>';
+  }).join(''):'<div class="muted">Nessun codice promozionale generato.</div>';
+}
+document.getElementById('createPromoCode').addEventListener('click',async()=>{
+  const m=document.getElementById('promoCodeMsg'),mode=document.getElementById('promoMode').value;
+  const raw=Number(document.getElementById('promoValue').value||0);
+  const value=mode==='fixed'?Math.round(raw*100):raw;
+  const maxUses=document.getElementById('promoMaxUses').value;
+  m.textContent='Generazione…';
+  const {r,d}=await api('create-promo',{mode,value,maxUses,note:document.getElementById('promoNote').value});
+  if(!r.ok){m.textContent=d.error||'Errore';return;}
+  m.innerHTML='<span class="ok">Creato: <strong>'+esc(d.code.code)+'</strong></span>';
+  loadPromoCodes();
+});
+
+async function loadStock(){
+  const list=document.getElementById('stockList'),m=document.getElementById('stockMsg');
+  const {r,d}=await api('stock-list');
+  if(!r.ok){m.textContent=d.error||'Errore';return;}
+  m.textContent='';
+  const rows=Array.isArray(d.items)?d.items:[];
+  list.innerHTML=rows.map(x=>'<div class="admin-item stock-row" data-stock-id="'+esc(x.product_id)+'"><div><strong>'+esc(x.product_name)+'</strong><div class="muted">'+esc(x.product_id)+'</div></div><input class="stockQty" type="number" min="0" placeholder="non gestito" value="'+(x.stock_qty==null?'':esc(x.stock_qty))+'"><button type="button" class="saveStock">'+(x.enabled?'Salva':'Riattiva')+'</button></div>').join('');
+  list.querySelectorAll('.saveStock').forEach(btn=>btn.addEventListener('click',async()=>{
+    const row=btn.closest('[data-stock-id]'),qty=row.querySelector('.stockQty').value;
+    btn.disabled=true;
+    const {r,d}=await api('stock-update',{productId:row.dataset.stockId,qty:qty===''?null:Number(qty),enabled:true});
+    btn.disabled=false;
+    if(!r){return}
+    if(!d.ok){m.textContent=d.error||'Errore aggiornamento';return;}
+    m.innerHTML='<span class="ok">Stock aggiornato.</span>';
+    loadStock();
+  }));
 }
 async function loadTestTools(){
   const codeEl=document.getElementById('pointsTestCode'),list=document.getElementById('testPromoCodes');
