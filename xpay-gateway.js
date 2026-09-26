@@ -4,6 +4,7 @@ const { callBeeDataApi } = require('./bee-wallet-client');
 const { pointsForItem } = require('./test-purchase-store');
 const {consumePromo}=require('./promo-store');
 const {decrementStock}=require('./stock-store');
+const {getPendingPayment}=require('./xpay-pending-store');
 
 const PROD_ENDPOINT = 'https://ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet';
 const PURCHASE_PARAM = 'fdap';
@@ -144,6 +145,22 @@ function decodePurchase(token, secret) {
   return payload;
 }
 
+async function purchasePayloadFromFields(fields) {
+  const { secret } = config();
+  const codTrans = clean(fields && fields.codTrans, 30);
+  const importo = clean(fields && fields.importo, 20);
+  const token = fields && fields[PURCHASE_PARAM];
+
+  if (token) return decodePurchase(token, secret);
+
+  const pending = await getPendingPayment(codTrans);
+  if (!pending) throw new Error('Dati ordine XPay mancanti o non validi.');
+  if (String(pending.amount_cents) !== importo) {
+    throw new Error('Importo XPay non corrispondente ai dati ordine temporanei.');
+  }
+  return compactPurchase(pending.purchase, codTrans, importo);
+}
+
 function makeTransactionId() {
   const time = Date.now().toString(36).toUpperCase();
   const random = crypto.randomBytes(5).toString('hex').toUpperCase();
@@ -209,7 +226,7 @@ async function sendPaidOrderEmail(fields) {
 
   const { secret } = config();
   const codTrans = clean(fields && fields.codTrans, 30);
-  const payload = decodePurchase(fields && fields[PURCHASE_PARAM], secret);
+  const payload = await purchasePayloadFromFields(fields);
   if (payload.c !== codTrans) throw new Error('Dati ordine XPay non corrispondenti per email.');
 
   const u = payload.u || {};
@@ -318,7 +335,7 @@ async function persistPaidPurchase(fields) {
   const existing = await callBeeDataApi('get_purchase', { orderId: codTrans });
   if (existing && existing.ok !== false) return existing;
 
-  const payload = decodePurchase(fields[PURCHASE_PARAM], secret);
+  const payload = await purchasePayloadFromFields(fields);
   if (payload.c !== codTrans || String(payload.a) !== clean(fields.importo, 20)) {
     throw new Error('Dati ordine XPay non corrispondenti alla transazione.');
   }
@@ -377,11 +394,11 @@ async function persistPaidPurchase(fields) {
   throw new Error(result && result.error ? result.error : 'Impossibile registrare il pagamento nel Saldo Api.');
 }
 
-function xpaySuccessToken(fields) {
+async function xpaySuccessToken(fields) {
   const { secret } = config();
   const codTrans = clean(fields && fields.codTrans, 30);
   if (!secret || !codTrans) throw new Error('Dati XPay mancanti per conferma ordine.');
-  const payload = decodePurchase(fields && fields[PURCHASE_PARAM], secret);
+  const payload = await purchasePayloadFromFields(fields);
   if (payload.c !== codTrans || String(payload.a) !== clean(fields && fields.importo, 20)) {
     throw new Error('Dati ordine XPay non corrispondenti alla transazione.');
   }
@@ -445,7 +462,7 @@ async function returnHandler(req, res) {
   if (esito === 'OK') {
     let successToken = '';
     try {
-      successToken = xpaySuccessToken(fields);
+      successToken = await xpaySuccessToken(fields);
     } catch (tokenError) {
       console.error('[XPay] Impossibile creare conferma sicura del pagamento:', tokenError && tokenError.message ? tokenError.message : tokenError);
     }
