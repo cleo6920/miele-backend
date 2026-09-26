@@ -39,7 +39,7 @@ function loadCatalog(){
       return catalogCache;
     }
   }catch(error){
-    console.error('[Ape Pelù Vercel] Catalogo non letto:',error&&error.message?error.message:error);
+    console.error('[Ape Telù Vercel] Catalogo non letto:',error&&error.message?error.message:error);
   }
   catalogCache=busatello;
   return catalogCache;
@@ -96,7 +96,7 @@ function prestigeReply(message,lang){
 async function handleChat(req,res){
   const lang=language(req.body&&req.body.language);
   const message=clean(req.body&&req.body.message,1800);
-  if(!message)return res.status(400).json({ok:false,error:'Scrivi una domanda per Ape Pelù.'});
+  if(!message)return res.status(400).json({ok:false,error:'Scrivi una domanda per Ape Telù.'});
 
   const cheap=cheapReply(message,lang);
   if(cheap)return res.status(200).json({ok:true,reply:cheap.reply,action:cheap.action,source:'vercel-catalog'});
@@ -106,8 +106,8 @@ async function handleChat(req,res){
 
   const apiKey=String(process.env.GROQ_API_KEY||'').trim();
   if(!apiKey){
-    console.warn('[Ape Pelù Vercel] GROQ_API_KEY assente.');
-    return res.status(503).json({ok:false,aiConfigured:false,error:'Ape Pelù AI non è ancora configurata su Vercel.'});
+    console.warn('[Ape Telù Vercel] GROQ_API_KEY assente.');
+    return res.status(503).json({ok:false,aiConfigured:false,error:'Ape Telù AI non è ancora configurata su Vercel.'});
   }
 
   const history=Array.isArray(req.body&&req.body.history)?req.body.history.slice(-10):[];
@@ -118,7 +118,7 @@ async function handleChat(req,res){
   const langName={it:'Italiano',en:'English',de:'Deutsch',fr:'Français',es:'Español'}[lang];
 
   const system=[
-    'Sei "Ape Pelù", la guida esperta della Fabbrica delle Api.',
+    'Sei "Ape Telù", la guida esperta della Fabbrica delle Api.',
     'Rispondi SEMPRE in '+langName+' salvo richiesta esplicita diversa.',
     'Il tuo mondo comprende api, alveari, apicoltura, impollinazione, biodiversità, prodotti dell’alveare, Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, Linea Veleni, Punti Ape, catalogo, ordini e spedizioni.',
     'Interpreta parole generiche come prodotto, prezzo, quello, questo, economico e consiglio nel contesto della Fabbrica delle Api se la frase non indica chiaramente un soggetto esterno.',
@@ -149,16 +149,16 @@ async function handleChat(req,res){
     });
     const data=await ai.json().catch(()=>null);
     if(!ai.ok){
-      console.error('[Ape Pelù Vercel] Groq error:',ai.status,data&&data.error&&data.error.message||'unknown');
-      return res.status(502).json({ok:false,aiConfigured:true,error:'Ape Pelù non riesce a rispondere con il motore AI in questo momento.'});
+      console.error('[Ape Telù Vercel] Groq error:',ai.status,data&&data.error&&data.error.message||'unknown');
+      return res.status(502).json({ok:false,aiConfigured:true,error:'Ape Telù non riesce a rispondere con il motore AI in questo momento.'});
     }
     const reply=clean(data&&data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content,12000);
     if(!reply)return res.status(502).json({ok:false,aiConfigured:true,error:'Risposta AI vuota.'});
-    console.log('[Ape Pelù Vercel] Groq OK:',String(process.env.GROQ_MODEL||'openai/gpt-oss-20b'));
+    console.log('[Ape Telù Vercel] Groq OK:',String(process.env.GROQ_MODEL||'openai/gpt-oss-20b'));
     return res.status(200).json({ok:true,reply,action:productAction(message,reply,lang),source:'vercel-groq'});
   }catch(error){
-    console.error('[Ape Pelù Vercel] Errore:',error&&error.message?error.message:error);
-    return res.status(500).json({ok:false,aiConfigured:true,error:'Errore temporaneo di Ape Pelù.'});
+    console.error('[Ape Telù Vercel] Errore:',error&&error.message?error.message:error);
+    return res.status(500).json({ok:false,aiConfigured:true,error:'Errore temporaneo di Ape Telù.'});
   }
 }
 
@@ -177,7 +177,7 @@ async function handleApePelu(req,res,action){
     if(req.method!=='POST')return res.status(405).json({ok:false,error:'Metodo non consentito.'});
     return handleChat(req,res);
   }
-  return res.status(404).json({ok:false,error:'Azione Ape Pelù non valida.'});
+  return res.status(404).json({ok:false,error:'Azione Ape Telù non valida.'});
 }
 
 module.exports={handleApePelu};
