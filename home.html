@@ -153,6 +153,38 @@ section[id]{scroll-margin-top:92px}
 .product-icon{font-size:30px;margin-bottom:20px}
 .product-box h3{margin:0 0 8px}.product-box p{margin:0;color:#687067}
 .product-box .go{display:block;margin-top:18px;font-size:13px;font-weight:800;color:#8a5b0b}
+/* Ape Telù · mascotte della Fabbrica delle Api */
+.ape-telu-home{position:relative;overflow:hidden;background:#fff8e8;padding:58px 0 62px}
+.ape-telu-home::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(231,174,45,.13);right:-160px;top:-190px}
+.ape-telu-home::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(18,57,45,.07);left:-120px;bottom:-150px}
+.ape-telu-shell{position:relative;z-index:1;display:grid;grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr);gap:38px;align-items:stretch}
+.ape-telu-character{position:relative;min-height:420px;border-radius:34px;background:linear-gradient(145deg,#173c2f,#0b2a21);color:#fff;padding:34px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 22px 55px rgba(20,47,37,.18)}
+.ape-telu-character::after{content:"";position:absolute;inset:18px;border:1px solid rgba(255,221,126,.22);border-radius:25px;pointer-events:none}
+.ape-telu-badge{position:relative;z-index:1;display:inline-flex;width:max-content;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#f2bd46;color:#17362a;font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+.ape-telu-face{position:relative;z-index:1;display:grid;place-items:center;width:150px;height:150px;margin:18px auto 10px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#fff9df 0 12%,#f6c64e 13% 58%,#d89518 59% 100%);font-size:78px;box-shadow:0 18px 40px rgba(0,0,0,.22);animation:apeTeluFloat 4.2s ease-in-out infinite}
+.ape-telu-character h3{position:relative;z-index:1;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.02;margin:8px 0 7px;color:#ffe08c}
+.ape-telu-character p{position:relative;z-index:1;margin:0;color:#eaf1ed;font-size:16px;line-height:1.55}
+.ape-telu-content{background:#fff;border:1px solid #eadbb7;border-radius:34px;padding:38px 40px;box-shadow:0 18px 46px rgba(65,45,9,.10)}
+.ape-telu-content .eyebrow{color:#9a6412}
+.ape-telu-content h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(42px,5.4vw,70px);line-height:.98;margin:10px 0 14px;color:#17382b;letter-spacing:-.025em}
+.ape-telu-lead{font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.25;color:#7a5214;margin:0 0 14px}
+.ape-telu-intro{font-size:17px;line-height:1.65;color:#435048;margin:0 0 24px;max-width:760px}
+.ape-telu-talents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 24px}
+.ape-telu-talent{border-radius:18px;background:#f7f1e3;padding:16px 17px;border:1px solid #eadfc8}
+.ape-telu-talent strong{display:block;color:#15382b;font-size:15px;margin-bottom:4px}
+.ape-telu-talent span{display:block;color:#5b635d;font-size:14px;line-height:1.45}
+.ape-telu-try{margin-top:8px;padding-top:20px;border-top:1px solid #e7deca}
+.ape-telu-try b{display:block;color:#17382b;margin-bottom:10px}
+.ape-telu-prompts{display:flex;gap:9px;flex-wrap:wrap}
+.ape-telu-prompt{border:1px solid #d8c79b;background:#fffaf1;color:#5d4615;border-radius:999px;padding:9px 12px;font-size:13px;font-weight:800}
+.ape-telu-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}
+.ape-telu-talk{border:0;cursor:pointer;background:#17382b;color:#fff;border-radius:999px;padding:14px 21px;font-weight:950;font-size:15px;box-shadow:0 10px 22px rgba(23,56,43,.18)}
+.ape-telu-talk:hover{transform:translateY(-1px)}
+.ape-telu-note{font-size:13px;color:#777066;font-weight:700}
+@keyframes apeTeluFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+@media(max-width:860px){.ape-telu-shell{grid-template-columns:1fr}.ape-telu-character{min-height:330px}.ape-telu-face{width:126px;height:126px;font-size:64px}.ape-telu-talents{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.ape-telu-home{padding:42px 0}.ape-telu-character,.ape-telu-content{border-radius:26px;padding:26px 22px}.ape-telu-talents{grid-template-columns:1fr}.ape-telu-content h2{font-size:44px}.ape-telu-lead{font-size:21px}.ape-telu-prompts{display:grid}.ape-telu-prompt{border-radius:14px}}
+
 .conversation{background:#dfa92f;padding:74px 0}
 .conversation-inner{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center}
 .conversation h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(42px,5vw,64px);line-height:1.02;margin:10px 0 12px}
@@ -201,6 +233,47 @@ section[id]{scroll-margin-top:92px}
     <h1>L’esperienza dell’alveare <em>durante tutto l’anno.</em></h1>
     <p>Due stagioni, due ambienti, un unico percorso per avvicinarsi all’atmosfera, ai profumi, ai suoni e all’universo dell’alveare.</p>
     <div class="hero-tags"><span>Primavera · Estate — Oasi del Busatello</span><span>Autunno · Inverno — Galena delle Api</span></div>
+  </div>
+</section>
+
+<section class="ape-telu-home" id="ape-telu">
+  <div class="wrap ape-telu-shell">
+    <aside class="ape-telu-character" aria-label="Ape Telù, mascotte della Fabbrica delle Api">
+      <span class="ape-telu-badge">🐝 La mascotte della Fabbrica delle Api</span>
+      <div class="ape-telu-face" aria-hidden="true">🐝</div>
+      <div>
+        <h3>Ape Telù</h3>
+        <p>Una voce amica nel mondo delle api. Curiosa, semplice e sempre pronta ad accompagnarti.</p>
+      </div>
+    </aside>
+
+    <div class="ape-telu-content">
+      <span class="eyebrow">CONOSCI APE TELÙ</span>
+      <h2>Chiedi. Scopri.<br>Lasciati accompagnare.</h2>
+      <p class="ape-telu-lead">Non sai da dove iniziare? Chiedilo ad Ape Telù.</p>
+      <p class="ape-telu-intro">Ape Telù è qui per stare al tuo fianco mentre scopri la Fabbrica delle Api. Puoi parlarle delle tue curiosità, chiederle aiuto nella scelta dei prodotti, farti spiegare a cosa servono e come si utilizzano, oppure lasciarti guidare tra api, alveare, Alveoterapia Integrata, Oasi del Busatello, Galena delle Api e Punti Ape.</p>
+
+      <div class="ape-telu-talents">
+        <div class="ape-telu-talent"><strong>Ti aiuta a scegliere</strong><span>Ti orienta tra i prodotti in base a ciò che stai cercando e alle tue preferenze.</span></div>
+        <div class="ape-telu-talent"><strong>Ti spiega con semplicità</strong><span>Puoi chiederle che cosa sono i prodotti, a cosa servono e come si utilizzano.</span></div>
+        <div class="ape-telu-talent"><strong>Conosce il mondo dell’alveare</strong><span>Api, miele, propoli, polline, pappa reale, Oasi, Galena e molto altro.</span></div>
+        <div class="ape-telu-talent"><strong>Resta con te nella conversazione</strong><span>Puoi continuare a fare domande e approfondire quello che ti incuriosisce.</span></div>
+      </div>
+
+      <div class="ape-telu-try">
+        <b>Puoi iniziare anche con una domanda semplice:</b>
+        <div class="ape-telu-prompts">
+          <span class="ape-telu-prompt">“A cosa serve la propoli?”</span>
+          <span class="ape-telu-prompt">“Come si utilizza questo prodotto?”</span>
+          <span class="ape-telu-prompt">“Che differenza c’è tra polline e pappa reale?”</span>
+        </div>
+      </div>
+
+      <div class="ape-telu-actions">
+        <button class="ape-telu-talk" type="button" onclick="document.getElementById('apeChatLaunch')?.click()">Parla con Ape Telù →</button>
+        <span class="ape-telu-note">Puoi tornare a parlarle ogni volta che vuoi.</span>
+      </div>
+    </div>
   </div>
 </section>
 
