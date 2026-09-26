@@ -1,6 +1,7 @@
 const xpayGateway = require('../xpay-gateway');
 const {applyPromo,normalizeCode}=require('../promo-store');
 const {checkStock}=require('../stock-store');
+const {savePendingPayment}=require('../xpay-pending-store');
 
 function cleanText(value, maxLength = 200) {
   return String(value || '').trim().slice(0, maxLength);
@@ -125,6 +126,19 @@ module.exports = async (req, res) => {
 
     await checkStock(purchaseItems);
 
+    const pendingPurchase = {
+      items: purchaseItems,
+      goodsTotal: goodsCents / 100,
+      shipping: shippingCents / 100,
+      discount: promo ? promo.discountCents / 100 : 0,
+      total: totalCents / 100,
+      promoCode: promo ? promo.code : '',
+      promoTestMode: Boolean(promo&&promo.testMode),
+      customer: safeCustomer,
+      language: orderLanguage,
+      notes: cleanText(body.notes, 500)
+    };
+
     const payment = xpayGateway.createPaymentRedirectUrl({
       amountCents: totalCents,
       email,
@@ -132,18 +146,13 @@ module.exports = async (req, res) => {
       note1: orderReference,
       note2: itemSummary,
       note3: cleanText(body.notes, 200),
-      purchase: {
-        items: purchaseItems,
-        goodsTotal: goodsCents / 100,
-        shipping: shippingCents / 100,
-        discount: promo ? promo.discountCents / 100 : 0,
-        total: totalCents / 100,
-        promoCode: promo ? promo.code : '',
-        promoTestMode: Boolean(promo&&promo.testMode),
-        customer: safeCustomer,
-        language: orderLanguage,
-        notes: cleanText(body.notes, 500)
-      }
+      purchase: pendingPurchase
+    });
+
+    await savePendingPayment({
+      codTrans: payment.id,
+      amountCents: totalCents,
+      purchase: pendingPurchase
     });
 
     console.log('[XPay] Avvio pagamento ' + payment.id + ' per ' + (totalCents / 100).toFixed(2) + ' EUR.');
