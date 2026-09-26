@@ -1,6 +1,7 @@
 const crypto=require('crypto');
 const {lookupWallet,normalizeEmail,normalizePhone,normalizeCode}=require('../bee-wallet-public');
 const {callBeeDataApi}=require('../bee-wallet-client');
+const {createTestCode,listTestCodes}=require('../promo-store');
 const {Pool}=require('pg');
 const TEST_DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').trim();
 let testPool;
@@ -95,6 +96,25 @@ async function handleAdminAction(req,res,action){
     }catch(error){
       console.error('[Area riservata] ordini',error);
       return res.status(500).json({ok:false,error:'Non è stato possibile caricare gli ordini.'});
+    }
+  }
+  if(action==='test-tools'){
+    try{
+      const codes=await listTestCodes(20);
+      return res.json({ok:true,pointsCode:TEST_ALWAYS,testPromoCodes:codes});
+    }catch(error){
+      console.error('[Area riservata] test-tools',error);
+      return res.status(500).json({ok:false,error:'Non è stato possibile caricare gli strumenti di test.'});
+    }
+  }
+  if(action==='create-test-promo'){
+    try{
+      const cents=Math.max(1,Math.min(500,Math.round(Number(req.body?.targetCents)||10)));
+      const row=await createTestCode(cents);
+      return res.json({ok:true,code:row.code,targetCents:row.target_total_cents,maxUses:row.max_uses});
+    }catch(error){
+      console.error('[Area riservata] create-test-promo',error);
+      return res.status(500).json({ok:false,error:'Non è stato possibile generare il codice test.'});
     }
   }
   return res.status(400).json({ok:false,error:'Operazione amministrativa non riconosciuta.'});
