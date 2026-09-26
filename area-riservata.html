@@ -24,6 +24,10 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 
 .admin-section{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}.admin-box{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--cream);margin-top:12px}.admin-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end}.admin-form label{margin:0}.admin-form input,.admin-form select{width:100%;padding:11px 12px;border:1px solid #cfc7b8;border-radius:12px;background:#fff;font-size:15px}.admin-form button{margin:0}.admin-list{display:grid;gap:8px;margin-top:12px}.admin-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-size:14px}.stock-row{display:grid;grid-template-columns:minmax(180px,1fr) 110px 110px;gap:8px;align-items:center}.stock-row input{padding:9px}.stock-row button{margin:0;padding:9px 10px;font-size:13px}.muted{color:#708078;font-size:13px}@media(max-width:620px){.stock-row{grid-template-columns:1fr}.stock-row button{width:100%}}
 
+
+.copy-btn{width:auto!important;margin:0!important;padding:7px 10px!important;border-radius:10px!important;font-size:12px!important;background:#e9e1d2!important;color:var(--g)!important}
+.code-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.code-tools code{font-family:monospace;font-size:14px;font-weight:900}
 </style>
 </head>
 <body>
@@ -92,7 +96,7 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
     <h3 style="margin:0">🧪 Strumenti di test</h3>
     <div class="test-box">
       <strong>Codice Punti Ape permanente · saldo sempre 100</strong>
-      <div class="code-line" id="pointsTestCode">Caricamento…</div>
+      <div class="code-tools"><div class="code-line" id="pointsTestCode" style="flex:1">Caricamento…</div><button type="button" class="copy-btn" id="copyPointsTestCode">Copia codice</button></div>
     </div>
     <div class="test-box">
       <strong>Codice per acquisto reale Nexi</strong>
@@ -164,7 +168,7 @@ async function loadPointsCodes(){
   const {r,d}=await api('points-codes');
   if(!r.ok){document.getElementById('pointsCodeMsg').textContent=d.error||'Errore';return;}
   const rows=Array.isArray(d.codes)?d.codes:[];
-  list.innerHTML=rows.length?rows.map(x=>'<div class="admin-item"><strong>'+esc(x.code)+'</strong> · '+esc(x.points_total)+' punti · '+esc(x.status)+(x.source_order_id?' · '+esc(x.source_order_id):'')+'</div>').join(''):'<div class="muted">Nessun codice generato.</div>';
+  list.innerHTML=rows.length?rows.map(x=>'<div class="admin-item"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia codice</button></div><div>'+esc(x.points_total)+' punti · '+esc(x.status)+(x.source_order_id?' · '+esc(x.source_order_id):'')+'</div></div>').join(''):'<div class="muted">Nessun codice generato.</div>';
 }
 document.getElementById('createPointsCode').addEventListener('click',async()=>{
   const m=document.getElementById('pointsCodeMsg');m.textContent='Generazione…';
@@ -182,7 +186,7 @@ async function loadPromoCodes(){
   list.innerHTML=rows.length?rows.map(x=>{
     const val=x.kind==='percent'?esc(x.percent_off)+'%':euro(Number(x.value_cents||0)/100);
     const uses=x.max_uses==null?'senza limite':esc(x.uses)+'/'+esc(x.max_uses);
-    return '<div class="admin-item"><strong>'+esc(x.code)+'</strong> · '+val+' · utilizzi '+uses+' · '+(x.active?'ATTIVO':'DISATTIVATO')+(x.note?' · '+esc(x.note):'')+'</div>';
+    return '<div class="admin-item"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia codice</button></div><div>'+val+' · utilizzi '+uses+' · '+(x.active?'ATTIVO':'DISATTIVATO')+(x.note?' · '+esc(x.note):'')+'</div></div>';
   }).join(''):'<div class="muted">Nessun codice promozionale generato.</div>';
 }
 document.getElementById('createPromoCode').addEventListener('click',async()=>{
@@ -222,7 +226,7 @@ async function loadTestTools(){
   if(codeEl)codeEl.textContent=d.pointsCode||'—';
   if(list){
     const rows=Array.isArray(d.testPromoCodes)?d.testPromoCodes:[];
-    list.innerHTML=rows.length?rows.map(x=>'<div class="test-code-item"><strong>'+esc(x.code)+'</strong> · '+euro(Number(x.target_total_cents||0)/100)+' · '+(x.active?'utilizzabile':'usato/disattivato')+'</div>').join(''):'<div>Nessun codice test generato.</div>';
+    list.innerHTML=rows.length?rows.map(x=>'<div class="test-code-item"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia codice</button></div><div>'+euro(Number(x.target_total_cents||0)/100)+' · '+(x.active?'utilizzabile':'usato/disattivato')+'</div></div>').join(''):'<div>Nessun codice test generato.</div>';
   }
 }
 document.getElementById('generateTestPromo').addEventListener('click',async()=>{
@@ -235,6 +239,18 @@ document.getElementById('generateTestPromo').addEventListener('click',async()=>{
   m.innerHTML='<span class="ok">Codice creato: <strong>'+esc(d.code)+'</strong> · totale da pagare '+euro(Number(d.targetCents||0)/100)+'</span>';
   loadTestTools();
 });
+async function copyCode(value,btn){
+  const text=String(value||'');
+  try{
+    await navigator.clipboard.writeText(text);
+    if(btn){const old=btn.textContent;btn.textContent='Copiato';setTimeout(()=>btn.textContent=old,1200);}
+  }catch(_){
+    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+    if(btn){const old=btn.textContent;btn.textContent='Copiato';setTimeout(()=>btn.textContent=old,1200);}
+  }
+}
+document.addEventListener('click',e=>{const btn=e.target.closest('[data-copy]');if(btn)copyCode(btn.dataset.copy,btn);});
+document.getElementById('copyPointsTestCode')?.addEventListener('click',e=>copyCode(document.getElementById('pointsTestCode')?.textContent,e.currentTarget));
 document.getElementById('refreshOrders').addEventListener('click',loadOrders);
 document.getElementById('logoutBtn').addEventListener('click',async()=>{await api('logout');showLogin();});
 </script>
