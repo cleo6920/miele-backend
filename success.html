@@ -69,7 +69,7 @@ async function finalize(){
 
       document.getElementById('title').textContent=T.title;
       document.getElementById('intro').textContent=T.intro;
-      receiptDownload.href='/api/xpay/receipt?t='+encodeURIComponent(successToken);
+      receiptDownload.href='/api/xpay/success-status?receipt=1&t='+encodeURIComponent(successToken);
       receiptDownload.textContent=T.receipt||'Scarica ricevuta PDF';
       receiptDownload.hidden=false;
       const order=pendingOrder();
