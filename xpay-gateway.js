@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const zlib = require('zlib');
 const { callBeeDataApi } = require('./bee-wallet-client');
 const { pointsForItem } = require('./test-purchase-store');
+const {consumePromo}=require('./promo-store');
 
 const PROD_ENDPOINT = 'https://ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet';
 const PURCHASE_PARAM = 'fdap';
@@ -95,7 +96,10 @@ function compactPurchase(purchase, codTrans, importo) {
     i: items,
     g: Number(purchase && purchase.goodsTotal),
     s: Number(purchase && purchase.shipping),
+    d: Number(purchase && purchase.discount || 0),
     t: Number(purchase && purchase.total),
+    pc: clean(purchase && purchase.promoCode,80),
+    pt: purchase && purchase.promoTestMode === true,
     l: ['it','en','de','fr','es'].includes(clean(purchase && purchase.language, 5).toLowerCase()) ? clean(purchase && purchase.language, 5).toLowerCase() : 'it',
     u: {
       n: clean(customer.name, 100),
@@ -228,6 +232,7 @@ async function sendPaidOrderEmail(fields) {
     '',
     'Prodotti: ' + euroText(payload.g),
     'Spedizione: ' + euroText(payload.s),
+    ...(Number(payload.d||0)>0?['Sconto: -' + euroText(payload.d),'Codice promozionale: '+(payload.pc||'—')]:[]),
     'Totale PAGATO: ' + euroText(payload.t),
     'Pagamento: Nexi XPay · CONFERMATO',
     'Note: ' + (clean(payload.o,400) || '—')
@@ -331,7 +336,7 @@ async function persistPaidPurchase(fields) {
   }));
   if (!items.length) throw new Error('Ordine XPay senza prodotti.');
   const pointLines = items.map(pointsForItem);
-  const beePoints = pointLines.reduce((sum, line) => sum + Number(line.totalPoints || 0), 0);
+  const beePoints = payload.pt===true ? 0 : pointLines.reduce((sum, line) => sum + Number(line.totalPoints || 0), 0);
   const u = payload.u || {};
   const customer = {
     name: clean(u.n, 100),
@@ -350,6 +355,7 @@ async function persistPaidPurchase(fields) {
     items: pointLines,
     goodsTotal: Number(Number(payload.g || 0).toFixed(2)),
     shipping: Number(Number(payload.s || 0).toFixed(2)),
+    discount: Number(Number(payload.d || 0).toFixed(2)),
     total: Number(Number(payload.t || 0).toFixed(2)),
     beePoints,
     notes: clean(payload.o, 400)
@@ -357,6 +363,9 @@ async function persistPaidPurchase(fields) {
 
   const result = await callBeeDataApi('create_purchase', purchase);
   if (result && result.ok !== false) {
+    if(payload.pc){
+      try{await consumePromo(payload.pc);}catch(e){console.error('[XPay] Codice promo non marcato come usato:',e&&e.message?e.message:e);}
+    }
     console.log(`[XPay] Saldo Api accreditato per ${codTrans}: ${beePoints} Api.`);
     return result;
   }
@@ -377,7 +386,7 @@ function xpaySuccessToken(fields) {
   const items = Array.isArray(payload.i) ? payload.i : [];
   const digital = items.some((item) => clean(item && item.i, 180) === 'alveo-digitale-10-colazioni');
   const lang = ['it','en','de','fr','es'].includes(clean(payload.l, 5).toLowerCase()) ? clean(payload.l, 5).toLowerCase() : 'it';
-  const beePoints = items.map((item) => ({
+  const beePoints = payload.pt===true ? 0 : items.map((item) => ({
     productId: clean(item && item.i, 180),
     productName: clean(item && item.n, 180),
     name: clean(item && item.n, 180),
