@@ -154,20 +154,28 @@ section[id]{scroll-margin-top:92px}
 .product-box h3{margin:0 0 8px}.product-box p{margin:0;color:#687067}
 .product-box .go{display:block;margin-top:18px;font-size:13px;font-weight:800;color:#8a5b0b}
 /* Ape Telù · mascotte della Fabbrica delle Api */
-.ape-telu-home{position:relative;overflow:hidden;background:#fff8e8;padding:52px 0 58px}
-.ape-telu-home::before{content:"";position:absolute;width:440px;height:440px;border-radius:50%;background:rgba(231,174,45,.12);right:-180px;top:-220px}
-.ape-telu-shell{position:relative;z-index:1;display:grid;grid-template-columns:minmax(285px,.82fr) minmax(0,1.48fr);gap:0;background:#fff;border:1px solid #ead8ac;border-radius:34px;overflow:hidden;box-shadow:0 22px 55px rgba(64,45,11,.13)}
-.ape-telu-character{position:relative;overflow:hidden;min-height:0;background:
- radial-gradient(circle at 18% 20%,rgba(255,255,255,.50) 0 4px,transparent 5px),
- linear-gradient(145deg,#f7d77a 0%,#efb83a 58%,#dda01d 100%);color:#17382b;padding:28px 28px 30px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
-.ape-telu-character::before{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(255,255,255,.34);border-radius:46% 54% 45% 55%;left:-100px;top:-105px;transform:rotate(18deg)}
-.ape-telu-character::after{content:"";position:absolute;width:230px;height:230px;border:1px solid rgba(23,56,43,.10);border-radius:50%;right:-115px;bottom:-120px}
-.ape-telu-badge{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;border-radius:999px;background:#17382b;color:#fff7dc;font-size:10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 8px 20px rgba(23,56,43,.13)}
-.ape-telu-speech{position:relative;z-index:2;margin:18px 0 0;background:#fffdf6;border:1px solid rgba(23,56,43,.13);border-radius:18px 18px 18px 5px;padding:10px 14px;font-family:Georgia,'Times New Roman',serif;font-size:17px;font-weight:700;color:#17382b;box-shadow:0 10px 22px rgba(69,46,5,.10)}
-.ape-telu-mascot{position:relative;z-index:2;width:min(100%,230px);margin:7px auto 4px;animation:apeTeluFloat 4.2s ease-in-out infinite;filter:drop-shadow(0 16px 14px rgba(61,42,7,.18))}
+.ape-telu-home{position:relative;overflow:hidden;background:#fff8e8;padding:50px 0 56px}
+.ape-telu-home::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:rgba(238,183,53,.10);right:-210px;top:-260px}
+.ape-telu-home::after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(23,56,43,.045);left:-150px;bottom:-190px}
+.ape-telu-shell{position:relative;z-index:1;display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.52fr);gap:0;background:#fff;border:1px solid #ead8ac;border-radius:34px;overflow:hidden;box-shadow:0 24px 58px rgba(64,45,11,.14)}
+.ape-telu-character{position:relative;overflow:hidden;min-height:450px;background:linear-gradient(160deg,#f8da79 0%,#f2bf40 48%,#e7a81f 100%);color:#17382b;padding:28px 28px 26px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.ape-telu-character::before{content:"";position:absolute;inset:0;background:
+ radial-gradient(circle at 12% 15%,rgba(255,255,255,.55) 0 3px,transparent 4px),
+ radial-gradient(circle at 84% 18%,rgba(255,255,255,.35) 0 3px,transparent 4px),
+ radial-gradient(circle at 76% 78%,rgba(255,255,255,.28) 0 4px,transparent 5px),
+ linear-gradient(30deg,transparent 24%,rgba(255,255,255,.10) 25%,rgba(255,255,255,.10) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.10) 75%,rgba(255,255,255,.10) 76%,transparent 77%);
+background-size:auto,auto,auto,56px 96px;opacity:.8}
+.ape-telu-character::after{content:"";position:absolute;width:260px;height:260px;border:2px solid rgba(23,56,43,.09);border-radius:46% 54% 45% 55%;right:-120px;bottom:-125px;transform:rotate(18deg)}
+.ape-telu-badge{position:relative;z-index:3;display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;border-radius:999px;background:#17382b;color:#fff7dc;font-size:10px;font-weight:950;letter-spacing:.09em;text-transform:uppercase;box-shadow:0 8px 18px rgba(23,56,43,.14)}
+.ape-telu-speech{position:relative;z-index:3;margin:15px 0 0;background:#fffdf6;border:1px solid rgba(23,56,43,.12);border-radius:18px 18px 18px 6px;padding:10px 14px;font-family:Georgia,'Times New Roman',serif;font-size:17px;font-weight:700;color:#17382b;box-shadow:0 10px 22px rgba(69,46,5,.10)}
+.ape-telu-speech::after{content:"";position:absolute;left:25px;bottom:-9px;width:18px;height:18px;background:#fffdf6;border-right:1px solid rgba(23,56,43,.12);border-bottom:1px solid rgba(23,56,43,.12);transform:rotate(45deg)}
+.ape-telu-mascot{position:relative;z-index:2;width:min(100%,255px);margin:4px auto -2px;animation:apeTeluFloat 4.2s ease-in-out infinite;filter:drop-shadow(0 18px 14px rgba(61,42,7,.20))}
 .ape-telu-mascot svg{display:block;width:100%;height:auto}
-.ape-telu-character h3{position:relative;z-index:2;font-family:Georgia,'Times New Roman',serif;font-size:35px;line-height:1;margin:3px 0 7px;color:#17382b}
-.ape-telu-character p{position:relative;z-index:2;margin:0;max-width:280px;color:#314a40;font-size:14px;line-height:1.48;font-weight:700}
+.ape-telu-nameplate{position:relative;z-index:3;margin-top:4px}
+.ape-telu-character h3{font-family:Georgia,'Times New Roman',serif;font-size:37px;line-height:1;margin:0 0 7px;color:#17382b}
+.ape-telu-character p{margin:0 auto;max-width:285px;color:#304a3f;font-size:14px;line-height:1.48;font-weight:700}
+.ape-telu-mini{position:relative;z-index:3;margin-top:12px;display:inline-flex;gap:7px;align-items:center;color:#17382b;font-size:12px;font-weight:850}
+.ape-telu-mini span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#17382b}
 .ape-telu-content{padding:34px 38px 36px;background:#fff}
 .ape-telu-content .eyebrow{color:#9a6412}
 .ape-telu-content h2{font-family:Georgia,'Times New Roman',serif;font-size:clamp(39px,4.8vw,62px);line-height:.98;margin:9px 0 12px;color:#17382b;letter-spacing:-.025em}
@@ -188,7 +196,7 @@ button.ape-telu-prompt:hover{background:#f4e8c8;border-color:#cda640}
 .ape-telu-talk:hover{transform:translateY(-1px)}
 .ape-telu-note{font-size:12px;color:#777066;font-weight:700}
 @keyframes apeTeluFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}
-@media(max-width:860px){.ape-telu-shell{grid-template-columns:1fr}.ape-telu-character{padding:26px 24px}.ape-telu-mascot{width:190px}.ape-telu-talents{grid-template-columns:1fr 1fr}}
+@media(max-width:860px){.ape-telu-shell{grid-template-columns:1fr}.ape-telu-character{min-height:390px;padding:26px 24px}.ape-telu-mascot{width:220px}.ape-telu-talents{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.ape-telu-home{padding:40px 0}.ape-telu-shell{border-radius:26px}.ape-telu-character,.ape-telu-content{padding:24px 20px}.ape-telu-talents{grid-template-columns:1fr}.ape-telu-content h2{font-size:42px}.ape-telu-lead{font-size:20px}.ape-telu-prompts{display:grid}.ape-telu-prompt{border-radius:14px;text-align:left}}
 
 .conversation{background:#dfa92f;padding:74px 0}
@@ -249,41 +257,61 @@ button.ape-telu-prompt:hover{background:#f4e8c8;border-color:#cda640}
       <div class="ape-telu-speech">Ciao! Sono Ape Telù.</div>
 
       <div class="ape-telu-mascot" aria-hidden="true">
-        <svg viewBox="0 0 260 210" role="img" aria-label="Ape Telù">
+        <svg viewBox="0 0 300 250" role="img" aria-label="Ape Telù">
           <defs>
-            <linearGradient id="teluBody" x1="0" x2="1">
-              <stop offset="0" stop-color="#f7c849"/>
-              <stop offset="1" stop-color="#edae22"/>
+            <linearGradient id="teluBody" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffd86a"/>
+              <stop offset=".55" stop-color="#f4be38"/>
+              <stop offset="1" stop-color="#e8a61b"/>
+            </linearGradient>
+            <linearGradient id="teluWing" x1="0" x2="1">
+              <stop offset="0" stop-color="#fffef8" stop-opacity=".96"/>
+              <stop offset="1" stop-color="#e9f3ed" stop-opacity=".78"/>
             </linearGradient>
           </defs>
-          <g fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round">
-            <path d="M110 47 C100 26 85 23 78 31"/>
-            <path d="M150 47 C160 26 175 23 182 31"/>
+
+          <g fill="none" stroke="#17382b" stroke-width="5.5" stroke-linecap="round">
+            <path d="M126 52 C113 29 96 27 87 36"/>
+            <path d="M174 52 C187 29 204 27 213 36"/>
           </g>
-          <circle cx="76" cy="30" r="6" fill="#17382b"/>
-          <circle cx="184" cy="30" r="6" fill="#17382b"/>
-          <ellipse cx="76" cy="99" rx="49" ry="30" transform="rotate(-28 76 99)" fill="#fffdf5" opacity=".92" stroke="#d8c79b" stroke-width="3"/>
-          <ellipse cx="184" cy="99" rx="49" ry="30" transform="rotate(28 184 99)" fill="#fffdf5" opacity=".92" stroke="#d8c79b" stroke-width="3"/>
-          <ellipse cx="130" cy="119" rx="60" ry="72" fill="url(#teluBody)" stroke="#17382b" stroke-width="5"/>
-          <path d="M83 100 Q130 118 177 100" stroke="#17382b" stroke-width="17" fill="none"/>
-          <path d="M76 133 Q130 151 184 133" stroke="#17382b" stroke-width="17" fill="none"/>
-          <ellipse cx="130" cy="75" rx="45" ry="37" fill="#f9d05b"/>
-          <circle cx="112" cy="72" r="6" fill="#17382b"/>
-          <circle cx="148" cy="72" r="6" fill="#17382b"/>
-          <circle cx="110" cy="70" r="2" fill="#fff"/>
-          <circle cx="146" cy="70" r="2" fill="#fff"/>
-          <path d="M116 88 Q130 99 144 88" fill="none" stroke="#17382b" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="101" cy="84" r="5" fill="#e99858" opacity=".55"/>
-          <circle cx="159" cy="84" r="5" fill="#e99858" opacity=".55"/>
-          <path d="M78 126 Q55 137 48 158" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
-          <path d="M182 126 Q205 137 212 158" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
-          <path d="M102 182 Q93 194 82 197" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
-          <path d="M158 182 Q167 194 178 197" fill="none" stroke="#17382b" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="86" cy="35" r="6.5" fill="#17382b"/>
+          <circle cx="214" cy="35" r="6.5" fill="#17382b"/>
+
+          <ellipse cx="83" cy="116" rx="59" ry="35" transform="rotate(-28 83 116)" fill="url(#teluWing)" stroke="#c9d6cf" stroke-width="3"/>
+          <ellipse cx="217" cy="116" rx="59" ry="35" transform="rotate(28 217 116)" fill="url(#teluWing)" stroke="#c9d6cf" stroke-width="3"/>
+
+          <ellipse cx="150" cy="139" rx="67" ry="83" fill="url(#teluBody)" stroke="#17382b" stroke-width="5.5"/>
+          <path d="M94 117 Q150 136 206 117" stroke="#17382b" stroke-width="18" fill="none"/>
+          <path d="M87 151 Q150 171 213 151" stroke="#17382b" stroke-width="18" fill="none"/>
+
+          <ellipse cx="150" cy="86" rx="50" ry="42" fill="#ffdd70" stroke="#17382b" stroke-width="4"/>
+          <path d="M119 72 Q128 65 136 72" stroke="#17382b" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M164 72 Q172 65 181 72" stroke="#17382b" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="129" cy="83" r="6.5" fill="#17382b"/>
+          <circle cx="171" cy="83" r="6.5" fill="#17382b"/>
+          <circle cx="127" cy="81" r="2" fill="#fff"/>
+          <circle cx="169" cy="81" r="2" fill="#fff"/>
+          <path d="M132 101 Q150 115 168 101" fill="#fffdf8" stroke="#17382b" stroke-width="4" stroke-linecap="round"/>
+          <path d="M138 105 Q150 111 162 105" fill="none" stroke="#e3a51f" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="116" cy="98" rx="8" ry="5" fill="#e98b65" opacity=".55"/>
+          <ellipse cx="184" cy="98" rx="8" ry="5" fill="#e98b65" opacity=".55"/>
+
+          <path d="M87 145 Q55 154 45 183" fill="none" stroke="#17382b" stroke-width="5.5" stroke-linecap="round"/>
+          <path d="M213 145 Q245 154 255 183" fill="none" stroke="#17382b" stroke-width="5.5" stroke-linecap="round"/>
+          <path d="M105 211 Q94 227 77 231" fill="none" stroke="#17382b" stroke-width="5.5" stroke-linecap="round"/>
+          <path d="M195 211 Q206 227 223 231" fill="none" stroke="#17382b" stroke-width="5.5" stroke-linecap="round"/>
+
+          <path d="M235 65 Q250 70 255 86" fill="none" stroke="#17382b" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="259" cy="93" r="3.5" fill="#17382b"/>
+          <circle cx="270" cy="105" r="2.5" fill="#17382b"/>
         </svg>
       </div>
 
-      <h3>Ape Telù</h3>
-      <p>Una voce amica nel mondo delle api. Curiosa, semplice e sempre pronta ad accompagnarti.</p>
+      <div class="ape-telu-nameplate">
+        <h3>Ape Telù</h3>
+        <p>Una voce amica nel mondo delle api. Curiosa, semplice e sempre pronta ad accompagnarti.</p>
+      </div>
+      <div class="ape-telu-mini"><span></span> Chiedi · scopri · continua a parlare</div>
     </aside>
 
     <div class="ape-telu-content">
