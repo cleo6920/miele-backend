@@ -168,7 +168,10 @@ async function loadPointsCodes(){
   const {r,d}=await api('points-codes');
   if(!r.ok){document.getElementById('pointsCodeMsg').textContent=d.error||'Errore';return;}
   const rows=Array.isArray(d.codes)?d.codes:[];
-  list.innerHTML=rows.length?rows.map(x=>'<div class="admin-item"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia codice</button></div><div>'+esc(x.points_total)+' punti · '+esc(x.status)+(x.source_order_id?' · '+esc(x.source_order_id):'')+'</div></div>').join(''):'<div class="muted">Nessun codice generato.</div>';
+  list.innerHTML=rows.length?rows.map(x=>{
+    const total=Number(x.points_total||0),remaining=Number(x.points_remaining||0),used=Math.max(0,total-remaining);
+    return '<div class="admin-item"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia codice</button>'+(remaining===0&&String(x.status)==='UTILIZZATO'?'<button type="button" class="copy-btn delete-points-code" data-code="'+esc(x.code)+'">Elimina</button>':'')+'</div><div>'+total+' punti iniziali · '+used+' utilizzati · <strong>'+remaining+' rimasti</strong> · '+esc(x.status)+(x.source_order_id?' · '+esc(x.source_order_id):'')+'</div></div>';
+  }).join(''):'<div class="muted">Nessun codice generato.</div>';
 }
 document.getElementById('createPointsCode').addEventListener('click',async()=>{
   const m=document.getElementById('pointsCodeMsg');m.textContent='Generazione…';
@@ -250,6 +253,17 @@ async function copyCode(value,btn){
   }
 }
 document.addEventListener('click',e=>{const btn=e.target.closest('[data-copy]');if(btn)copyCode(btn.dataset.copy,btn);});
+document.addEventListener('click',async e=>{
+  const btn=e.target.closest('.delete-points-code');if(!btn)return;
+  const code=btn.dataset.code||'';
+  if(!confirm('Eliminare definitivamente il codice '+code+'?'))return;
+  btn.disabled=true;
+  const {r,d}=await api('delete-points-code',{code});
+  btn.disabled=false;
+  if(!r.ok){document.getElementById('pointsCodeMsg').textContent=d.error||'Errore eliminazione';return;}
+  document.getElementById('pointsCodeMsg').innerHTML='<span class="ok">Codice eliminato.</span>';
+  loadPointsCodes();
+});
 document.getElementById('copyPointsTestCode')?.addEventListener('click',e=>copyCode(document.getElementById('pointsTestCode')?.textContent,e.currentTarget));
 document.getElementById('refreshOrders').addEventListener('click',loadOrders);
 document.getElementById('logoutBtn').addEventListener('click',async()=>{await api('logout');showLogin();});
