@@ -204,6 +204,19 @@ async function listAdminPointsCodes(limit=60){
   return r.rows||[];
 }
 
+async function deleteUsedAdminPointsCode(code){
+  const c=normalizeCode(code);
+  if(!validCouponCodeFormat(c)) throw new Error('Codice Punti Ape non valido.');
+  const p=getTestPool();
+  const r=await p.query("select code,points_remaining,status,source_kind from bee_coupons where upper(code)=upper($1) limit 1",[c]);
+  const row=r.rows[0];
+  if(!row) throw new Error('Codice non trovato.');
+  if(String(row.source_kind)!=='MANUAL') throw new Error('Puoi eliminare solo i codici creati manualmente dall’Area riservata.');
+  if(String(row.status)!=='UTILIZZATO'||Number(row.points_remaining||0)!==0) throw new Error('Puoi eliminare solo i codici completamente utilizzati.');
+  await p.query("delete from bee_coupons where code=$1",[row.code]);
+  return {code:row.code};
+}
+
 async function adminOrdersSnapshot(){
   await ensureAdminOrderEventsTable();
   const p=getTestPool();
@@ -247,6 +260,12 @@ async function handleAdminAction(req,res,action){
       const row=await createAdminPointsCode(req.body?.points,req.body?.note);
       return res.json({ok:true,code:row});
     }catch(error){console.error('[Area riservata] create-points-code',error);return res.status(500).json({ok:false,error:'Non è stato possibile generare il codice Punti Ape.'});}
+  }
+  if(action==='delete-points-code'){
+    try{
+      const row=await deleteUsedAdminPointsCode(req.body?.code);
+      return res.json({ok:true,code:row.code});
+    }catch(error){console.error('[Area riservata] delete-points-code',error);return res.status(422).json({ok:false,error:error?.message||'Non è stato possibile eliminare il codice.'});}
   }
   if(action==='promo-codes'){
     try{return res.json({ok:true,codes:await listPromoCodes(80)});}
@@ -689,15 +708,25 @@ module.exports=async(req,res)=>{
   if(req.method==='GET' && String(req.query?.receipt||'')==='1'){
     const orderNumber=cleanField(req.query?.order,120);
     const code=normalizeCode(req.query?.code);
-    if(!orderNumber||!(code===TEST_ONCE||code===TEST_ALWAYS)) return res.status(400).send('Ricevuta non valida.');
+    const bundle=String(req.query?.bundle||'')==='1';
+    if(!orderNumber) return res.status(400).send('Ricevuta non valida.');
     try{
       const p=getTestPool();
-      const r=await p.query("select payload from bee_test_state where id=$1 limit 1",['cesto-test:'+orderNumber]);
-      const payload=r.rows[0]?.payload;
-      if(!payload||payload.code!==code) return res.status(404).send('Ricevuta non trovata.');
+      let payload=null;
+      if(bundle){
+        await ensureAdminOrderEventsTable();
+        const r=await p.query("select payload from bee_admin_order_events where event_type='cesto' and order_id=$1 order by created_at desc limit 1",[orderNumber]);
+        payload=r.rows[0]?.payload||null;
+      }else{
+        if(!(code===TEST_ONCE||code===TEST_ALWAYS)) return res.status(400).send('Ricevuta non valida.');
+        const r=await p.query("select payload from bee_test_state where id=$1 limit 1",['cesto-test:'+orderNumber]);
+        payload=r.rows[0]?.payload||null;
+        if(payload&&payload.code!==code) return res.status(404).send('Ricevuta non trovata.');
+      }
+      if(!payload) return res.status(404).send('Ricevuta non trovata.');
       const lang=cestoLang(req.query?.lang||payload.language||'it');
       const order={
-        orderNumber:payload.orderNumber,
+        orderNumber:payload.orderNumber||payload.id||orderNumber,
         shipping:payload.customer||{},
         giftObjects:Array.isArray(payload.giftProducts)?payload.giftProducts:[]
       };
@@ -756,6 +785,7 @@ module.exports=async(req,res)=>{
       return res.json({
         ok:true,found:true,bundleMode:true,balance:order.balance,earned:result.balance,spent:100,
         goal:100,remainingToReward:Math.max(0,100-order.balance),cestoOrder:order,emailSent:true,
+        receiptUrl:'/api/bee-balance?receipt=1&bundle=1&order='+encodeURIComponent(order.orderNumber)+'&lang='+encodeURIComponent(order.language||'it'),
         message:'Ordine Cesto creato. Sono stati utilizzati 100 Punti Ape.'
       });
     }
