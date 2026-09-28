@@ -71,7 +71,7 @@ async function createAdminPointsCode(points,note=''){
   const p=getTestPool();
   for(let i=0;i<10;i++){
     const raw=crypto.randomBytes(5).toString('hex').toUpperCase();
-    const code='APE-'+raw.slice(0,5)+'-'+raw.slice(5);
+    const code='APE-'+raw.slice(0,4)+'-'+raw.slice(4,8)+'-'+raw.slice(8,10);
     try{
       const r=await p.query(
         "insert into bee_coupons(code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id) values($1,$2,$2,'ATTIVO','MANUAL',$3,null) returning code,points_total,points_remaining,status,source_kind,created_at",
@@ -81,6 +81,24 @@ async function createAdminPointsCode(points,note=''){
     }catch(e){if(e&&e.code==='23505')continue;throw e;}
   }
   throw new Error('Impossibile generare il codice Punti Ape.');
+}
+async function lookupManualPointsCode(code){
+  const c=normalizeCode(code);
+  const r=await getTestPool().query(
+    "select code,points_total,points_remaining,status,assigned_account_id from bee_coupons where upper(code)=upper($1) limit 1",
+    [c]
+  );
+  const row=r.rows[0];
+  if(!row) return null;
+  const remaining=Math.max(0,Number(row.points_remaining||0));
+  return {
+    found:true,
+    balance:remaining,
+    earned:Number(row.points_total||0),
+    spent:Math.max(0,Number(row.points_total||0)-remaining),
+    couponStatus:String(row.status||''),
+    couponCode:String(row.code||c)
+  };
 }
 async function listAdminPointsCodes(limit=60){
   const r=await getTestPool().query(
@@ -566,7 +584,7 @@ module.exports=async(req,res)=>{
   if(apeAction) return handleApePelu(req,res,apeAction);
   if(req.method==='GET' && String(req.query?.card||'')==='1'){
     const code=normalizeCode(req.query?.code);
-    if(!/^APE-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(code)) return res.status(400).send('Codice non valido.');
+    if(!/^APE-(?:[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}|[A-Z0-9]{5}-[A-Z0-9]{5})$/.test(code)) return res.status(400).send('Codice non valido.');
     res.setHeader('Content-Type','application/pdf');
     res.setHeader('Content-Disposition','attachment; filename="Promemoria_Punti_Ape_'+code+'.pdf"');
     res.setHeader('Cache-Control','private, no-store');
@@ -634,7 +652,7 @@ module.exports=async(req,res)=>{
     if(!email&&!phone&&!code) return res.status(422).json({ok:false,error:'Inserisci email, telefono oppure Codice Punti Ape.'});
     if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(422).json({ok:false,error:'Email non valida.'});
     if(phone&&phone.length<6) return res.status(422).json({ok:false,error:'Numero di telefono non valido.'});
-    if(code&&!/^APE-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}$/.test(code)) return res.status(422).json({ok:false,error:'Codice Punti Ape non valido.'});
+    if(code&&!/^APE-(?:[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}|[A-Z0-9]{5}-[A-Z0-9]{5})$/.test(code)) return res.status(422).json({ok:false,error:'Codice Punti Ape non valido.'});
     let result;
     if(email||phone){
       const data=await callBeeDataApi('lookup',{email,phone});
@@ -649,7 +667,8 @@ module.exports=async(req,res)=>{
         spent:Number(data&&data.spent||0)
       };
     }else{
-      result=await lookupWallet({email,phone,code});
+      result=await lookupManualPointsCode(code);
+      if(!result) result=await lookupWallet({email,phone,code});
     }
     if(!result.found) return res.status(404).json({ok:false,found:false,error:'Nessun Saldo Punti Ape trovato con questi dati.'});
     return res.json({
