@@ -74,7 +74,7 @@ async function createAdminPointsCode(points,note=''){
     const code='APE-'+raw.slice(0,5)+'-'+raw.slice(5);
     try{
       const r=await p.query(
-        "insert into bee_coupons(code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id) values($1,$2,$2,'ATTIVO','ADMIN_PHYSICAL',$3,null) returning code,points_total,points_remaining,status,source_kind,created_at",
+        "insert into bee_coupons(code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id) values($1,$2,$2,'ATTIVO','MANUAL',$3,null) returning code,points_total,points_remaining,status,source_kind,created_at",
         [code,value,cleanField(note,160)||null]
       );
       return r.rows[0];
@@ -84,7 +84,7 @@ async function createAdminPointsCode(points,note=''){
 }
 async function listAdminPointsCodes(limit=60){
   const r=await getTestPool().query(
-    "select code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id,created_at,used_at from bee_coupons where source_kind='ADMIN_PHYSICAL' order by created_at desc limit $1",
+    "select code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id,created_at,used_at from bee_coupons where source_kind='MANUAL' order by created_at desc limit $1",
     [Math.max(1,Math.min(200,Number(limit)||60))]
   );
   return r.rows||[];
