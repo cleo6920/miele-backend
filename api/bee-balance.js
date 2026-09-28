@@ -100,6 +100,102 @@ async function lookupManualPointsCode(code){
     couponCode:String(row.code||c)
   };
 }
+function validCouponCodeFormat(code){
+  return /^APE-(?:[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}|[A-Z0-9]{5}-[A-Z0-9]{5})$/.test(normalizeCode(code));
+}
+function normalizeCouponCodes(values){
+  const arr=Array.isArray(values)?values:[];
+  const unique=[...new Set(arr.map(normalizeCode).filter(Boolean))];
+  if(unique.length>120) throw new Error('Puoi verificare al massimo 120 codici alla volta.');
+  for(const code of unique) if(!validCouponCodeFormat(code)) throw new Error('Uno dei Codici Punti Ape non è valido.');
+  return unique;
+}
+async function lookupCouponBundle(values){
+  const codes=normalizeCouponCodes(values);
+  if(!codes.length) throw new Error('Inserisci almeno un Codice Punti Ape.');
+  const p=getTestPool();
+  const r=await p.query(
+    "select code,points_total,points_remaining,status from bee_coupons where upper(code)=any($1::text[])",
+    [codes]
+  );
+  const map=new Map(r.rows.map(x=>[String(x.code).toUpperCase(),x]));
+  const items=codes.map(code=>{
+    const row=map.get(code);
+    if(!row) return {code,valid:false,points:0,status:'NON TROVATO'};
+    const points=Math.max(0,Number(row.points_remaining||0));
+    const active=String(row.status)==='ATTIVO'&&points>0;
+    return {code,valid:active,points,status:String(row.status||'')};
+  });
+  const invalid=items.filter(x=>!x.valid);
+  if(invalid.length) throw new Error('Codice non valido o già utilizzato: '+invalid[0].code);
+  const balance=items.reduce((s,x)=>s+x.points,0);
+  return {found:true,balance,earned:balance,spent:0,items,codes};
+}
+async function createCouponBundleCestoOrder(codes,body){
+  const lang=cestoLang(body.language);
+  const {gifts,shipping}=validateTestCesto(body);
+  await validateShippingRemotely(shipping);
+  const normalized=normalizeCouponCodes(codes);
+  if(!normalized.length) throw new Error('Inserisci almeno un Codice Punti Ape.');
+  const p=getTestPool();
+  const client=await p.connect();
+  let before=0,after=0,orderNumber='',giftObjects=[];
+  try{
+    await client.query('begin');
+    const r=await client.query(
+      "select code,points_total,points_remaining,status from bee_coupons where upper(code)=any($1::text[]) for update",
+      [normalized]
+    );
+    const map=new Map(r.rows.map(x=>[String(x.code).toUpperCase(),x]));
+    const rows=normalized.map(code=>map.get(code));
+    if(rows.some(x=>!x)) throw new Error('Uno dei Codici Punti Ape non esiste.');
+    if(rows.some(x=>String(x.status)!=='ATTIVO'||Number(x.points_remaining||0)<=0)) throw new Error('Uno dei Codici Punti Ape è già stato utilizzato.');
+    before=rows.reduce((s,x)=>s+Number(x.points_remaining||0),0);
+    if(before<100) throw new Error('Servono almeno 100 Punti Ape per riscattare il Cesto.');
+    let remainingToSpend=100;
+    for(const code of normalized){
+      if(remainingToSpend<=0) break;
+      const row=map.get(code);
+      const available=Math.max(0,Number(row.points_remaining||0));
+      const take=Math.min(available,remainingToSpend);
+      const left=available-take;
+      await client.query(
+        "update bee_coupons set points_remaining=$2,status=$3,used_at=case when $2=0 then now() else used_at end where code=$1",
+        [row.code,left,left===0?'UTILIZZATO':'ATTIVO']
+      );
+      remainingToSpend-=take;
+    }
+    after=before-100;
+    const accountId='COUPON-BUNDLE-'+crypto.randomBytes(10).toString('hex').toUpperCase();
+    await client.query("insert into bee_accounts(id,created_at,updated_at) values($1,now(),now())",[accountId]);
+    orderNumber='CESTO-APE-'+Date.now().toString().slice(-8)+'-'+crypto.randomBytes(2).toString('hex').toUpperCase();
+    giftObjects=gifts.map(id=>({id,name:TEST_GIFTS.get(id)}));
+    await client.query(
+      "insert into bee_reward_claims(claim_id,account_id,anchor_coupon_code,gift_products,points_spent,balance_before,balance_after,residual_coupon_code,created_at) values($1,$2,$3,$4::jsonb,100,$5,$6,$7,now())",
+      [orderNumber,accountId,normalized[0],JSON.stringify(giftObjects),before,after,after>0?normalized.find(code=>Number(map.get(code)?.points_remaining||0)>0)||null:null]
+    );
+    await client.query('commit');
+  }catch(error){
+    await client.query('rollback');
+    throw error;
+  }finally{client.release();}
+  await recordAdminOrderEvent('cesto',orderNumber,{id:orderNumber,customer:shipping,giftProducts:giftObjects,pointsSpent:100,balanceBefore:before,balanceAfter:after,codes:normalized,status:'DA PREPARARE'});
+  const text=[
+    'LA FABBRICA DELLE API','ORDINE CESTO PUNTI APE','',
+    'Ordine: '+orderNumber,
+    'Punti utilizzati: 100',
+    'Saldo codici prima: '+before,
+    'Saldo residuo complessivo: '+after,
+    'Codici utilizzati: '+normalized.join(', '),
+    'Stato: DA PREPARARE','','CLIENTE E SPEDIZIONE',
+    'Nome: '+shipping.name,'Email: '+shipping.email,'Telefono: '+shipping.phone,
+    'Indirizzo: '+shipping.address,'CAP: '+shipping.postalCode,'Comune: '+shipping.city,'Provincia: '+shipping.state,'Paese: '+shipping.country,
+    'Note: '+(shipping.notes||'—'),'','5 PRODOTTI SCELTI',
+    ...giftObjects.map((g,i)=>(i+1)+'. '+g.name),'','Pagamento: 100 Punti Ape','Spedizione: GRATUITA','Totale da pagare: €0,00'
+  ].join('\n');
+  await sendAdminResend({subject:'Cesto Punti Ape '+orderNumber+' · '+shipping.name,text,replyTo:shipping.email,idempotency:'cesto-real-'+orderNumber});
+  return {orderNumber,giftObjects:giftObjects.map(g=>({id:g.id,name:cestoGiftName(g.id,lang)})),shipping,emailSent:true,balance:after,language:lang};
+}
 async function listAdminPointsCodes(limit=60){
   const r=await getTestPool().query(
     "select code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id,created_at,used_at from bee_coupons where source_kind='MANUAL' order by created_at desc limit $1",
@@ -647,6 +743,20 @@ module.exports=async(req,res)=>{
         message:permanent
           ? 'Modalità TEST permanente: questo saldo resterà sempre a 100 Punti Ape.'
           : (used?'Modalità TEST una tantum già utilizzata: saldo TEST = 0.':'Modalità TEST una tantum: puoi simulare il riscatto del cesto.')
+      });
+    }
+    if(String(body.action||'')==='lookup_coupon_bundle'){
+      const result=await lookupCouponBundle(body.codes);
+      return res.json({ok:true,...result,goal:100,remainingToReward:Math.max(0,100-result.balance),bundleMode:true});
+    }
+    if(String(body.action||'')==='claim_coupon_bundle'){
+      const result=await lookupCouponBundle(body.codes);
+      if(result.balance<100) return res.status(422).json({ok:false,error:'Servono almeno 100 Punti Ape per riscattare il Cesto.'});
+      const order=await createCouponBundleCestoOrder(result.codes,body);
+      return res.json({
+        ok:true,found:true,bundleMode:true,balance:order.balance,earned:result.balance,spent:100,
+        goal:100,remainingToReward:Math.max(0,100-order.balance),cestoOrder:order,emailSent:true,
+        message:'Ordine Cesto creato. Sono stati utilizzati 100 Punti Ape.'
       });
     }
     if(!email&&!phone&&!code) return res.status(422).json({ok:false,error:'Inserisci email, telefono oppure Codice Punti Ape.'});
