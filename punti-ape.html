@@ -22,6 +22,8 @@
 @media(max-width:680px){.gift-grid,.ship-grid{grid-template-columns:1fr}}
 .privacy{margin-top:22px;padding:16px;border-radius:18px;background:#fff3c9;color:#624d0f;line-height:1.45}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions a{text-decoration:none;border-radius:999px;padding:11px 15px;font-weight:900}.primary{background:var(--g);color:#fff}.secondary{border:1px solid #bea66e;color:#60480c;background:#fff}
 @media(max-width:760px){.guide{grid-template-columns:1fr}.hero{padding:28px}.lookup{padding:20px}}
+
+.coupon-tools{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}.coupon-tools button{border:0;border-radius:999px;background:#10392c;color:#fff;padding:10px 14px;font-weight:900;cursor:pointer}.coupon-stack{display:grid;gap:8px;margin-top:12px}.coupon-chip{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid #d9cfbb;background:#fffaf0;border-radius:12px;padding:10px 12px}.coupon-chip code{font-weight:900}.coupon-chip button{border:0;background:#eee5d6;color:#7a3c16;border-radius:999px;padding:6px 10px;font-weight:900;cursor:pointer}.coupon-total{margin-top:10px;font-weight:900;color:#10392c}
 </style>
 </head>
 <body>
@@ -49,7 +51,7 @@
 </div>
 <div class="method active" data-method="email"><label for="email">La tua email</label><input id="email" type="email" autocomplete="email" placeholder="esempio@email.it"><div class="hint">Usa la stessa email lasciata sul sito.</div></div>
 <div class="method" data-method="phone"><label for="phone">Il tuo telefono</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="+39 ..."><div class="hint">Puoi scriverlo anche con spazi o prefisso internazionale.</div></div>
-<div class="method" data-method="code"><label for="code">Codice Punti Ape</label><input id="code" autocomplete="off" placeholder="APE-XXXX-XXXX-XX" style="text-transform:uppercase"><div class="hint">Lo trovi nel promemoria ricevuto se hai scelto di non lasciare contatti.</div></div>
+<div class="method" data-method="code"><label for="code">Codice Punti Ape</label><input id="code" autocomplete="off" placeholder="APE-XXXX-XXXX-XX" style="text-transform:uppercase"><div class="hint">Inserisci un codice. Se ne hai più di uno, usa “Aggiungi codice coupon” per sommarli.</div><div class="coupon-tools"><button id="addCouponCode" type="button">＋ Aggiungi codice coupon</button></div><div id="couponStack" class="coupon-stack"></div><div id="couponTotal" class="coupon-total"></div></div>
 <button class="check" id="check" type="button">🐝 Vedi il mio saldo</button>
 <div id="status"></div>
 <div class="result" id="result">
@@ -97,6 +99,8 @@
 <script>
 let kind='email';
 let activeTestCode='';
+let activeCouponCodes=[];
+let couponCodes=[];
 const selectedGifts=new Set();
 const TEST_GIFTS=[
 ['favo-integrale-bio','Favo Integrale Bio'],
@@ -212,7 +216,7 @@ function shippingComplete(){
 function updateClaimState(){
   const btn=document.getElementById('testclaim');
   if(!btn)return;
-  btn.disabled=!(activeTestCode&&selectedGifts.size===5&&shippingComplete());
+  btn.disabled=!((activeTestCode||activeCouponCodes.length)&&selectedGifts.size===5&&shippingComplete());
   const st=document.getElementById('claimStatus');
   const tx=cestoUi();
   if(selectedGifts.size!==5)st.textContent=tx.missing(5-selectedGifts.size);
@@ -230,14 +234,43 @@ document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>
   document.getElementById('status').textContent='';
   document.getElementById('result').classList.remove('show');
 }));
+function renderCouponStack(){
+  const box=document.getElementById('couponStack'),total=document.getElementById('couponTotal');
+  if(!box)return;
+  box.innerHTML=couponCodes.map(code=>'<div class="coupon-chip"><code>'+code+'</code><button type="button" data-remove-coupon="'+code+'">Rimuovi</button></div>').join('');
+  if(total)total.textContent=couponCodes.length?couponCodes.length+' '+(couponCodes.length===1?'codice inserito':'codici inseriti'):'';
+}
+async function verifyCouponBundle(){
+  const status=document.getElementById('status');
+  if(!couponCodes.length){status.textContent='Inserisci almeno un Codice Punti Ape.';return null;}
+  const r=await fetch('/api/bee-balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'lookup_coupon_bundle',codes:couponCodes})});
+  const data=await r.json().catch(()=>null);
+  if(!r.ok||!data?.ok)throw new Error(data?.error||'Codici Punti Ape non disponibili.');
+  return data;
+}
+async function addCouponCode(){
+  const input=document.getElementById('code'),raw=String(input?.value||'').trim().toUpperCase();
+  if(!raw){document.getElementById('status').textContent='Inserisci un Codice Punti Ape.';return;}
+  if(!couponCodes.includes(raw))couponCodes.push(raw);
+  input.value='';
+  renderCouponStack();
+  await checkBalance();
+}
 async function checkBalance(){
   const status=document.getElementById('status'),button=document.getElementById('check');
-  const value=document.getElementById(kind).value.trim();
-  if(!value){status.textContent='Inserisci il dato scelto per controllare il saldo.';return;}
+  let value=document.getElementById(kind).value.trim();
+  if(kind==='code'&&value){
+    value=value.toUpperCase();
+    if(!couponCodes.includes(value))couponCodes.push(value);
+    document.getElementById('code').value='';
+    renderCouponStack();
+  }
+  if(kind!=='code'&&!value){status.textContent='Inserisci il dato scelto per controllare il saldo.';return;}
+  if(kind==='code'&&!couponCodes.length){status.textContent='Inserisci almeno un Codice Punti Ape.';return;}
   button.disabled=true;const old=button.textContent;button.textContent='Controllo in corso…';status.textContent='';
   document.getElementById('result').classList.remove('show');
   try{
-    const body={};body[kind]=value;
+    const body=kind==='code'?{action:'lookup_coupon_bundle',codes:couponCodes}:({[kind]:value});
     const r=await fetch('/api/bee-balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const data=await r.json().catch(()=>null);
     if(!r.ok||!data?.ok)throw new Error(data?.error||'Saldo non disponibile.');
@@ -249,6 +282,7 @@ async function checkBalance(){
     const flow=document.getElementById('cestoFlow');
     if(data.testMode){
       activeTestCode=String(value||'').toUpperCase();
+      activeCouponCodes=[];
       tb.classList.add('show');
       document.getElementById('testtitle').textContent=data.testKind==='always'?'Modalità TEST permanente':'Modalità TEST una tantum';
       document.getElementById('testmessage').textContent=data.message||'';
@@ -259,11 +293,22 @@ async function checkBalance(){
         renderGiftGrid();
         updateClaimState();
         setTimeout(()=>flow.scrollIntoView({behavior:'smooth',block:'start'}),120);
-      }else{
-        flow.classList.remove('show');
-      }
+      }else flow.classList.remove('show');
+    }else if(data.bundleMode){
+      activeTestCode='';
+      activeCouponCodes=[...couponCodes];
+      tb.classList.remove('show');
+      if(b>=100){
+        flow.classList.add('show');
+        applyCestoStaticLanguage();
+        selectedGifts.clear();
+        renderGiftGrid();
+        updateClaimState();
+        setTimeout(()=>flow.scrollIntoView({behavior:'smooth',block:'start'}),120);
+      }else flow.classList.remove('show');
     }else{
       activeTestCode='';
+      activeCouponCodes=[];
       tb.classList.remove('show');
       flow.classList.remove('show');
     }
@@ -326,7 +371,7 @@ async function validateCestoShippingClient(){
 }
 
 async function claimTestReward(){
-  if(!activeTestCode)return;
+  if(!activeTestCode&&!activeCouponCodes.length)return;
   const btn=document.getElementById('testclaim');
   const msg=document.getElementById('claimStatus');
   if(selectedGifts.size!==5||!shippingComplete()){updateClaimState();return;}
@@ -338,10 +383,16 @@ async function claimTestReward(){
     const r=await fetch('/api/bee-balance',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
+      body:JSON.stringify(activeTestCode?{
         code:activeTestCode,
         language:cestoLanguage(),
         action:'claim_test_reward',
+        giftProducts:[...selectedGifts],
+        shipping:verifiedShipping
+      }:{
+        codes:activeCouponCodes,
+        language:cestoLanguage(),
+        action:'claim_coupon_bundle',
         giftProducts:[...selectedGifts],
         shipping:verifiedShipping
       })
@@ -364,7 +415,7 @@ async function claimTestReward(){
     document.getElementById('balance').textContent=b;
     document.getElementById('bar').style.width=Math.min(100,b)+'%';
     document.getElementById('goal').textContent=b>=100?'Hai raggiunto almeno 100 punti: puoi richiedere il cesto omaggio.':'Ti mancano '+Math.max(0,100-b)+' punti per arrivare al cesto omaggio da 100 punti.';
-    document.getElementById('testmessage').textContent=data.message||'Ordine Cesto creato.';
+    if(document.getElementById('testmessage'))document.getElementById('testmessage').textContent=data.message||'Ordine Cesto creato.';
     const order=data.cestoOrder||{};
     const names=(order.giftObjects||[]).map(x=>x.name).join('<br>• ');
     const confirm=document.getElementById('cestoConfirm');
@@ -382,12 +433,30 @@ async function claimTestReward(){
       '<strong>'+tx.total+'</strong><br>'+
       (data.receiptUrl?'<a class="receipt-btn" href="'+data.receiptUrl+'">'+tx.receipt+'</a>':'');
     confirm.classList.add('show');
-    if(data.testKind==='once')document.getElementById('cestoFlow').classList.remove('show');
+    if(data.bundleMode){
+      document.getElementById('cestoFlow').classList.remove('show');
+      couponCodes=[];
+      activeCouponCodes=[];
+      renderCouponStack();
+    }else if(data.testKind==='once')document.getElementById('cestoFlow').classList.remove('show');
     else{selectedGifts.clear();renderGiftGrid();updateClaimState();}
   }catch(e){msg.textContent=e?.message||'Non è stato possibile completare il Cesto.';}
   btn.disabled=false;btn.textContent=old;
 }
 document.getElementById('check').addEventListener('click',checkBalance);
+document.getElementById('addCouponCode')?.addEventListener('click',addCouponCode);
+document.getElementById('couponStack')?.addEventListener('click',async e=>{
+  const btn=e.target.closest('[data-remove-coupon]');if(!btn)return;
+  couponCodes=couponCodes.filter(x=>x!==btn.dataset.removeCoupon);
+  renderCouponStack();
+  if(couponCodes.length)await checkBalance();
+  else{
+    activeCouponCodes=[];
+    document.getElementById('result').classList.remove('show');
+    document.getElementById('cestoFlow').classList.remove('show');
+    document.getElementById('status').textContent='';
+  }
+});
 document.getElementById('testclaim').addEventListener('click',claimTestReward);
 ['shipName','shipEmail','shipPhone','shipAddress','shipPostal','shipCity','shipState','shipCountry','shipNotes'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateClaimState));
 renderGiftGrid();
