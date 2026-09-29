@@ -28,6 +28,8 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 .copy-btn{width:auto!important;margin:0!important;padding:7px 10px!important;border-radius:10px!important;font-size:12px!important;background:#e9e1d2!important;color:var(--g)!important}
 .code-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .code-tools code{font-family:monospace;font-size:14px;font-weight:900}
+
+.archive-toggle{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px}.archive-toggle button{width:auto;margin:0}.archive-panel{display:none;margin-top:12px}.archive-panel.open{display:block}.archive-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;align-items:end}.archive-filters label{margin:0}.archive-filters input,.archive-filters select{width:100%;padding:10px;border:1px solid #cfc7b8;border-radius:12px;background:#fff;font:inherit}.batch-result{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.batch-result .code-tools{margin-top:8px}.batch-list{display:grid;gap:6px;margin-top:10px;max-height:260px;overflow:auto}.batch-code{font-family:monospace;border:1px dashed #d4c6aa;border-radius:10px;padding:8px;background:#fffaf0}.small-note{font-size:12px;color:#708078;margin-top:6px}
 </style>
 </head>
 <body>
@@ -58,12 +60,42 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
     <h3 style="margin:0">🐝 Codici Punti Ape</h3>
     <div class="admin-box">
       <div class="admin-form">
-        <label>Punti del codice<input id="pointsCodeValue" type="number" min="1" max="1000" value="10"></label>
+        <label>Punti per ogni codice<input id="pointsCodeValue" type="number" min="1" max="1000" value="2"></label>
+        <label>Quantità codici<input id="pointsCodeQty" type="number" min="1" max="100" value="1"></label>
         <label>Nota facoltativa<input id="pointsCodeNote" placeholder="es. Mercatino Stellata"></label>
-        <button id="createPointsCode" type="button">Genera codice</button>
+        <button id="createPointsCode" type="button">Genera</button>
       </div>
+      <div class="small-note">Esempio: 2 punti · quantità 10 = 10 codici diversi da 2 Punti Ape ciascuno.</div>
       <div id="pointsCodeMsg" class="msg"></div>
-      <div id="pointsCodeList" class="admin-list"></div>
+      <div id="pointsBatchResult"></div>
+
+      <div class="archive-toggle">
+        <strong>Archivio codici generati</strong>
+        <button id="togglePointsArchive" class="alt" type="button">Mostra archivio</button>
+      </div>
+      <div id="pointsArchivePanel" class="archive-panel">
+        <div class="archive-filters">
+          <label>Periodo
+            <select id="pointsQuickFilter">
+              <option value="10">Ultimi 10 giorni</option>
+              <option value="30">Ultimi 30 giorni</option>
+              <option value="all">Tutti</option>
+              <option value="custom">Dal / al</option>
+            </select>
+          </label>
+          <label>Dal<input id="pointsFrom" type="date"></label>
+          <label>Al<input id="pointsTo" type="date"></label>
+          <label>Stato
+            <select id="pointsStatusFilter">
+              <option value="all">Tutti</option>
+              <option value="ATTIVO">Attivi</option>
+              <option value="UTILIZZATO">Utilizzati</option>
+            </select>
+          </label>
+          <button id="applyPointsFilter" type="button">Applica filtro</button>
+        </div>
+        <div id="pointsCodeList" class="admin-list"></div>
+      </div>
     </div>
   </section>
 
@@ -126,7 +158,7 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 <script>
 const loginCard=document.getElementById('loginCard'),dashboard=document.getElementById('dashboard'),msg=document.getElementById('loginMsg');
 async function api(action,body={}){const r=await fetch('/api/bee-balance?adminAction='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'});const d=await r.json().catch(()=>({}));return {r,d};}
-function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders();loadTestTools();loadPointsCodes();loadPromoCodes();loadStock()}
+function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders();loadTestTools();loadPromoCodes();loadStock()}
 function showLogin(){dashboard.style.display='none';loginCard.style.display='block'}
 (async()=>{try{const {d}=await api('status');if(d.authenticated)showDash();else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';}catch(_){}})();
 document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash();}else msg.textContent=d.error||'Accesso non riuscito.';});
@@ -163,23 +195,71 @@ async function loadOrders(){
   ].sort((a,b)=>b.at-a.at).slice(0,100);
   box.innerHTML=merged.length?merged.map(v=>v.kind==='paid'?paidCard(v.x):cancelledCard(v.x)).join(''):'<p>Nessun ordine registrato.</p>';
 }
+function pointsFilterPayload(){
+  const quick=document.getElementById('pointsQuickFilter')?.value||'10';
+  let from='',to='';
+  const today=new Date(); const iso=d=>d.toISOString().slice(0,10);
+  if(quick==='10'||quick==='30'){
+    const d=new Date(today);d.setDate(d.getDate()-(Number(quick)-1));from=iso(d);to=iso(today);
+  }else if(quick==='custom'){
+    from=document.getElementById('pointsFrom')?.value||'';
+    to=document.getElementById('pointsTo')?.value||'';
+  }
+  return {from,to,status:document.getElementById('pointsStatusFilter')?.value||'all',limit:500};
+}
 async function loadPointsCodes(){
   const list=document.getElementById('pointsCodeList');
-  const {r,d}=await api('points-codes');
+  if(!list)return;
+  list.innerHTML='<div class="muted">Caricamento…</div>';
+  const {r,d}=await api('points-codes',pointsFilterPayload());
   if(!r.ok){document.getElementById('pointsCodeMsg').textContent=d.error||'Errore';return;}
   const rows=Array.isArray(d.codes)?d.codes:[];
   list.innerHTML=rows.length?rows.map(x=>{
     const total=Number(x.points_total||0),remaining=Number(x.points_remaining||0),used=Math.max(0,total-remaining);
-    return '<div class="admin-item"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia codice</button>'+(remaining===0&&String(x.status)==='UTILIZZATO'?'<button type="button" class="copy-btn delete-points-code" data-code="'+esc(x.code)+'">Elimina</button>':'')+'</div><div>'+total+' punti iniziali · '+used+' utilizzati · <strong>'+remaining+' rimasti</strong> · '+esc(x.status)+(x.source_order_id?' · '+esc(x.source_order_id):'')+'</div></div>';
-  }).join(''):'<div class="muted">Nessun codice generato.</div>';
+    const when=x.created_at?new Date(x.created_at).toLocaleString('it-IT'):'';
+    return '<div class="admin-item"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia codice</button>'+(remaining===0&&String(x.status)==='UTILIZZATO'?'<button type="button" class="copy-btn delete-points-code" data-code="'+esc(x.code)+'">Elimina</button>':'')+'</div><div>'+total+' punti iniziali · '+used+' utilizzati · <strong>'+remaining+' rimasti</strong> · '+esc(x.status)+'</div><div class="muted">'+esc(when)+(x.source_order_id?' · '+esc(x.source_order_id):'')+'</div></div>';
+  }).join(''):'<div class="muted">Nessun codice nel periodo selezionato.</div>';
+}
+function renderBatchCodes(rows){
+  const box=document.getElementById('pointsBatchResult');
+  if(!box)return;
+  if(!rows?.length){box.innerHTML='';return;}
+  const codes=rows.map(x=>String(x.code||'')).filter(Boolean);
+  box.innerHTML='<div class="batch-result"><strong>Generati '+codes.length+' codici</strong><div class="code-tools"><button type="button" class="copy-btn" id="copyBatchCodes">Copia tutti</button></div><div class="batch-list">'+rows.map(x=>'<div class="batch-code"><div class="code-tools"><code>'+esc(x.code)+'</code><button type="button" class="copy-btn" data-copy="'+esc(x.code)+'">Copia</button></div><div>'+esc(x.points_total)+' punti</div></div>').join('')+'</div></div>';
+  document.getElementById('copyBatchCodes')?.addEventListener('click',e=>copyCode(codes.join('\n'),e.currentTarget));
 }
 document.getElementById('createPointsCode').addEventListener('click',async()=>{
-  const m=document.getElementById('pointsCodeMsg');m.textContent='Generazione…';
-  const {r,d}=await api('create-points-code',{points:Number(document.getElementById('pointsCodeValue').value||1),note:document.getElementById('pointsCodeNote').value});
+  const m=document.getElementById('pointsCodeMsg'),btn=document.getElementById('createPointsCode');
+  const points=Number(document.getElementById('pointsCodeValue').value||1);
+  const quantity=Math.max(1,Math.min(100,Number(document.getElementById('pointsCodeQty').value||1)));
+  const note=document.getElementById('pointsCodeNote').value;
+  btn.disabled=true;m.textContent='Generazione…';
+  const action=quantity===1?'create-points-code':'create-points-codes';
+  const {r,d}=await api(action,{points,quantity,note});
+  btn.disabled=false;
   if(!r.ok){m.textContent=d.error||'Errore';return;}
-  m.innerHTML='<span class="ok">Creato: <strong>'+esc(d.code.code)+'</strong> · '+esc(d.code.points_total)+' punti</span>';
-  loadPointsCodes();
+  const rows=Array.isArray(d.codes)?d.codes:(d.code?[d.code]:[]);
+  m.innerHTML='<span class="ok">'+rows.length+' '+(rows.length===1?'codice generato':'codici generati')+' correttamente.</span>';
+  renderBatchCodes(rows);
+  if(document.getElementById('pointsArchivePanel').classList.contains('open'))loadPointsCodes();
 });
+document.getElementById('togglePointsArchive').addEventListener('click',()=>{
+  const panel=document.getElementById('pointsArchivePanel'),btn=document.getElementById('togglePointsArchive');
+  const open=!panel.classList.contains('open');
+  panel.classList.toggle('open',open);
+  btn.textContent=open?'Nascondi archivio':'Mostra archivio';
+  if(open)loadPointsCodes();
+});
+document.getElementById('applyPointsFilter').addEventListener('click',loadPointsCodes);
+document.getElementById('pointsQuickFilter').addEventListener('change',e=>{
+  const custom=e.target.value==='custom';
+  document.getElementById('pointsFrom').disabled=!custom;
+  document.getElementById('pointsTo').disabled=!custom;
+  if(!custom&&document.getElementById('pointsArchivePanel').classList.contains('open'))loadPointsCodes();
+});
+document.getElementById('pointsStatusFilter').addEventListener('change',()=>{if(document.getElementById('pointsArchivePanel').classList.contains('open'))loadPointsCodes();});
+document.getElementById('pointsFrom').disabled=true;
+document.getElementById('pointsTo').disabled=true;
 
 async function loadPromoCodes(){
   const list=document.getElementById('promoCodeList');
