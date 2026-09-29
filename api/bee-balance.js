@@ -197,9 +197,33 @@ async function createCouponBundleCestoOrder(codes,body){
   return {orderNumber,giftObjects:giftObjects.map(g=>({id:g.id,name:cestoGiftName(g.id,lang)})),shipping,emailSent:true,balance:after,language:lang};
 }
 async function listAdminPointsCodes({limit=100,from='',to='',status='all'}={}){
-  const values=[],where=["source_kind='MANUAL'"];
-  const fromText=cleanField(from,30),toText=cleanField(to,30),st=cleanField(status,20).toUpperCase();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(fromText)){values.push(fromText+'T00:00:00Z');where.push('created_at >= 
+  const values=[];
+  const where=["source_kind='MANUAL'"];
+  const fromText=cleanField(from,30);
+  const toText=cleanField(to,30);
+  const st=cleanField(status,20).toUpperCase();
+
+  if(/^\d{4}-\d{2}-\d{2}$/.test(fromText)){
+    values.push(fromText+'T00:00:00Z');
+    where.push('created_at >= $'+values.length+'::timestamptz');
+  }
+  if(/^\d{4}-\d{2}-\d{2}$/.test(toText)){
+    values.push(toText+'T23:59:59.999Z');
+    where.push('created_at <= $'+values.length+'::timestamptz');
+  }
+  if(st==='ATTIVO'||st==='UTILIZZATO'){
+    values.push(st);
+    where.push('status = $'+values.length);
+  }
+
+  values.push(Math.max(1,Math.min(500,Number(limit)||100)));
+  const sql=
+    "select code,points_total,points_remaining,status,source_kind,source_order_id,assigned_account_id,created_at,used_at "+
+    "from bee_coupons where "+where.join(' and ')+
+    " order by created_at desc limit $"+values.length;
+  const r=await getTestPool().query(sql,values);
+  return r.rows||[];
+}
 
 async function deleteUsedAdminPointsCode(code){
   const c=normalizeCode(code);
