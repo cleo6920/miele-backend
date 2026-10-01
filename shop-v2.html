@@ -2006,6 +2006,7 @@ function apeVoicePick(locale){
   return voices.map(v=>{const vl=String(v.lang||'').toLowerCase(),name=String(v.name||'');let score=0;if(vl===String(locale||'').toLowerCase())score+=180;else if(vl.startsWith(base))score+=125;else score-=999;if(/natural|neural|online|premium|enhanced/i.test(name))score+=150;if(preferred.test(name))score+=70;if(/microsoft|google|apple/i.test(name))score+=20;if(avoid.test(name))score-=110;return{v,score}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score)[0]?.v||null;
 }
 function apeSpeechClean(value){return String(value||'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,' ').replace(/<[^>]*>/g,' ').replace(/[\*_#\x60]/g,' ').replace(/[🐝→•]/g,' ').replace(/\s+/g,' ').trim()}
+let apeSpeechToken=0;
 function apeSpeak(value){
   if(!apeVoiceEnabled||!apeVoiceSupported())return;
   const text=apeSpeechClean(value);if(!text)return;
@@ -2027,19 +2028,23 @@ function apeUpdateMicButton(){
   apeMicBtn.title=apeListening?'Ferma ascolto':'Parla con Ape Telù';
   apeMicBtn.setAttribute('aria-label',apeMicBtn.title);
 }
-function apeStartListening(){
+function apeStartListening(retryCount=0){
   const Ctor=apeRecognitionCtor();if(!Ctor||apeListening)return;
   apeStopVoice();
   try{
     const rec=new Ctor();apeRecognition=rec;apeListening=true;apeUpdateMicButton();
     rec.lang=apeVoiceLocale();rec.interimResults=false;rec.continuous=false;rec.maxAlternatives=1;
     rec.onresult=e=>{const transcript=String(e.results?.[0]?.[0]?.transcript||'').trim();if(transcript){apeChatInput.value=transcript;setTimeout(()=>apeAsk(transcript),80)}};
-    rec.onerror=()=>{};
+    rec.onerror=e=>{
+      const err=String(e&&e.error||'');
+      apeListening=false;apeRecognition=null;apeUpdateMicButton();
+      if(err==='network'&&retryCount<1){setTimeout(()=>apeStartListening(retryCount+1),350)}
+    };
     rec.onend=()=>{apeListening=false;apeRecognition=null;apeUpdateMicButton()};
     rec.start();
   }catch(_){apeListening=false;apeRecognition=null;apeUpdateMicButton()}
 }
-function apeStopListening(){try{apeRecognition?.stop()}catch(_){}apeListening=false;apeRecognition=null;apeUpdateMicButton()}
+function apeStopListening(){try{apeRecognition?.abort()}catch(_){}apeListening=false;apeRecognition=null;apeUpdateMicButton()}
 apeUpdateVoiceButton();apeUpdateMicButton();
 if(apeVoiceSupported())window.speechSynthesis.onvoiceschanged=apeUpdateVoiceButton;
 apeVoiceBtn?.addEventListener('click',()=>{apeVoiceEnabled=!apeVoiceEnabled;try{localStorage.setItem(APE_VOICE_KEY,apeVoiceEnabled?'on':'off')}catch(_){}if(!apeVoiceEnabled)apeStopVoice();apeUpdateVoiceButton()});
