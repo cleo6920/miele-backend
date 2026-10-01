@@ -805,7 +805,7 @@ img{display:block;max-width:100%}
 <circle cx="26" cy="18" r="2.4" fill="#1b211d"/><circle cx="38" cy="18" r="2.4" fill="#1b211d"/>
 <path d="M27 23q5 5 10 0" fill="none" stroke="#1b211d" stroke-width="2.4" stroke-linecap="round"/>
 <path d="M24 10q-4-6-8-4M40 10q4-6 8-4" fill="none" stroke="#1b211d" stroke-width="2.4" stroke-linecap="round"/>
-</svg><div><strong>Ape Telù</strong><small>La tua guida nella Fabbrica delle Api</small></div><button class="ape-chat-close" id="apeChatClose" type="button">×</button></div>
+</svg><div><strong>Ape Telù</strong><small>La tua guida nella Fabbrica delle Api</small></div><button id="apeChatVoice" type="button" aria-label="Voce di Ape Telù" title="Voce di Ape Telù" style="margin-left:auto;border:0;background:rgba(255,255,255,.12);color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer">🔊</button><button class="ape-chat-close" id="apeChatClose" type="button">×</button></div>
   <div class="ape-chat-messages" id="apeChatMessages">
     <div class="ape-msg bot"><strong>Ciao, sono Ape Telù 🐝</strong><br>Posso accompagnarti tra Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, Mieli, Linea Veleni, Punti Ape, ordini e spedizioni. Cosa ti incuriosisce?</div>
   </div>
@@ -818,7 +818,7 @@ img{display:block;max-width:100%}
     <button type="button" data-ape-q="Come funzionano i Punti Ape?">Punti Ape</button>
     <button type="button" data-ape-q="Come funzionano spedizioni e ordini?">Ordini e spedizioni</button>
   </div>
-  <div class="ape-chat-input"><input id="apeChatInput" type="text" placeholder="Scrivi la tua domanda..." autocomplete="off"><button id="apeChatSend" type="button">Invia</button></div>
+  <div class="ape-chat-input"><input id="apeChatInput" type="text" placeholder="Scrivi o parla con Ape Telù..." autocomplete="off"><button id="apeChatMic" type="button" aria-label="Parla con Ape Telù" title="Parla con Ape Telù" style="font-size:18px">🎙️</button><button id="apeChatSend" type="button">Invia</button></div>
   <div class="ape-note">Ape Telù informa e orienta. Non sostituisce un medico o un professionista sanitario.</div>
 </section>
 
@@ -1992,6 +1992,59 @@ document.getElementById('finishCheckout').addEventListener('click',()=>{document
 const apeChatPanel=document.getElementById('apeChatPanel');
 const apeChatMessages=document.getElementById('apeChatMessages');
 const apeChatInput=document.getElementById('apeChatInput');
+const apeVoiceBtn=document.getElementById('apeChatVoice'),apeMicBtn=document.getElementById('apeChatMic');
+const APE_VOICE_KEY='fda-ape-telu-voice-v1';
+let apeVoiceEnabled=true,apeVoiceGreeted=false,apeRecognition=null,apeListening=false;
+try{apeVoiceEnabled=localStorage.getItem(APE_VOICE_KEY)!=='off'}catch(_){}
+function apeVoiceSupported(){return 'speechSynthesis' in window&&'SpeechSynthesisUtterance' in window}
+function apeVoiceLocale(){const l=apeCurrentLanguage();return {it:'it-IT',en:'en-US',de:'de-DE',fr:'fr-FR',es:'es-ES'}[l]||'it-IT'}
+function apeVoicePick(locale){
+  if(!apeVoiceSupported())return null;
+  const voices=window.speechSynthesis.getVoices()||[],base=String(locale||'it-IT').slice(0,2).toLowerCase();
+  const preferred=/elsa|alice|federica|isabella|silvia|paola|natural|neural|enhanced|premium|google.*ital/i;
+  const avoid=/compact|novelty|robot|whisper/i;
+  return voices.map(v=>{const vl=String(v.lang||'').toLowerCase(),name=String(v.name||'');let score=0;if(vl===String(locale||'').toLowerCase())score+=120;else if(vl.startsWith(base))score+=90;if(preferred.test(name))score+=45;if(/microsoft|google|apple/i.test(name))score+=12;if(v.localService)score+=8;if(avoid.test(name))score-=120;return{v,score}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score)[0]?.v||null;
+}
+function apeSpeechClean(value){return String(value||'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,' ').replace(/<[^>]*>/g,' ').replace(/[\*_#\x60]/g,' ').replace(/[🐝→]/g,' ').replace(/\s+/g,' ').trim()}
+function apeSpeak(value){
+  if(!apeVoiceEnabled||!apeVoiceSupported())return;
+  const text=apeSpeechClean(value);if(!text)return;
+  try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=apeVoiceLocale();u.rate=.92;u.pitch=1.03;u.volume=1;const v=apeVoicePick(u.lang);if(v)u.voice=v;window.speechSynthesis.speak(u)}catch(_){}
+}
+function apeStopVoice(){try{if(apeVoiceSupported())window.speechSynthesis.cancel()}catch(_){}}
+function apeUpdateVoiceButton(){
+  if(!apeVoiceBtn)return;
+  if(!apeVoiceSupported()){apeVoiceBtn.style.display='none';return}
+  apeVoiceBtn.textContent=apeVoiceEnabled?'🔊':'🔇';
+  apeVoiceBtn.title=apeVoiceEnabled?'Disattiva la voce di Ape Telù':'Attiva la voce di Ape Telù';
+  apeVoiceBtn.setAttribute('aria-label',apeVoiceBtn.title);
+}
+function apeRecognitionCtor(){return window.SpeechRecognition||window.webkitSpeechRecognition||null}
+function apeUpdateMicButton(){
+  if(!apeMicBtn)return;
+  if(!apeRecognitionCtor()){apeMicBtn.style.display='none';return}
+  apeMicBtn.textContent=apeListening?'⏹️':'🎙️';
+  apeMicBtn.title=apeListening?'Ferma ascolto':'Parla con Ape Telù';
+  apeMicBtn.setAttribute('aria-label',apeMicBtn.title);
+}
+function apeStartListening(){
+  const Ctor=apeRecognitionCtor();if(!Ctor||apeListening)return;
+  apeStopVoice();
+  try{
+    const rec=new Ctor();apeRecognition=rec;apeListening=true;apeUpdateMicButton();
+    rec.lang=apeVoiceLocale();rec.interimResults=false;rec.continuous=false;rec.maxAlternatives=1;
+    rec.onresult=e=>{const transcript=String(e.results?.[0]?.[0]?.transcript||'').trim();if(transcript){apeChatInput.value=transcript;setTimeout(()=>apeAsk(transcript),80)}};
+    rec.onerror=()=>{};
+    rec.onend=()=>{apeListening=false;apeRecognition=null;apeUpdateMicButton()};
+    rec.start();
+  }catch(_){apeListening=false;apeRecognition=null;apeUpdateMicButton()}
+}
+function apeStopListening(){try{apeRecognition?.stop()}catch(_){}apeListening=false;apeRecognition=null;apeUpdateMicButton()}
+apeUpdateVoiceButton();apeUpdateMicButton();
+if(apeVoiceSupported())window.speechSynthesis.onvoiceschanged=apeUpdateVoiceButton;
+apeVoiceBtn?.addEventListener('click',()=>{apeVoiceEnabled=!apeVoiceEnabled;try{localStorage.setItem(APE_VOICE_KEY,apeVoiceEnabled?'on':'off')}catch(_){}if(!apeVoiceEnabled)apeStopVoice();apeUpdateVoiceButton()});
+apeMicBtn?.addEventListener('click',()=>{if(apeListening)apeStopListening();else apeStartListening()});
+
 
 function apeEscape(value){
   return String(value||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -2571,6 +2624,8 @@ async function apeAsk(text){
   const value=String(text||'').trim();
   if(!value)return;
 
+  apeStopListening();
+  apeStopVoice();
   apeAddMessage(value,'user');
   apeChatInput.value='';
 
@@ -2588,6 +2643,7 @@ async function apeAsk(text){
     if(res.ok && data?.ok && data?.reply){
       apeChatHistory.push({role:'assistant',content:data.reply});
       apeAddMessage(apeRenderAi(data.reply),'bot');
+      apeSpeak(data.reply);
       const contextualAction=data.suppressAction?null:(data.action||apeContextActionFromText(value,data.reply));
       if(contextualAction)apeAddContextLink(contextualAction);
       return;
@@ -2603,11 +2659,12 @@ async function apeAsk(text){
     content:fallbackPlain
   });
   apeAddMessage(fallback,'bot');
+  apeSpeak(fallbackPlain);
   const fallbackAction=apeContextActionFromText(value,fallbackPlain);
   if(fallbackAction)apeAddContextLink(fallbackAction);
 }
-document.getElementById('apeChatLaunch').addEventListener('click',()=>{apeChatPanel.classList.add('open');setTimeout(()=>apeChatInput.focus(),50);});
-document.getElementById('apeChatClose').addEventListener('click',()=>apeChatPanel.classList.remove('open'));
+document.getElementById('apeChatLaunch').addEventListener('click',()=>{apeChatPanel.classList.add('open');setTimeout(()=>apeChatInput.focus(),50);if(!apeVoiceGreeted){apeVoiceGreeted=true;setTimeout(()=>{const first=apeChatMessages.querySelector('.ape-msg.bot');apeSpeak(first?first.innerText:'Ciao, sono Ape Telù. Cosa ti incuriosisce?')},120)}});
+document.getElementById('apeChatClose').addEventListener('click',()=>{apeChatPanel.classList.remove('open');apeStopListening();apeStopVoice()});
 document.getElementById('apeChatSend').addEventListener('click',()=>apeAsk(apeChatInput.value));
 apeChatInput.addEventListener('keydown',e=>{if(e.key==='Enter')apeAsk(apeChatInput.value);});
 document.querySelectorAll('[data-ape-q]').forEach(btn=>btn.addEventListener('click',()=>apeAsk(btn.dataset.apeQ)));
