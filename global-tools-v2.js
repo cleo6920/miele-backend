@@ -89,54 +89,24 @@ function apeSpeechClean(value){
     .replace(/\s+/g,' ')
     .trim();
 }
-function apeSpeechChunks(text){
-  const pieces=String(text||'').match(/[^.!?…]+[.!?…]?/g)||[String(text||'')];
-  const out=[];
-  for(const piece of pieces){
-    const s=piece.trim();
-    if(!s)continue;
-    if(s.length<=180){out.push(s);continue}
-    const parts=s.split(/[,;:]\s+/);
-    let current='';
-    for(const p of parts){
-      const next=current?current+', '+p:p;
-      if(next.length>180&&current){out.push(current);current=p}else current=next;
-    }
-    if(current)out.push(current);
-  }
-  return out;
-}
 let apeSpeechToken=0;
 function apeSpeak(value){
   if(!apeVoiceEnabled||!apeVoiceSupported())return;
   const text=apeSpeechClean(value);if(!text)return;
   const token=++apeSpeechToken,locale=apeVoiceLocale();
-  try{window.speechSynthesis.cancel()}catch(_){}
-  const start=(attempt=0)=>{
+  try{window.speechSynthesis.cancel();window.speechSynthesis.resume()}catch(_){}
+  setTimeout(()=>{
     if(token!==apeSpeechToken||!apeVoiceEnabled)return;
-    const voices=window.speechSynthesis.getVoices()||[];
-    if(!voices.length&&attempt<5){setTimeout(()=>start(attempt+1),160);return}
-    const voice=apeVoicePick(locale),chunks=apeSpeechChunks(text);
-    let index=0;
-    const next=()=>{
-      if(token!==apeSpeechToken||!apeVoiceEnabled||index>=chunks.length)return;
-      try{
-        const u=new SpeechSynthesisUtterance(chunks[index++]);
-        u.lang=locale;
-        u.rate=.89;
-        u.pitch=.96;
-        u.volume=1;
-        if(voice)u.voice=voice;
-        u.onend=()=>setTimeout(next,85);
-        u.onerror=()=>setTimeout(next,40);
-        window.speechSynthesis.speak(u);
-      }catch(_){}
-    };
-    next();
-  };
-  start();
+    try{
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang=locale;u.rate=.90;u.pitch=.97;u.volume=1;
+      const v=apeVoicePick(locale);if(v)u.voice=v;
+      window.speechSynthesis.resume();
+      window.speechSynthesis.speak(u);
+    }catch(_){}
+  },90);
 }
-function apeStopVoice(){apeSpeechToken++;try{if(apeVoiceSupported())window.speechSynthesis.cancel()}catch(_){}}
+function apeStopVoice(){apeSpeechToken++;try{if(apeVoiceSupported()){window.speechSynthesis.cancel();window.speechSynthesis.resume()}}catch(_){}}
 function apeUpdateVoiceButton(){
   if(!voiceBtn)return;
   if(!apeVoiceSupported()){voiceBtn.style.display='none';return}
@@ -153,19 +123,23 @@ function apeUpdateMicButton(){
   micBtn.setAttribute('aria-label',micBtn.title);
   micBtn.style.background=apeListening?'#f3d6cf':'#f0b52f';
 }
-function apeStartListening(){
+function apeStartListening(retryCount=0){
   const Ctor=apeRecognitionCtor();if(!Ctor||apeListening)return;
   apeStopVoice();
   try{
     const rec=new Ctor();apeRecognition=rec;apeListening=true;apeUpdateMicButton();
     rec.lang=apeVoiceLocale();rec.interimResults=false;rec.continuous=false;rec.maxAlternatives=1;
     rec.onresult=e=>{const transcript=String(e.results?.[0]?.[0]?.transcript||'').trim();if(transcript){qIn.value=transcript;setTimeout(()=>{if(form.requestSubmit)form.requestSubmit();else form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))},80)}};
-    rec.onerror=()=>{};
+    rec.onerror=e=>{
+      const err=String(e&&e.error||'');
+      apeListening=false;apeRecognition=null;apeUpdateMicButton();
+      if(err==='network'&&retryCount<1){setTimeout(()=>apeStartListening(retryCount+1),350)}
+    };
     rec.onend=()=>{apeListening=false;apeRecognition=null;apeUpdateMicButton()};
     rec.start();
   }catch(_){apeListening=false;apeRecognition=null;apeUpdateMicButton()}
 }
-function apeStopListening(){try{apeRecognition?.stop()}catch(_){}apeListening=false;apeRecognition=null;apeUpdateMicButton()}
+function apeStopListening(){try{apeRecognition?.abort()}catch(_){}apeListening=false;apeRecognition=null;apeUpdateMicButton()}
 apeUpdateVoiceButton();apeUpdateMicButton();
 if(apeVoiceSupported())window.speechSynthesis.onvoiceschanged=apeUpdateVoiceButton;
 voiceBtn?.addEventListener('click',()=>{apeVoiceEnabled=!apeVoiceEnabled;try{localStorage.setItem(APE_VOICE_KEY,apeVoiceEnabled?'on':'off')}catch(_){}if(!apeVoiceEnabled)apeStopVoice();apeUpdateVoiceButton()});
