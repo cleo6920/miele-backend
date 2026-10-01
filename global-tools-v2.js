@@ -59,18 +59,84 @@ function apeVoiceSupported(){return 'speechSynthesis' in window&&'SpeechSynthesi
 function apeVoiceLocale(){const l=lang();return {it:'it-IT',en:'en-US',de:'de-DE',fr:'fr-FR',es:'es-ES'}[l]||'it-IT'}
 function apeVoicePick(locale){
   if(!apeVoiceSupported())return null;
-  const voices=window.speechSynthesis.getVoices()||[],base=String(locale||'it-IT').slice(0,2).toLowerCase();
-  const preferred=/elsa|alice|federica|isabella|silvia|paola|natural|neural|enhanced|premium|google.*ital/i;
-  const avoid=/compact|novelty|robot|whisper/i;
-  return voices.map(v=>{const vl=String(v.lang||'').toLowerCase(),name=String(v.name||'');let score=0;if(vl===String(locale||'').toLowerCase())score+=120;else if(vl.startsWith(base))score+=90;if(preferred.test(name))score+=45;if(/microsoft|google|apple/i.test(name))score+=12;if(v.localService)score+=8;if(avoid.test(name))score-=120;return{v,score}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score)[0]?.v||null;
+  const voices=window.speechSynthesis.getVoices()||[];
+  const wanted=String(locale||'it-IT').toLowerCase(),base=wanted.slice(0,2);
+  const warm=/natural|neural|online|premium|enhanced|elsa|isabella|alice|federica|paola|silvia|giorgia|bianca/i;
+  const trusted=/microsoft|google|apple/i;
+  const harsh=/desktop|compact|novelty|robot|whisper|espeak/i;
+  return voices
+    .map(v=>{
+      const lang=String(v.lang||'').toLowerCase(),name=String(v.name||'');
+      let score=0;
+      if(lang===wanted)score+=180;
+      else if(lang.startsWith(base))score+=125;
+      else return {v,score:-999};
+      if(/natural|neural|online|premium|enhanced/i.test(name))score+=150;
+      if(warm.test(name))score+=70;
+      if(trusted.test(name))score+=20;
+      if(harsh.test(name))score-=110;
+      return {v,score};
+    })
+    .sort((a,b)=>b.score-a.score)[0]?.v||null;
 }
-function apeSpeechClean(value){return String(value||'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,' ').replace(/<[^>]*>/g,' ').replace(/[\*_#\x60]/g,' ').replace(/[🐝→]/g,' ').replace(/\s+/g,' ').trim()}
+function apeSpeechClean(value){
+  return String(value||'')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1')
+    .replace(/https?:\/\/\S+/g,' ')
+    .replace(/<[^>]*>/g,' ')
+    .replace(/[\*_#\x60]/g,' ')
+    .replace(/[🐝→•]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function apeSpeechChunks(text){
+  const pieces=String(text||'').match(/[^.!?…]+[.!?…]?/g)||[String(text||'')];
+  const out=[];
+  for(const piece of pieces){
+    const s=piece.trim();
+    if(!s)continue;
+    if(s.length<=180){out.push(s);continue}
+    const parts=s.split(/[,;:]\s+/);
+    let current='';
+    for(const p of parts){
+      const next=current?current+', '+p:p;
+      if(next.length>180&&current){out.push(current);current=p}else current=next;
+    }
+    if(current)out.push(current);
+  }
+  return out;
+}
+let apeSpeechToken=0;
 function apeSpeak(value){
   if(!apeVoiceEnabled||!apeVoiceSupported())return;
   const text=apeSpeechClean(value);if(!text)return;
-  try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=apeVoiceLocale();u.rate=.92;u.pitch=1.03;u.volume=1;const v=apeVoicePick(u.lang);if(v)u.voice=v;window.speechSynthesis.speak(u)}catch(_){}
+  const token=++apeSpeechToken,locale=apeVoiceLocale();
+  try{window.speechSynthesis.cancel()}catch(_){}
+  const start=(attempt=0)=>{
+    if(token!==apeSpeechToken||!apeVoiceEnabled)return;
+    const voices=window.speechSynthesis.getVoices()||[];
+    if(!voices.length&&attempt<5){setTimeout(()=>start(attempt+1),160);return}
+    const voice=apeVoicePick(locale),chunks=apeSpeechChunks(text);
+    let index=0;
+    const next=()=>{
+      if(token!==apeSpeechToken||!apeVoiceEnabled||index>=chunks.length)return;
+      try{
+        const u=new SpeechSynthesisUtterance(chunks[index++]);
+        u.lang=locale;
+        u.rate=.89;
+        u.pitch=.96;
+        u.volume=1;
+        if(voice)u.voice=voice;
+        u.onend=()=>setTimeout(next,85);
+        u.onerror=()=>setTimeout(next,40);
+        window.speechSynthesis.speak(u);
+      }catch(_){}
+    };
+    next();
+  };
+  start();
 }
-function apeStopVoice(){try{if(apeVoiceSupported())window.speechSynthesis.cancel()}catch(_){}}
+function apeStopVoice(){apeSpeechToken++;try{if(apeVoiceSupported())window.speechSynthesis.cancel()}catch(_){}}
 function apeUpdateVoiceButton(){
   if(!voiceBtn)return;
   if(!apeVoiceSupported()){voiceBtn.style.display='none';return}
