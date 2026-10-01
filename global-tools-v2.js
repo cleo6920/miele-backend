@@ -49,12 +49,66 @@ function render(){const q=(input&&input.value||'').trim();if(!q){closeResults();
 function setActive(n){const bs=[...results.querySelectorAll('.global-search-result')];if(!bs.length)return;bs.forEach(b=>b.classList.remove('active'));active=(n+bs.length)%bs.length;bs[active].classList.add('active')}
 if(input&&results&&goBtn){input.oninput=render;input.onfocus=()=>{if(input.value.trim())render()};input.onkeydown=e=>{if(e.key==='ArrowDown'){e.preventDefault();if(!matches.length)render();setActive(active+1)}else if(e.key==='ArrowUp'){e.preventDefault();setActive(active-1)}else if(e.key==='Enter'){e.preventDefault();if(!matches.length)matches=find(input.value);go(matches[active>=0?active:0])}else if(e.key==='Escape'){closeResults();input.blur()}};goBtn.onclick=()=>{matches=find(input.value);if(matches[0])go(matches[0]);else render()};document.addEventListener('click',e=>{if(root&&!root.contains(e.target))closeResults()})}
 const launch=document.getElementById('apeChatLaunch');if(!launch)return;
-const panel=document.createElement('section');panel.className='global-ape-panel';panel.id='globalApePanel';panel.innerHTML='<div class="global-ape-head"><div class="bee">🐝</div><div><strong>Ape Pelù</strong><small>La tua guida nella Fabbrica delle Api</small></div><button class="global-ape-close" type="button">×</button></div><div class="global-ape-messages" id="globalApeMessages"><div class="global-ape-msg bot">Ciao, sono Ape Pelù 🐝<br>Posso accompagnarti tra api, Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, prodotti, Linea Veleni, Punti Ape, ordini e spedizioni. Cosa ti incuriosisce?</div></div><form class="global-ape-input" id="globalApeForm"><input id="globalApeInput" autocomplete="off" placeholder="Scrivi la tua domanda..."><button type="submit">Invia</button></form><div class="global-ape-note">Ape Pelù informa e orienta. Non sostituisce un medico o un professionista sanitario.</div>';document.body.appendChild(panel);
+const panel=document.createElement('section');panel.className='global-ape-panel';panel.id='globalApePanel';panel.innerHTML='<div class="global-ape-head"><div class="bee">🐝</div><div><strong>Ape Telù</strong><small>La tua guida nella Fabbrica delle Api</small></div><button class="global-ape-voice" id="globalApeVoice" type="button" aria-label="Voce di Ape Telù" title="Voce di Ape Telù" style="margin-left:auto;border:0;background:rgba(255,255,255,.12);color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer">🔊</button><button class="global-ape-close" type="button">×</button></div><div class="global-ape-messages" id="globalApeMessages"><div class="global-ape-msg bot">Ciao, sono Ape Telù 🐝<br>Posso accompagnarti tra api, Alveoterapia Integrata, Oasi del Busatello, Galena delle Api, prodotti, Linea Veleni, Punti Ape, ordini e spedizioni. Cosa ti incuriosisce?</div></div><form class="global-ape-input" id="globalApeForm"><input id="globalApeInput" autocomplete="off" placeholder="Scrivi o parla con Ape Telù..."><button id="globalApeMic" type="button" aria-label="Parla con Ape Telù" title="Parla con Ape Telù" style="border:0;border-radius:999px;padding:0 12px;font-size:18px;cursor:pointer;background:#f0b52f">🎙️</button><button type="submit">Invia</button></form><div class="global-ape-note">Ape Telù informa e orienta. Non sostituisce un medico o un professionista sanitario.</div>';document.body.appendChild(panel);
 const msgs=panel.querySelector('#globalApeMessages'),form=panel.querySelector('#globalApeForm'),qIn=panel.querySelector('#globalApeInput');let hist=[];
-launch.onclick=()=>{panel.classList.toggle('open');if(panel.classList.contains('open'))setTimeout(()=>qIn.focus(),40)};
-panel.querySelector('.global-ape-close').onclick=()=>panel.classList.remove('open');
+const voiceBtn=panel.querySelector('#globalApeVoice'),micBtn=panel.querySelector('#globalApeMic');
+const APE_VOICE_KEY='fda-ape-telu-voice-v1';
+let apeVoiceEnabled=true,apeVoiceGreeted=false,apeRecognition=null,apeListening=false;
+try{apeVoiceEnabled=localStorage.getItem(APE_VOICE_KEY)!=='off'}catch(_){}
+function apeVoiceSupported(){return 'speechSynthesis' in window&&'SpeechSynthesisUtterance' in window}
+function apeVoiceLocale(){const l=lang();return {it:'it-IT',en:'en-US',de:'de-DE',fr:'fr-FR',es:'es-ES'}[l]||'it-IT'}
+function apeVoicePick(locale){
+  if(!apeVoiceSupported())return null;
+  const voices=window.speechSynthesis.getVoices()||[],base=String(locale||'it-IT').slice(0,2).toLowerCase();
+  const preferred=/elsa|alice|federica|isabella|silvia|paola|natural|neural|enhanced|premium|google.*ital/i;
+  const avoid=/compact|novelty|robot|whisper/i;
+  return voices.map(v=>{const vl=String(v.lang||'').toLowerCase(),name=String(v.name||'');let score=0;if(vl===String(locale||'').toLowerCase())score+=120;else if(vl.startsWith(base))score+=90;if(preferred.test(name))score+=45;if(/microsoft|google|apple/i.test(name))score+=12;if(v.localService)score+=8;if(avoid.test(name))score-=120;return{v,score}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score)[0]?.v||null;
+}
+function apeSpeechClean(value){return String(value||'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,' ').replace(/<[^>]*>/g,' ').replace(/[\*_#\x60]/g,' ').replace(/[🐝→]/g,' ').replace(/\s+/g,' ').trim()}
+function apeSpeak(value){
+  if(!apeVoiceEnabled||!apeVoiceSupported())return;
+  const text=apeSpeechClean(value);if(!text)return;
+  try{window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=apeVoiceLocale();u.rate=.92;u.pitch=1.03;u.volume=1;const v=apeVoicePick(u.lang);if(v)u.voice=v;window.speechSynthesis.speak(u)}catch(_){}
+}
+function apeStopVoice(){try{if(apeVoiceSupported())window.speechSynthesis.cancel()}catch(_){}}
+function apeUpdateVoiceButton(){
+  if(!voiceBtn)return;
+  if(!apeVoiceSupported()){voiceBtn.style.display='none';return}
+  voiceBtn.textContent=apeVoiceEnabled?'🔊':'🔇';
+  voiceBtn.title=apeVoiceEnabled?'Disattiva la voce di Ape Telù':'Attiva la voce di Ape Telù';
+  voiceBtn.setAttribute('aria-label',voiceBtn.title);
+}
+function apeRecognitionCtor(){return window.SpeechRecognition||window.webkitSpeechRecognition||null}
+function apeUpdateMicButton(){
+  if(!micBtn)return;
+  if(!apeRecognitionCtor()){micBtn.style.display='none';return}
+  micBtn.textContent=apeListening?'⏹️':'🎙️';
+  micBtn.title=apeListening?'Ferma ascolto':'Parla con Ape Telù';
+  micBtn.setAttribute('aria-label',micBtn.title);
+  micBtn.style.background=apeListening?'#f3d6cf':'#f0b52f';
+}
+function apeStartListening(){
+  const Ctor=apeRecognitionCtor();if(!Ctor||apeListening)return;
+  apeStopVoice();
+  try{
+    const rec=new Ctor();apeRecognition=rec;apeListening=true;apeUpdateMicButton();
+    rec.lang=apeVoiceLocale();rec.interimResults=false;rec.continuous=false;rec.maxAlternatives=1;
+    rec.onresult=e=>{const transcript=String(e.results?.[0]?.[0]?.transcript||'').trim();if(transcript){qIn.value=transcript;setTimeout(()=>{if(form.requestSubmit)form.requestSubmit();else form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))},80)}};
+    rec.onerror=()=>{};
+    rec.onend=()=>{apeListening=false;apeRecognition=null;apeUpdateMicButton()};
+    rec.start();
+  }catch(_){apeListening=false;apeRecognition=null;apeUpdateMicButton()}
+}
+function apeStopListening(){try{apeRecognition?.stop()}catch(_){}apeListening=false;apeRecognition=null;apeUpdateMicButton()}
+apeUpdateVoiceButton();apeUpdateMicButton();
+if(apeVoiceSupported())window.speechSynthesis.onvoiceschanged=apeUpdateVoiceButton;
+voiceBtn?.addEventListener('click',()=>{apeVoiceEnabled=!apeVoiceEnabled;try{localStorage.setItem(APE_VOICE_KEY,apeVoiceEnabled?'on':'off')}catch(_){}if(!apeVoiceEnabled)apeStopVoice();apeUpdateVoiceButton()});
+micBtn?.addEventListener('click',()=>{if(apeListening)apeStopListening();else apeStartListening()});
+
+launch.onclick=()=>{panel.classList.toggle('open');if(panel.classList.contains('open')){setTimeout(()=>qIn.focus(),40);if(!apeVoiceGreeted){apeVoiceGreeted=true;setTimeout(()=>{const first=panel.querySelector('.global-ape-msg.bot');apeSpeak(first?first.innerText:'Ciao, sono Ape Telù. Cosa ti incuriosisce?')},120)}}else{apeStopListening();apeStopVoice()}};
+panel.querySelector('.global-ape-close').onclick=()=>{panel.classList.remove('open');apeStopListening();apeStopVoice()};
 function add(v,w){const d=document.createElement('div');d.className='global-ape-msg '+w;d.innerHTML=v;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
 function fmt(v){return esc(v).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}
 function lang(){try{const v=localStorage.getItem('fda-site-language');if(['it','en','de','fr','es'].includes(v))return v}catch(_){}return'it'}
-form.onsubmit=async e=>{e.preventDefault();const message=qIn.value.trim();if(!message)return;qIn.value='';add(esc(message),'user');const h=hist.slice(-8);hist.push({role:'user',content:message});const wait=document.createElement('div');wait.className='global-ape-msg bot';wait.textContent='Sto cercando la risposta…';msgs.appendChild(wait);try{const res=await fetch('/api/ape-pelu-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,language:lang(),history:h})});const data=await res.json();wait.remove();const reply=data&&data.reply?String(data.reply):'Non riesco a rispondere in questo momento.';add(fmt(reply),'bot');hist.push({role:'assistant',content:reply.replace(/\*\*/g,'')});if(data&&data.action&&data.action.href){const a=document.createElement('a');a.className='global-ape-action';a.href=data.action.href;a.textContent=data.action.label||'Vai alla sezione →';msgs.appendChild(a)}}catch(_){wait.remove();add('Non riesco a rispondere in questo momento. Riprova tra poco.','bot')}};
+form.onsubmit=async e=>{e.preventDefault();const message=qIn.value.trim();if(!message)return;apeStopListening();apeStopVoice();qIn.value='';add(esc(message),'user');const h=hist.slice(-8);hist.push({role:'user',content:message});const wait=document.createElement('div');wait.className='global-ape-msg bot';wait.textContent='Sto cercando la risposta…';msgs.appendChild(wait);try{const res=await fetch('/api/ape-pelu-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,language:lang(),history:h})});const data=await res.json();wait.remove();const reply=data&&data.reply?String(data.reply):'Non riesco a rispondere in questo momento.';add(fmt(reply),'bot');apeSpeak(reply);hist.push({role:'assistant',content:reply.replace(/\*\*/g,'')});if(data&&data.action&&data.action.href){const a=document.createElement('a');a.className='global-ape-action';a.href=data.action.href;a.textContent=data.action.label||'Vai alla sezione →';msgs.appendChild(a)}}catch(_){wait.remove();const msg='Non riesco a rispondere in questo momento. Riprova tra poco.';add(msg,'bot');apeSpeak(msg)}};
 })();
