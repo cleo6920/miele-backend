@@ -426,6 +426,16 @@ img{display:block;max-width:100%}
 .free-open-card{outline:2px solid rgba(221,169,46,.32)}
 .free-open-card .catalog-points{background:#e3f4dd;color:#315d29}
 @media(max-width:620px){#freeEditionModal{padding:26px 18px 22px}}
+
+/* Promozione spedizioni: solo nello shop */
+.shipping-promo{background:#f8e7b5;color:#17372a;border-bottom:3px solid #c38c23;padding:14px 16px;text-align:center}
+.shipping-promo-inner{max-width:1120px;margin:auto;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-size:16px}
+.shipping-promo strong{font-size:20px;font-weight:900}
+.shipping-promo .shipping-tag{background:#123d2c;color:#fff;border-radius:999px;padding:6px 13px;font-weight:800}
+.shipping-progress{margin:12px 0;padding:12px;background:#fff6db;color:#17372a;border:1px solid #e4c16d;border-radius:12px;font-weight:800}
+.shipping-progress-track{height:8px;background:#e7d5a7;border-radius:99px;overflow:hidden;margin-top:8px}
+.shipping-progress-fill{height:100%;background:#23704a;width:0%;transition:width .2s}
+@media(max-width:620px){.shipping-promo-inner{font-size:14px;gap:7px}.shipping-promo strong{font-size:18px}}
 </style>
 <link rel="stylesheet" href="/global-nav-v2.css?v=20260922-1">
 </head>
@@ -480,6 +490,7 @@ img{display:block;max-width:100%}
 </div>
 
 <main>
+<section class="shipping-promo" aria-label="Promozione spedizioni Italia"><div class="shipping-promo-inner"><span class="shipping-tag">🚚 SPEDIZIONI ITALIA</span><strong>Solo 6 €</strong><span>· GRATIS da 69,90 € di prodotti</span></div></section>
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="wrap hero-inner">
@@ -792,7 +803,7 @@ img{display:block;max-width:100%}
 <aside class="cart-drawer" id="cartDrawer" aria-label="Cestino">
   <div class="cart-head"><h2>Il tuo cestino</h2><button class="cart-close" id="cartClose" type="button">×</button></div>
   <div class="cart-items" id="cartItems"></div>
-  <div class="cart-foot"><div class="cart-points"><span>🐝 Punti Ape di questo ordine</span><span id="cartPoints">0</span></div><div class="cart-total"><span>Totale prodotti</span><span id="cartTotal">€0,00</span></div><button class="checkout-new" type="button" id="startCheckout">Continua con l'ordine →</button><div class="cart-note">100 Punti Ape = cesto omaggio con 5 prodotti a scelta.</div></div>
+  <div class="cart-foot"><div class="shipping-progress" id="shippingProgress" aria-live="polite"><span id="shippingProgressText">Spedizione gratuita in Italia da 69,90 €</span><div class="shipping-progress-track"><div class="shipping-progress-fill" id="shippingProgressFill"></div></div></div><div class="cart-points"><span>🐝 Punti Ape di questo ordine</span><span id="cartPoints">0</span></div><div class="cart-total"><span>Totale prodotti</span><span id="cartTotal">€0,00</span></div><button class="checkout-new" type="button" id="startCheckout">Continua con l'ordine →</button><div class="cart-note">100 Punti Ape = cesto omaggio con 5 prodotti a scelta.</div></div>
 </aside>
 
 
@@ -1079,6 +1090,11 @@ function addV2Product(btn){
 
 function removeV2Product(id){shopV2Cart=shopV2Cart.filter(x=>x.id!==id);saveV2Cart();}
 function renderV2Cart(){
+  const progressText=document.getElementById('shippingProgressText');
+  const progressFill=document.getElementById('shippingProgressFill');
+  const remaining=Math.max(0,69.90-cartTotal());
+  if(progressText) progressText.textContent=cartTotal()>=69.90?'🎉 Hai raggiunto la spedizione gratuita in Italia!':cartTotal()>0?'Ti mancano '+euro(remaining)+' per la spedizione gratuita in Italia!':'Spedizione gratuita in Italia da 69,90 €';
+  if(progressFill)progressFill.style.width=Math.min(100,Math.max(0,cartTotal()/69.90*100))+'%';
   const box=document.getElementById('cartItems');
   const count=shopV2Cart.reduce((s,x)=>s+x.qty,0);
   document.getElementById('cartCount').textContent=count;
