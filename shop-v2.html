@@ -1017,7 +1017,7 @@ async function calculateShipping(){
     return shippingState;
   }
   const country=document.getElementById('coCountry').value||'IT';
-  if(country==='IT' && cartTotal()>=200){
+  if(country==='IT' && cartTotal()>=69.90){
     const estimate=await fetch('/api/shipping-estimate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({country,items:shopV2Cart.filter(x=>x.id!=='alveo-digitale-10-colazioni').map(x=>({id:x.id,qty:x.qty}))})}).then(r=>r.json()).catch(()=>null);
     shippingState={cost:0,pending:false,weightKg:Number(estimate?.weightKg||0),label:purchaseT('free'),reason:purchaseT('order200Reason')};
     return shippingState;
@@ -1049,8 +1049,8 @@ async function calculateShipping(){
   }
 
   shippingState={
-    cost:Number(estimate.cost||0),pending:false,weightKg:Number(estimate.weightKg||0),zone:estimate.zone||'',
-    label:euro(estimate.cost),
+    cost:(country==='IT' && [8,10].includes(Number(estimate.cost))) ? 6 : Number(estimate.cost||0),pending:false,weightKg:Number(estimate.weightKg||0),zone:estimate.zone||'',
+    label:euro((country==='IT' && [8,10].includes(Number(estimate.cost))) ? 6 : Number(estimate.cost||0)),
     reason:country==='IT'
       ? purchaseT('posteItalyReason')(Number(estimate.weightKg||0))
       : purchaseT('posteIntlReason')(Number(estimate.weightKg||0),estimate.zone||'')
