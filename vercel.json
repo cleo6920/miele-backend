@@ -80,6 +80,14 @@
       "destination": "/area-riservata.html"
     },
     {
+      "source": "/images/regali-natale-mondo-api.webp",
+      "destination": "https://raw.githubusercontent.com/cleo6920/miele-backend/main/images/Regali%20dal%20mondo%20delle%20api_%20Natale%20in%20festa.png"
+    },
+    {
+      "source": "/images/Regali dal mondo delle api_ Natale in festa.png",
+      "destination": "https://raw.githubusercontent.com/cleo6920/miele-backend/main/images/Regali%20dal%20mondo%20delle%20api_%20Natale%20in%20festa.png"
+    },
+    {
       "source": "/images/:path*",
       "destination": "https://miele-shop-experience-v2.onrender.com/images/:path*"
     },
