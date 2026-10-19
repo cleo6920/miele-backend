@@ -2735,5 +2735,17 @@ renderV2Cart();
 <script src="/render-language-de-test.js?v=20260923-10"></script>
 <!-- pappa-reale-fresca-deploy-20260923 -->
 <!-- deploy-edizioni-aperte-20260923-final -->
+<script id="gift-banner-image-refresh-20261019">
+(function(){
+  const newBanner='/images/Regali%20dal%20mondo%20delle%20api_%20Natale%20in%20festa.png?v=20261019';
+  function refreshGiftBanner(){
+    document.querySelectorAll('img[src*="regali-natale-mondo-api.webp"], #gift-visual img').forEach(function(img){
+      if(img.getAttribute('src')!==newBanner) img.setAttribute('src',newBanner);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',refreshGiftBanner);
+  else refreshGiftBanner();
+})();
+</script>
 </body>
 </html>
