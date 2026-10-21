@@ -183,7 +183,11 @@ function pointsForItem(item) {
   let bonusPerUnit = 0;
   let calculation = 'fascia-prezzo';
 
-  if (productId === 'alveo-digitale-10-colazioni' || /10 Colazioni dell[’']Alveare/i.test(productName)) {
+  if (productId === 'regalo-sapori-del-bosco') {
+    perUnit = 6;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Sapori del Bosco = 6 Punti Ape';
+  } else if (productId === 'alveo-digitale-10-colazioni' || /10 Colazioni dell[’']Alveare/i.test(productName)) {
     perUnit = 2;
     bonusPerUnit = 0;
     calculation = 'Alveo Digitale = 2 Api';
