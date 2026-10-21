@@ -57,6 +57,12 @@ module.exports = async (req, res) => {
           return res.status(400).json({ error: 'Prezzo o quantità non valida per Sapori del Bosco.' });
         }
       }
+      if (id === 'regalo-b02-pausa-doro' || id === 'regalo-b03-abbraccio-dautunno') {
+        const item = sanitizedItems[i];
+        if (Math.round(item.amount * 100) !== 1390 || item.quantity !== 1) {
+          return res.status(400).json({ error: 'Prezzo o quantità non valida per la confezione regalo.' });
+        }
+      }
       if (id === 'regalo-b01-dolce-incontro') {
         const item = sanitizedItems[i];
         if (Math.round(item.amount * 100) !== 1390 || item.quantity !== 1) {
