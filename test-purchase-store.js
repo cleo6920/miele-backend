@@ -183,7 +183,13 @@ function pointsForItem(item) {
   let bonusPerUnit = 0;
   let calculation = 'fascia-prezzo';
 
-  if (productId === 'regalo-b01-dolce-incontro') {
+  if (productId === 'regalo-b02-pausa-doro' || productId === 'regalo-b03-abbraccio-dautunno') {
+    perUnit = 3;
+    bonusPerUnit = 0;
+    calculation = productId === 'regalo-b02-pausa-doro'
+      ? 'Confezione Pausa d’Oro = 3 Punti Ape'
+      : 'Confezione Abbraccio d’Autunno = 3 Punti Ape';
+  } else if (productId === 'regalo-b01-dolce-incontro') {
     perUnit = 3;
     bonusPerUnit = 0;
     calculation = 'Confezione Dolce Incontro = 3 Punti Ape';
