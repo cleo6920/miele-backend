@@ -183,7 +183,11 @@ function pointsForItem(item) {
   let bonusPerUnit = 0;
   let calculation = 'fascia-prezzo';
 
-  if (productId === 'regalo-sapori-del-bosco') {
+  if (productId === 'regalo-b01-dolce-incontro') {
+    perUnit = 3;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Dolce Incontro = 3 Punti Ape';
+  } else if (productId === 'regalo-sapori-del-bosco') {
     perUnit = 6;
     bonusPerUnit = 0;
     calculation = 'Confezione Sapori del Bosco = 6 Punti Ape';
