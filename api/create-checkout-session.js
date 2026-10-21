@@ -48,6 +48,16 @@ module.exports = async (req, res) => {
     }
 
     const cartMeta = Array.isArray(body.xpayCart) ? body.xpayCart : [];
+    // Confezione già assemblata: prezzo approvato e massimo una unità per ordine.
+    for (let i = 0; i < sanitizedItems.length; i += 1) {
+      const id = cleanText(cartMeta[i] && cartMeta[i].productId, 180);
+      if (id === 'regalo-sapori-del-bosco') {
+        const item = sanitizedItems[i];
+        if (Math.round(item.amount * 100) !== 1800 || item.quantity !== 1) {
+          return res.status(400).json({ error: 'Prezzo o quantità non valida per Sapori del Bosco.' });
+        }
+      }
+    }
     const orderNote = cleanText(body.notes, 120);
     const isAlveoDigitalOrder =
       sanitizedItems.length === 1 &&
