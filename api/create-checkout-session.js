@@ -52,14 +52,14 @@ module.exports = async (req, res) => {
     // Prezzi autorevoli server-side per le confezioni; quantità acquistabili
     // determinate dalla giacenza reale, non più limitate artificialmente a uno.
     const GIFT_UNIT_CENTS={
-      'regalo-sapori-del-bosco':1800,
-      'regalo-b01-dolce-incontro':1390,'regalo-b02-pausa-doro':1390,'regalo-b03-abbraccio-dautunno':1390,
-      'regalo-b04-agrumi-in-fiore':2290,'regalo-b05-due-terre-un-miele':2290,'regalo-b06-essenza-di-natura':2290,
-      'regalo-t01-tre-sapori-una-storia':2090,'regalo-t02-arcobaleno-di-dolcezza':2090,
-      'regalo-t03-la-dolce-meraviglia':2690,'regalo-t04-tesori-dell-alveare':2290,
-      'regalo-t05-radici-di-miele':1790,'regalo-t06-risveglio-dorato':1890,
-      'regalo-t07-soffio-di-natura':1790,'regalo-t08-carezza-balsamica':2290,
-      'regalo-t09-intenso-incanto':2690
+      'regalo-sapori-del-bosco':2100,
+      'regalo-b01-dolce-incontro':1590,'regalo-b02-pausa-doro':1590,'regalo-b03-abbraccio-dautunno':1590,
+      'regalo-b04-agrumi-in-fiore':2490,'regalo-b05-due-terre-un-miele':2490,'regalo-b06-essenza-di-natura':2490,
+      'regalo-t01-tre-sapori-una-storia':2390,'regalo-t02-arcobaleno-di-dolcezza':2390,
+      'regalo-t03-la-dolce-meraviglia':2990,'regalo-t04-tesori-dell-alveare':2590,
+      'regalo-t05-radici-di-miele':2090,'regalo-t06-risveglio-dorato':2190,
+      'regalo-t07-soffio-di-natura':2090,'regalo-t08-carezza-balsamica':2590,
+      'regalo-t09-intenso-incanto':2990
     };
     for(let i=0;i<sanitizedItems.length;i++){
       const id=cleanText(cartMeta[i]&&cartMeta[i].productId,180);
