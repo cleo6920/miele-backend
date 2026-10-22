@@ -191,6 +191,10 @@ function pointsForItem(item) {
     perUnit = productId === 'regalo-t02-arcobaleno-di-dolcezza' ? 5 : productId === 'regalo-t03-la-dolce-meraviglia' ? 7 : 6;
     bonusPerUnit = 0;
     calculation = 'Confezione Tris = ' + perUnit + ' Punti Ape';
+  } else if (productId === 'regalo-t05-radici-di-miele') {
+    perUnit = 5;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Radici di Miele = 5 Punti Ape';
   } else if (productId === 'regalo-t01-tre-sapori-una-storia') {
     perUnit = 5;
     bonusPerUnit = 0;
