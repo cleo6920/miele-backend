@@ -70,6 +70,13 @@ module.exports = async (req, res) => {
           return res.status(400).json({ error: 'Prezzo o quantità non validi per la confezione regalo.' });
         }
       }
+      if (id === 'regalo-t02-arcobaleno-di-dolcezza' || id === 'regalo-t03-la-dolce-meraviglia' || id === 'regalo-t04-tesori-dell-alveare') {
+        const item = sanitizedItems[i];
+        const correctCents = id === 'regalo-t02-arcobaleno-di-dolcezza' ? 2090 : id === 'regalo-t03-la-dolce-meraviglia' ? 2690 : 2290;
+        if (Math.round(item.amount * 100) !== correctCents || item.quantity !== 1) {
+          return res.status(400).json({ error: 'Prezzo o quantità non validi per questa confezione regalo.' });
+        }
+      }
       if (id === 'regalo-b01-dolce-incontro') {
         const item = sanitizedItems[i];
         if (Math.round(item.amount * 100) !== 1390 || item.quantity !== 1) {
