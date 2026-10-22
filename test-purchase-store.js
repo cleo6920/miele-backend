@@ -183,7 +183,15 @@ function pointsForItem(item) {
   let bonusPerUnit = 0;
   let calculation = 'fascia-prezzo';
 
-  if (productId === 'regalo-b02-pausa-doro' || productId === 'regalo-b03-abbraccio-dautunno') {
+  if (productId === 'regalo-b04-agrumi-in-fiore' || productId === 'regalo-b05-due-terre-un-miele' || productId === 'regalo-b06-essenza-di-natura') {
+    perUnit = 6;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Bis Vaccaro = 6 Punti Ape';
+  } else if (productId === 'regalo-t01-tre-sapori-una-storia') {
+    perUnit = 5;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Tre Sapori, Una Storia = 5 Punti Ape';
+  } else if (productId === 'regalo-b02-pausa-doro' || productId === 'regalo-b03-abbraccio-dautunno') {
     perUnit = 3;
     bonusPerUnit = 0;
     calculation = productId === 'regalo-b02-pausa-doro'
