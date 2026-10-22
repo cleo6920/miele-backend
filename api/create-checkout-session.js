@@ -53,13 +53,13 @@ module.exports = async (req, res) => {
     // determinate dalla giacenza reale, non più limitate artificialmente a uno.
     const GIFT_UNIT_CENTS={
       'regalo-sapori-del-bosco':2100,
-      'regalo-b01-dolce-incontro':1590,'regalo-b02-pausa-doro':1590,'regalo-b03-abbraccio-dautunno':1590,
-      'regalo-b04-agrumi-in-fiore':2490,'regalo-b05-due-terre-un-miele':2490,'regalo-b06-essenza-di-natura':2490,
-      'regalo-t01-tre-sapori-una-storia':2390,'regalo-t02-arcobaleno-di-dolcezza':2390,
-      'regalo-t03-la-dolce-meraviglia':2990,'regalo-t04-tesori-dell-alveare':2590,
-      'regalo-t05-radici-di-miele':2090,'regalo-t06-risveglio-dorato':2190,
-      'regalo-t07-soffio-di-natura':2090,'regalo-t08-carezza-balsamica':2590,
-      'regalo-t09-intenso-incanto':2990
+      'regalo-b01-dolce-incontro':1400,'regalo-b02-pausa-doro':1400,'regalo-b03-abbraccio-dautunno':1400,
+      'regalo-b04-agrumi-in-fiore':2380,'regalo-b05-due-terre-un-miele':2380,'regalo-b06-essenza-di-natura':2380,
+      'regalo-t01-tre-sapori-una-storia':2100,'regalo-t02-arcobaleno-di-dolcezza':2100,
+      'regalo-t03-la-dolce-meraviglia':2690,'regalo-t04-tesori-dell-alveare':2380,
+      'regalo-t05-radici-di-miele':1880,'regalo-t06-risveglio-dorato':1980,
+      'regalo-t07-soffio-di-natura':1880,'regalo-t08-carezza-balsamica':2380,
+      'regalo-t09-intenso-incanto':2780
     };
     for(let i=0;i<sanitizedItems.length;i++){
       const id=cleanText(cartMeta[i]&&cartMeta[i].productId,180);
