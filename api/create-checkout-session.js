@@ -77,6 +77,12 @@ module.exports = async (req, res) => {
           return res.status(400).json({ error: 'Prezzo o quantità non validi per questa confezione regalo.' });
         }
       }
+      if (id === 'regalo-t05-radici-di-miele') {
+        const item = sanitizedItems[i];
+        if (Math.round(item.amount * 100) !== 1790 || item.quantity !== 1) {
+          return res.status(400).json({ error: 'Prezzo o quantità non validi per Radici di Miele.' });
+        }
+      }
       if (id === 'regalo-b01-dolce-incontro') {
         const item = sanitizedItems[i];
         if (Math.round(item.amount * 100) !== 1390 || item.quantity !== 1) {
