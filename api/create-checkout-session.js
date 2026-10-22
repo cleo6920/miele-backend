@@ -63,6 +63,13 @@ module.exports = async (req, res) => {
           return res.status(400).json({ error: 'Prezzo o quantità non valida per la confezione regalo.' });
         }
       }
+      if (id === 'regalo-b04-agrumi-in-fiore' || id === 'regalo-b05-due-terre-un-miele' || id === 'regalo-b06-essenza-di-natura' || id === 'regalo-t01-tre-sapori-una-storia') {
+        const item = sanitizedItems[i];
+        const correctAmount = id === 'regalo-t01-tre-sapori-una-storia' ? 2090 : 2290;
+        if (Math.round(item.amount * 100) !== correctAmount || item.quantity !== 1) {
+          return res.status(400).json({ error: 'Prezzo o quantità non validi per la confezione regalo.' });
+        }
+      }
       if (id === 'regalo-b01-dolce-incontro') {
         const item = sanitizedItems[i];
         if (Math.round(item.amount * 100) !== 1390 || item.quantity !== 1) {
