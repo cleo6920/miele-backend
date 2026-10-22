@@ -48,52 +48,24 @@ module.exports = async (req, res) => {
     }
 
     const cartMeta = Array.isArray(body.xpayCart) ? body.xpayCart : [];
-    // Confezione già assemblata: prezzo approvato e massimo una unità per ordine.
-    for (let i = 0; i < sanitizedItems.length; i += 1) {
-      const id = cleanText(cartMeta[i] && cartMeta[i].productId, 180);
-      if (id === 'regalo-sapori-del-bosco') {
-        const item = sanitizedItems[i];
-        if (Math.round(item.amount * 100) !== 1800 || item.quantity !== 1) {
-          return res.status(400).json({ error: 'Prezzo o quantità non valida per Sapori del Bosco.' });
-        }
-      }
-      if (id === 'regalo-b02-pausa-doro' || id === 'regalo-b03-abbraccio-dautunno') {
-        const item = sanitizedItems[i];
-        if (Math.round(item.amount * 100) !== 1390 || item.quantity !== 1) {
-          return res.status(400).json({ error: 'Prezzo o quantità non valida per la confezione regalo.' });
-        }
-      }
-      if (id === 'regalo-b04-agrumi-in-fiore' || id === 'regalo-b05-due-terre-un-miele' || id === 'regalo-b06-essenza-di-natura' || id === 'regalo-t01-tre-sapori-una-storia') {
-        const item = sanitizedItems[i];
-        const correctAmount = id === 'regalo-t01-tre-sapori-una-storia' ? 2090 : 2290;
-        if (Math.round(item.amount * 100) !== correctAmount || item.quantity !== 1) {
-          return res.status(400).json({ error: 'Prezzo o quantità non validi per la confezione regalo.' });
-        }
-      }
-      if (id === 'regalo-t02-arcobaleno-di-dolcezza' || id === 'regalo-t03-la-dolce-meraviglia' || id === 'regalo-t04-tesori-dell-alveare') {
-        const item = sanitizedItems[i];
-        const correctCents = id === 'regalo-t02-arcobaleno-di-dolcezza' ? 2090 : id === 'regalo-t03-la-dolce-meraviglia' ? 2690 : 2290;
-        if (Math.round(item.amount * 100) !== correctCents || item.quantity !== 1) {
-          return res.status(400).json({ error: 'Prezzo o quantità non validi per questa confezione regalo.' });
-        }
-      }
-      if (Object.prototype.hasOwnProperty.call({'regalo-t06-risveglio-dorato':1890, 'regalo-t08-carezza-balsamica':2290, 'regalo-t09-intenso-incanto':2690}, id)) {
-        const item = sanitizedItems[i];
-        const correctCents = ({'regalo-t06-risveglio-dorato':1890, 'regalo-t08-carezza-balsamica':2290, 'regalo-t09-intenso-incanto':2690})[id];
-        if (Math.round(item.amount * 100) !== correctCents || item.quantity !== 1) {
-          return res.status(400).json({ error: 'Prezzo o quantità non validi per la confezione regalo selezionata.' });
-        }
-      }
-      if (id === 'regalo-t05-radici-di-miele') {
-        const item = sanitizedItems[i];
-        if (Math.round(item.amount * 100) !== 1790 || item.quantity !== 1) {
-          return res.status(400).json({ error: 'Prezzo o quantità non validi per Radici di Miele.' });
-        }
-      }
-      if (id === 'regalo-b01-dolce-incontro') {
-        const item = sanitizedItems[i];
-        if (Math.round(item.amount * 100) !== 1390 || item.quantity !== 1) {
-          return res.status(400).json({ error: 'Prezzo o quantità non valida per Dolce Incontro.' });
+
+    // Prezzi autorevoli server-side per le confezioni; quantità acquistabili
+    // determinate dalla giacenza reale, non più limitate artificialmente a uno.
+    const GIFT_UNIT_CENTS={
+      'regalo-sapori-del-bosco':1800,
+      'regalo-b01-dolce-incontro':1390,'regalo-b02-pausa-doro':1390,'regalo-b03-abbraccio-dautunno':1390,
+      'regalo-b04-agrumi-in-fiore':2290,'regalo-b05-due-terre-un-miele':2290,'regalo-b06-essenza-di-natura':2290,
+      'regalo-t01-tre-sapori-una-storia':2090,'regalo-t02-arcobaleno-di-dolcezza':2090,
+      'regalo-t03-la-dolce-meraviglia':2690,'regalo-t04-tesori-dell-alveare':2290,
+      'regalo-t05-radici-di-miele':1790,'regalo-t06-risveglio-dorato':1890,
+      'regalo-t07-soffio-di-natura':1790,'regalo-t08-carezza-balsamica':2290,
+      'regalo-t09-intenso-incanto':2690
+    };
+    for(let i=0;i<sanitizedItems.length;i++){
+      const id=cleanText(cartMeta[i]&&cartMeta[i].productId,180);
+      if(Object.prototype.hasOwnProperty.call(GIFT_UNIT_CENTS,id)){
+        if(Math.round(sanitizedItems[i].amount*100)!==GIFT_UNIT_CENTS[id]){
+          return res.status(400).json({error:'Prezzo della confezione non valido.'});
         }
       }
     }
