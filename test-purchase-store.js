@@ -191,8 +191,8 @@ function pointsForItem(item) {
     perUnit = productId === 'regalo-t02-arcobaleno-di-dolcezza' ? 5 : productId === 'regalo-t03-la-dolce-meraviglia' ? 7 : 6;
     bonusPerUnit = 0;
     calculation = 'Confezione Tris = ' + perUnit + ' Punti Ape';
-  } else if (Object.prototype.hasOwnProperty.call({'regalo-t06-risveglio-dorato':5, 'regalo-t08-carezza-balsamica':6, 'regalo-t09-intenso-incanto':7}, productId)) {
-    perUnit = ({'regalo-t06-risveglio-dorato':5, 'regalo-t08-carezza-balsamica':6, 'regalo-t09-intenso-incanto':7})[productId];
+  } else if (Object.prototype.hasOwnProperty.call({'regalo-t06-risveglio-dorato':5, 'regalo-t07-soffio-di-natura':5, 'regalo-t08-carezza-balsamica':6, 'regalo-t09-intenso-incanto':7}, productId)) {
+    perUnit = ({'regalo-t06-risveglio-dorato':5, 'regalo-t07-soffio-di-natura':5, 'regalo-t08-carezza-balsamica':6, 'regalo-t09-intenso-incanto':7})[productId];
     bonusPerUnit = 0;
     calculation = 'Confezione regalo Tris = ' + perUnit + ' Punti Ape';
   } else if (productId === 'regalo-t05-radici-di-miele') {
