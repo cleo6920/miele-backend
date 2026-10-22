@@ -187,6 +187,10 @@ function pointsForItem(item) {
     perUnit = 6;
     bonusPerUnit = 0;
     calculation = 'Confezione Bis Vaccaro = 6 Punti Ape';
+  } else if (productId === 'regalo-t02-arcobaleno-di-dolcezza' || productId === 'regalo-t03-la-dolce-meraviglia' || productId === 'regalo-t04-tesori-dell-alveare') {
+    perUnit = productId === 'regalo-t02-arcobaleno-di-dolcezza' ? 5 : productId === 'regalo-t03-la-dolce-meraviglia' ? 7 : 6;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Tris = ' + perUnit + ' Punti Ape';
   } else if (productId === 'regalo-t01-tre-sapori-una-storia') {
     perUnit = 5;
     bonusPerUnit = 0;
