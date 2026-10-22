@@ -77,6 +77,13 @@ module.exports = async (req, res) => {
           return res.status(400).json({ error: 'Prezzo o quantità non validi per questa confezione regalo.' });
         }
       }
+      if (Object.prototype.hasOwnProperty.call({'regalo-t06-risveglio-dorato':1890, 'regalo-t08-carezza-balsamica':2290, 'regalo-t09-intenso-incanto':2690}, id)) {
+        const item = sanitizedItems[i];
+        const correctCents = ({'regalo-t06-risveglio-dorato':1890, 'regalo-t08-carezza-balsamica':2290, 'regalo-t09-intenso-incanto':2690})[id];
+        if (Math.round(item.amount * 100) !== correctCents || item.quantity !== 1) {
+          return res.status(400).json({ error: 'Prezzo o quantità non validi per la confezione regalo selezionata.' });
+        }
+      }
       if (id === 'regalo-t05-radici-di-miele') {
         const item = sanitizedItems[i];
         if (Math.round(item.amount * 100) !== 1790 || item.quantity !== 1) {
