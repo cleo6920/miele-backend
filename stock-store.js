@@ -12,9 +12,22 @@ async function ensureTable(){
     enabled boolean not null default true,
     updated_at timestamptz not null default now()
   )`);
-  for(const item of CATALOG){
-    await p.query("insert into shop_stock(product_id,product_name,stock_qty) values($1,$2,$3) on conflict(product_id) do update set product_name=excluded.product_name",[item.id,item.name,['regalo-sapori-del-bosco','regalo-b01-dolce-incontro','regalo-b02-pausa-doro','regalo-b03-abbraccio-dautunno','regalo-b04-agrumi-in-fiore','regalo-b05-due-terre-un-miele','regalo-b06-essenza-di-natura','regalo-t01-tre-sapori-una-storia','regalo-t02-arcobaleno-di-dolcezza','regalo-t03-la-dolce-meraviglia','regalo-t04-tesori-dell-alveare','regalo-t05-radici-di-miele','regalo-t06-risveglio-dorato','regalo-t07-soffio-di-natura','regalo-t08-carezza-balsamica','regalo-t09-intenso-incanto'].includes(item.id)?1:null]);
-  }
+  const initial=CATALOG.map(item=>({
+    id:item.id,name:item.name,
+    qty:['regalo-sapori-del-bosco','regalo-b01-dolce-incontro','regalo-b02-pausa-doro',
+      'regalo-b03-abbraccio-dautunno','regalo-b04-agrumi-in-fiore','regalo-b05-due-terre-un-miele',
+      'regalo-b06-essenza-di-natura','regalo-t01-tre-sapori-una-storia','regalo-t02-arcobaleno-di-dolcezza',
+      'regalo-t03-la-dolce-meraviglia','regalo-t04-tesori-dell-alveare','regalo-t05-radici-di-miele',
+      'regalo-t06-risveglio-dorato','regalo-t07-soffio-di-natura','regalo-t08-carezza-balsamica',
+      'regalo-t09-intenso-incanto'].includes(item.id)?1:null
+  }));
+  // One query instead of a round trip for every catalog item; never reset recorded quantities.
+  await p.query(
+    `insert into shop_stock(product_id,product_name,stock_qty)
+     select x.id,x.name,x.qty from jsonb_to_recordset($1::jsonb) as x(id text,name text,qty integer)
+     on conflict(product_id) do update set product_name=excluded.product_name`,
+    [JSON.stringify(initial)]
+  );
 }
 async function listStock(){
   await ensureTable();
