@@ -183,7 +183,12 @@ function pointsForItem(item) {
   let bonusPerUnit = 0;
   let calculation = 'fascia-prezzo';
 
-  if (productId === 'regalo-b04-agrumi-in-fiore' || productId === 'regalo-b05-due-terre-un-miele' || productId === 'regalo-b06-essenza-di-natura') {
+  const integratoriGiftPoints = {"regalo-i01-energia-dell-alveare":7,"regalo-i02-vitalita-dell-alveare":10,"regalo-i03-il-polline-e-la-propoli":5,"regalo-i04-vitalita-naturale":7,"regalo-i06-benessere-delle-api":9,"regalo-i07-le-risorse-dell-alveare":12};
+  if (Object.prototype.hasOwnProperty.call(integratoriGiftPoints,productId)) {
+    perUnit = integratoriGiftPoints[productId];
+    bonusPerUnit = 0;
+    calculation = 'Confezione Integratori: punteggio concordato';
+  } else if (productId === 'regalo-b04-agrumi-in-fiore' || productId === 'regalo-b05-due-terre-un-miele' || productId === 'regalo-b06-essenza-di-natura') {
     perUnit = 6;
     bonusPerUnit = 0;
     calculation = 'Confezione Bis Vaccaro = 6 Punti Ape';
