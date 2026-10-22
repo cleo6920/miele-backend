@@ -28,6 +28,36 @@ async function ensureTable(){
      on conflict(product_id) do update set product_name=excluded.product_name`,
     [JSON.stringify(initial)]
   );
+  // Una sola riconciliazione dei valori provvisori "1": per le confezioni
+  // realizzabili con prodotti inventariati usiamo le quantità pianificate.
+  // Le tre confezioni BIO Vaccaro attenderanno l'arrivo dei mieli da 500 g.
+  // Le quantità eventualmente già modificate/vendute (diverse da 1) restano intatte.
+  const planned={
+    'regalo-sapori-del-bosco':1,'regalo-b01-dolce-incontro':12,
+    'regalo-b02-pausa-doro':4,'regalo-b03-abbraccio-dautunno':2,
+    'regalo-b04-agrumi-in-fiore':0,'regalo-b05-due-terre-un-miele':0,
+    'regalo-b06-essenza-di-natura':0,'regalo-t01-tre-sapori-una-storia':9,
+    'regalo-t02-arcobaleno-di-dolcezza':5,'regalo-t03-la-dolce-meraviglia':1,
+    'regalo-t04-tesori-dell-alveare':1,'regalo-t05-radici-di-miele':2,
+    'regalo-t06-risveglio-dorato':3,'regalo-t07-soffio-di-natura':2,
+    'regalo-t08-carezza-balsamica':1,'regalo-t09-intenso-incanto':1
+  };
+  const client=await p.connect();
+  try{
+    await client.query('BEGIN');
+    await client.query("create table if not exists shop_stock_migrations(marker text primary key, applied_at timestamptz not null default now())");
+    const marker=await client.query("insert into shop_stock_migrations(marker) values($1) on conflict do nothing returning marker",['gift-plan-20261022-verified-first-seed']);
+    if(marker.rowCount){
+      await client.query(
+        `update shop_stock s
+         set stock_qty=p.qty,updated_at=now()
+         from jsonb_to_recordset($1::jsonb) as p(id text,qty integer)
+         where s.product_id=p.id and s.stock_qty=1`,
+        [JSON.stringify(Object.entries(planned).map(([id,qty])=>({id,qty})))]
+      );
+    }
+    await client.query('COMMIT');
+  }catch(e){await client.query('ROLLBACK');throw e;}finally{client.release();}
 }
 async function listStock(){
   await ensureTable();
