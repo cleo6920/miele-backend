@@ -60,6 +60,10 @@ module.exports = async (req, res) => {
       'regalo-t05-radici-di-miele':1880,'regalo-t06-risveglio-dorato':1980,
       'regalo-t07-soffio-di-natura':1880,'regalo-t08-carezza-balsamica':2380,
       'regalo-t09-intenso-incanto':2780,
+      'regalo-c01-mani-e-labbra':1680,
+      'regalo-c02-dolcezza-quotidiana':1080,
+      'regalo-c03-carezza-dell-alveare':2170,
+      'regalo-c04-rituale-corpo-e-capelli':2170,
       // Dolci su ordinazione, prezzi server autorevoli.
       'regalo-d01-dolci-sorrisi':850,
       'regalo-d02-agrumi-e-sorrisi':850,
