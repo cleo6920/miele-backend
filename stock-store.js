@@ -56,6 +56,26 @@ async function ensureTable(){
         [JSON.stringify(Object.entries(planned).map(([id,qty])=>({id,qty})))]
       );
     }
+
+    // One-off, non-recurring stock allocation from approved Integratori inventory.
+    // User authorised treating Pronto Natura/KONTAK orders as ordered goods.
+    // Never refill a sold-out SKU in subsequent requests or deployments.
+    // I05 remains disabled: photograph/composition still includes Sinugem.
+    const integratoriSeed=await client.query(
+      "insert into shop_stock_migrations(marker) values($1) on conflict do nothing returning marker",
+      ['gift-integratori-ordered-allocation-20261023-v1']
+    );
+    if(integratoriSeed.rowCount){
+      const allocation=[{"id":"regalo-i01-energia-dell-alveare","qty":1,"enabled":true},{"id":"regalo-i02-vitalita-dell-alveare","qty":1,"enabled":true},{"id":"regalo-i03-il-polline-e-la-propoli","qty":1,"enabled":true},{"id":"regalo-i04-vitalita-naturale","qty":1,"enabled":true},{"id":"regalo-i05-energia-dell-alveare-plus","qty":0,"enabled":false},{"id":"regalo-i06-benessere-delle-api","qty":1,"enabled":true},{"id":"regalo-i07-le-risorse-dell-alveare","qty":1,"enabled":true}];
+      await client.query(
+        `update shop_stock s
+         set stock_qty=a.qty, enabled=a.enabled, updated_at=now()
+         from jsonb_to_recordset($1::jsonb) as a(id text,qty integer,enabled boolean)
+         where s.product_id=a.id and s.stock_qty=0`,
+        [JSON.stringify(allocation)]
+      );
+    }
+
     await client.query('COMMIT');
   }catch(e){await client.query('ROLLBACK');throw e;}finally{client.release();}
 }
