@@ -59,7 +59,14 @@ module.exports = async (req, res) => {
       'regalo-t03-la-dolce-meraviglia':2690,'regalo-t04-tesori-dell-alveare':2380,
       'regalo-t05-radici-di-miele':1880,'regalo-t06-risveglio-dorato':1980,
       'regalo-t07-soffio-di-natura':1880,'regalo-t08-carezza-balsamica':2380,
-      'regalo-t09-intenso-incanto':2780
+      'regalo-t09-intenso-incanto':2780,
+      // Integratori: six complete combinations; I05 deliberately withheld.
+      'regalo-i01-energia-dell-alveare':2790,
+      'regalo-i02-vitalita-dell-alveare':3590,
+      'regalo-i03-il-polline-e-la-propoli':2090,
+      'regalo-i04-vitalita-naturale':2490,
+      'regalo-i06-benessere-delle-api':3490,
+      'regalo-i07-le-risorse-dell-alveare':4390
     };
     for(let i=0;i<sanitizedItems.length;i++){
       const id=cleanText(cartMeta[i]&&cartMeta[i].productId,180);
@@ -68,6 +75,21 @@ module.exports = async (req, res) => {
           return res.status(400).json({error:'Prezzo della confezione non valido.'});
         }
       }
+    }
+
+    // Never sell incomplete I05, regardless of client price/stock data.
+    if(cartMeta.some(item=>cleanText(item&&item.productId,180)==='regalo-i05-energia-dell-alveare-plus')){
+      return res.status(409).json({error:'Confezione I05 in revisione: acquisto non disponibile.'});
+    }
+    // Fresh royal jelly must be handed over cold. No ordinary courier shipping.
+    const chilledIds=new Set(['regalo-i02-vitalita-dell-alveare','regalo-i06-benessere-delle-api']);
+    const hasChilled=cartMeta.some(item=>chilledIds.has(cleanText(item&&item.productId,180)));
+    const deliveryMethod=cleanText(body.deliveryMethod,20);
+    if(hasChilled && deliveryMethod!=='pickup'){
+      return res.status(409).json({error:'Le confezioni con pappa reale fresca sono disponibili solo per ritiro concordato, con trasporto refrigerato.'});
+    }
+    if(hasChilled && Number(body.shippingCostOverride||0)!==0){
+      return res.status(400).json({error:'Per il ritiro delle confezioni refrigerate non deve essere applicata la spedizione.'});
     }
     const orderNote = cleanText(body.notes, 120);
     const isAlveoDigitalOrder =
