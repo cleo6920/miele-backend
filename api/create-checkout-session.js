@@ -60,6 +60,11 @@ module.exports = async (req, res) => {
       'regalo-t05-radici-di-miele':1880,'regalo-t06-risveglio-dorato':1980,
       'regalo-t07-soffio-di-natura':1880,'regalo-t08-carezza-balsamica':2380,
       'regalo-t09-intenso-incanto':2780,
+      // Dolci su ordinazione, prezzi server autorevoli.
+      'regalo-d01-dolci-sorrisi':850,
+      'regalo-d02-agrumi-e-sorrisi':850,
+      'regalo-d03-tre-tentazioni-alla-propoli':1200,
+      'regalo-d04-tre-gusti-dell-alveare':1250,
       // Integratori: six complete combinations; I05 deliberately withheld.
       'regalo-i01-energia-dell-alveare':2790,
       'regalo-i02-vitalita-dell-alveare':3590,
