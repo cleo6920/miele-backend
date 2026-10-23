@@ -3,6 +3,31 @@ const DB_URL=String(process.env.BEE_DATABASE_URL||process.env.DATABASE_URL||'').
 let pool;
 function db(){if(!DB_URL)throw new Error('Database stock non configurato.');if(!pool)pool=new Pool({connectionString:DB_URL,max:1,idleTimeoutMillis:30000,connectionTimeoutMillis:10000});return pool;}
 const CATALOG=[{"id":"propolterapy-professional","name":"PropolTerapy Professional"},{"id":"capsule-pb","name":"Capsule Propoli P+B (5 pz)"},{"id":"capsule-propolit","name":"Capsule PROPOLIT (5 pz)"},{"id":"castagno","name":"Miele di Castagno"},{"id":"acacia-zenzero-apinfiore","name":"Miele di Acacia e Zenzero"},{"id":"miele-eucalipto-apinfiore","name":"Miele Eucalipto"},{"id":"balsammiel","name":"Balsamico Italiano"},{"id":"acacia","name":"Miele Italiano di Acacia"},{"id":"favo-integrale-bio","name":"Miele Italiano di Acacia in Favo"},{"id":"polline-italiano","name":"Polline Italiano"},{"id":"pappa-reale-italiana-bio","name":"Pappa Reale Fresca"},{"id":"orsetti-gommosi","name":"Orsetti Gommosi BIO con Propoli e Miele"},{"id":"bee-energy-bio","name":"Bee Energy BIO"},{"id":"propol-active-bio","name":"Propol Active BIO"},{"id":"propoli-30-spray-integratore","name":"Soluzione Propoli 30% Spray"},{"id":"propoli-30-alcolica-integratore","name":"Soluzione Propoli 30% con Contagocce - Alcolica"},{"id":"propoli-analcolica-integratore","name":"Soluzione Propoli con Contagocce Analcolica"},{"id":"cosmesi-crema-mani","name":"Crema Mani"},{"id":"cosmesi-burrocacao-propoli-aloe","name":"Burrocacao Propoli e Aloe Vera"},{"id":"cosmesi-burrocacao-miele-pappa-reale","name":"Burrocacao Miele e Pappa Reale"},{"id":"cosmesi-shampoo-multivitaminico","name":"Shampoo Multivitaminico"},{"id":"cosmesi-saponetta-frutti-bosco","name":"Saponetta Miele e Frutti di Bosco"},{"id":"cosmesi-saponetta-lavanda","name":"Saponetta Miele e Lavanda"},{"id":"cosmesi-saponetta-aloe-vera","name":"Saponetta Miele e Aloe Vera"},{"id":"cosmesi-candela-alveare-cera-api","name":"Candela Alveare Grande in Cera d’Api"},{"id":"cosmesi-travel-kit-benessere","name":"Kit da Viaggio Benessere dell’Alveare"},{"id":"unguento-apis","name":"SOS DOL – Unguento al Veleno d’Api"},{"id":"sos-dol-50ml","name":"SOS DOL – Unguento al Veleno d’Api"},{"id":"apis1-crema-viso-veleno-api","name":"Crema Viso al Veleno d’Api – APIS1"},{"id":"apis2-siero-viso-veleno-api","name":"Siero Viso al Veleno d’Api – APIS2"},{"id":"apis4-crema-corpo-veleno-api-manuka","name":"Crema Corpo Veleno d’Api e Miele di Manuka – APIS4"},{"id":"apis5-gommage-veleno-api-manuka","name":"Gommage Viso e Corpo Veleno d’Api e Miele di Manuka – APIS5"},{"id":"bagnodoccia-veleno-oro","name":"Bagnodoccia Veleno d’Oro – APIS7"},{"id":"tesori-limoncello","name":"Limoncello “I Tesori di Francesco”"},{"id":"tesori-liquore-caffe","name":"Liquore di Caffè “I Tesori di Francesco”"},{"id":"tesori-castagne-rum","name":"Castagne al Rum “I Tesori di Francesco”"},{"id":"regalo-sapori-del-bosco","name":"Sapori del Bosco – Confezione Tris"},{"id":"regalo-b01-dolce-incontro","name":"Dolce Incontro – Confezione Bis"},{"id":"regalo-b02-pausa-doro","name":"Pausa d’Oro – Confezione Bis"},{"id":"regalo-b03-abbraccio-dautunno","name":"Abbraccio d’Autunno – Confezione Bis"},{"id":"regalo-b04-agrumi-in-fiore","name":"Agrumi in Fiore – Confezione Bis"},{"id":"regalo-b05-due-terre-un-miele","name":"Due Terre, Un Miele – Confezione Bis"},{"id":"regalo-b06-essenza-di-natura","name":"Essenza di Natura – Confezione Bis"},{"id":"regalo-t01-tre-sapori-una-storia","name":"Tre Sapori, Una Storia – Confezione Tris"},{"id":"regalo-t02-arcobaleno-di-dolcezza","name":"Arcobaleno di Dolcezza – Confezione Tris"},{"id":"regalo-t03-la-dolce-meraviglia","name":"La Dolce Meraviglia – Confezione Tris"},{"id":"regalo-t04-tesori-dell-alveare","name":"Tesori dell’Alveare – Confezione Tris"},{"id":"regalo-t05-radici-di-miele","name":"Radici di Miele – Confezione Tris"},{"id":"regalo-t06-risveglio-dorato","name":"Risveglio Dorato – Confezione Tris"},{"id":"regalo-t07-soffio-di-natura","name":"Soffio di Natura – Confezione Tris"},{"id":"regalo-t08-carezza-balsamica","name":"Carezza Balsamica – Confezione Tris"},{"id":"regalo-t09-intenso-incanto","name":"Intenso Incanto – Confezione Tris"},{"id":"regalo-i01-energia-dell-alveare","name":"Energia dell’Alveare – Confezione Bis"},{"id":"regalo-i02-vitalita-dell-alveare","name":"Vitalità dell’Alveare – Confezione Tris"},{"id":"regalo-i03-il-polline-e-la-propoli","name":"Il Polline e la Propoli – Confezione Bis"},{"id":"regalo-i04-vitalita-naturale","name":"Vitalità Naturale – Confezione Bis"},{"id":"regalo-i05-energia-dell-alveare-plus","name":"Energia dell’Alveare Plus – Confezione Tris"},{"id":"regalo-i06-benessere-delle-api","name":"Benessere delle Api – Confezione Tris"},{"id":"regalo-i07-le-risorse-dell-alveare","name":"Le Risorse dell’Alveare – Confezione Tris"},{"id":"regalo-d01-dolci-sorrisi","name":"Dolci Sorrisi – Confezione Bis"},{"id":"regalo-d02-agrumi-e-sorrisi","name":"Agrumi e Sorrisi – Confezione Bis"},{"id":"regalo-d03-tre-tentazioni-alla-propoli","name":"Tre Tentazioni alla Propoli – Confezione Tris"},{"id":"regalo-d04-tre-gusti-dell-alveare","name":"Tre Gusti dell’Alveare – Confezione Tris"},{"id":"regalo-c01-mani-e-labbra","name":"Mani e Labbra – Confezione Bis"},{"id":"regalo-c02-dolcezza-quotidiana","name":"Dolcezza Quotidiana – Confezione Bis"},{"id":"regalo-c03-carezza-dell-alveare","name":"Carezza dell’Alveare – Confezione Tris"},{"id":"regalo-c04-rituale-corpo-e-capelli","name":"Rituale Corpo e Capelli – Confezione Tris"},{"id":"alveo-digitale-10-colazioni","name":"10 Colazioni dell’Alveare – Edizione Premium"}];
+// Giacenze condivise: prodotti Apifiore del 21 ottobre + ordini Pronto Natura confermati.
+// I prodotti Pronto Natura saranno usati solo in future composizioni corrispondenti.
+const COSMESI_BUNDLES={
+ 'regalo-c01-mani-e-labbra':{'crema-mani':1,'burrocacao-aloe':1},
+ 'regalo-c02-dolcezza-quotidiana':{'sapone-lavanda':1,'burrocacao-pappa':1},
+ 'regalo-c03-carezza-dell-alveare':{'crema-mani':1,'sapone-frutti':1,'burrocacao-pappa':1},
+ 'regalo-c04-rituale-corpo-e-capelli':{'shampoo-multivitaminico':1,'sapone-aloe':1,'burrocacao-aloe':1}
+};
+const COSMESI_POOL={'crema-mani':1,'burrocacao-aloe':1,'burrocacao-pappa':2,'sapone-lavanda':0,'sapone-frutti':1,'sapone-aloe':1,'shampoo-multivitaminico':2};
+async function ensureCosmesiPool(client){
+ await client.query("create table if not exists cosmesi_component_stock(component_id text primary key,qty integer not null check(qty>=0))");
+ await client.query(`insert into cosmesi_component_stock(component_id,qty)
+ select t.id,t.qty from jsonb_to_recordset($1::jsonb) as t(id text,qty integer)
+ on conflict(component_id) do nothing`,[JSON.stringify(Object.entries(COSMESI_POOL).map(([id,qty])=>({id,qty})))]);
+}
+function cosmesiRequirements(items){
+ const totals={};
+ for(const item of items||[]){
+  const parts=COSMESI_BUNDLES[String(item.productId||'')];
+  if(!parts)continue;
+  const qty=Math.max(1,Math.round(Number(item.quantity)||1));
+  for(const [part,count] of Object.entries(parts))totals[part]=(totals[part]||0)+count*qty;
+ }
+ return totals;
+}
 async function ensureTable(){
   const p=db();
   await p.query(`create table if not exists shop_stock(
@@ -118,6 +143,12 @@ async function ensureTable(){
         from jsonb_to_recordset($1::jsonb) as a(id text,qty integer)
         where s.product_id=a.id and s.stock_qty is null`,[JSON.stringify(allocation)]);
     }
+    // C01 può essere acquistata in alternativa a C03/C04: lo stock comune
+    // viene scalato atomicamente dal pool e impedisce vendite duplicate.
+    const expanded=await client.query("insert into shop_stock_migrations(marker) values($1) on conflict do nothing returning marker",['gift-cosmesi-shared-component-pool-20261023-v2']);
+    if(expanded.rowCount){
+      await client.query("update shop_stock set stock_qty=1,enabled=true,updated_at=now() where product_id='regalo-c01-mani-e-labbra' and stock_qty=0");
+    }
     await client.query('COMMIT');
   }catch(e){await client.query('ROLLBACK');throw e;}finally{client.release();}
 }
@@ -132,7 +163,19 @@ async function getGiftStock(ids){
   const requested = Array.isArray(ids) && ids.length ? [...new Set(ids.map(String))].filter(id=>GIFT_IDS.has(id)).slice(0,50) : [...GIFT_IDS];
   if(!requested.length)return [];
   const result = await db().query("select product_id,stock_qty,enabled,updated_at from shop_stock where product_id=any($1::text[])",[requested]);
-  return result.rows.map(row=>({id:row.product_id,available:row.stock_qty===null?null:Math.max(0,Number(row.stock_qty)),enabled:row.enabled===true,updatedAt:row.updated_at}));
+  const cosmesiRequested=requested.some(id=>COSMESI_BUNDLES[id]);
+  let parts=new Map();
+  if(cosmesiRequested){
+    await ensureCosmesiPool(db());
+    const cr=await db().query("select component_id,qty from cosmesi_component_stock");
+    parts=new Map(cr.rows.map(x=>[x.component_id,Number(x.qty)]));
+  }
+  return result.rows.map(row=>{
+    const recipe=COSMESI_BUNDLES[row.product_id];
+    const available=row.stock_qty===null?null:Math.max(0,Number(row.stock_qty));
+    const componentAvailable=recipe?Math.min(...Object.entries(recipe).map(([k,n])=>Math.floor((parts.get(k)||0)/n))):null;
+    return {id:row.product_id,available:recipe?Math.min(available===null?999999:available,componentAvailable):available,enabled:row.enabled===true,updatedAt:row.updated_at};
+  });
 }
 async function updateStock(productId,qty,enabled){
   await ensureTable();
@@ -154,6 +197,13 @@ async function checkStock(items){
     if(!row.enabled)throw new Error(row.product_name+' non è al momento disponibile.');
     if(row.stock_qty!==null && Number(row.stock_qty)<qty)throw new Error('Disponibilità insufficiente per '+row.product_name+'.');
   }
+  const requirements=cosmesiRequirements(items);
+  if(Object.keys(requirements).length){
+    await ensureCosmesiPool(db());
+    const cr=await db().query("select component_id,qty from cosmesi_component_stock where component_id=any($1::text[])",[Object.keys(requirements)]);
+    const cm=new Map(cr.rows.map(x=>[x.component_id,Number(x.qty)]));
+    for(const [id,qty] of Object.entries(requirements))if((cm.get(id)||0)<qty)throw new Error('Una componente della confezione Cosmesi non è più disponibile.');
+  }
   return true;
 }
 async function decrementStock(items){
@@ -162,6 +212,14 @@ async function decrementStock(items){
   const client=await p.connect();
   try{
     await client.query('begin');
+    const requirements=cosmesiRequirements(items);
+    if(Object.keys(requirements).length){
+      await ensureCosmesiPool(client);
+      for(const [id,qty] of Object.entries(requirements).sort(([a],[b])=>a.localeCompare(b))){
+        const cr=await client.query("update cosmesi_component_stock set qty=qty-$2 where component_id=$1 and qty >= $2 returning qty",[id,qty]);
+        if(!cr.rowCount)throw new Error('Disponibilità condivisa Cosmesi esaurita.');
+      }
+    }
     for(const item of items||[]){
       const id=String(item.productId||'').trim(),qty=Math.max(1,Math.round(Number(item.quantity)||1));
       if(!id)continue;
