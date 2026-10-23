@@ -183,7 +183,7 @@ function pointsForItem(item) {
   let bonusPerUnit = 0;
   let calculation = 'fascia-prezzo';
 
-  const integratoriGiftPoints = {"regalo-i01-energia-dell-alveare":7,"regalo-i02-vitalita-dell-alveare":10,"regalo-i03-il-polline-e-la-propoli":5,"regalo-i04-vitalita-naturale":7,"regalo-i06-benessere-delle-api":9,"regalo-i07-le-risorse-dell-alveare":12};
+  const integratoriGiftPoints = {"regalo-i01-energia-dell-alveare":7,"regalo-i02-vitalita-dell-alveare":10,"regalo-i03-il-polline-e-la-propoli":5,"regalo-i04-vitalita-naturale":7,"regalo-i05-energia-dell-alveare-plus":11,"regalo-i06-benessere-delle-api":9,"regalo-i07-le-risorse-dell-alveare":12};
   if (Object.prototype.hasOwnProperty.call(integratoriGiftPoints,productId)) {
     perUnit = integratoriGiftPoints[productId];
     bonusPerUnit = 0;
