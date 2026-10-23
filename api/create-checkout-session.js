@@ -65,6 +65,7 @@ module.exports = async (req, res) => {
       'regalo-i02-vitalita-dell-alveare':3590,
       'regalo-i03-il-polline-e-la-propoli':2090,
       'regalo-i04-vitalita-naturale':2490,
+      'regalo-i05-energia-dell-alveare-plus':3970,
       'regalo-i06-benessere-delle-api':3490,
       'regalo-i07-le-risorse-dell-alveare':4390
     };
@@ -77,10 +78,7 @@ module.exports = async (req, res) => {
       }
     }
 
-    // Never sell incomplete I05, regardless of client price/stock data.
-    if(cartMeta.some(item=>cleanText(item&&item.productId,180)==='regalo-i05-energia-dell-alveare-plus')){
-      return res.status(409).json({error:'Confezione I05 in revisione: acquisto non disponibile.'});
-    }
+    // I05 completa: validazione prezzi autorevole + controllo disponibilità nel magazzino.
     // Fresh royal jelly must be handed over cold. No ordinary courier shipping.
     const chilledIds=new Set(['regalo-i02-vitalita-dell-alveare','regalo-i06-benessere-delle-api']);
     const hasChilled=cartMeta.some(item=>chilledIds.has(cleanText(item&&item.productId,180)));
