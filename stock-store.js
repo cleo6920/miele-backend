@@ -7,11 +7,11 @@ const CATALOG=[{"id":"propolterapy-professional","name":"PropolTerapy Profession
 // I prodotti Pronto Natura saranno usati solo in future composizioni corrispondenti.
 const COSMESI_BUNDLES={
  'regalo-c01-mani-e-labbra':{'crema-mani':1,'burrocacao-aloe':1},
- 'regalo-c02-dolcezza-quotidiana':{'sapone-lavanda':1,'burrocacao-pappa':1},
+ 'regalo-c02-dolcezza-quotidiana':{'sapone-pappa-pronto-natura':1,'burrocacao-pappa':1},
  'regalo-c03-carezza-dell-alveare':{'crema-mani':1,'sapone-frutti':1,'burrocacao-pappa':1},
  'regalo-c04-rituale-corpo-e-capelli':{'shampoo-multivitaminico':1,'sapone-aloe':1,'burrocacao-aloe':1}
 };
-const COSMESI_POOL={'crema-mani':1,'burrocacao-aloe':1,'burrocacao-pappa':2,'sapone-lavanda':0,'sapone-frutti':1,'sapone-aloe':1,'shampoo-multivitaminico':2};
+const COSMESI_POOL={'crema-mani':1,'burrocacao-aloe':1,'burrocacao-pappa':2,'sapone-lavanda':0,'sapone-pappa-pronto-natura':5,'sapone-frutti':1,'sapone-aloe':1,'shampoo-multivitaminico':2};
 async function ensureCosmesiPool(client){
  await client.query("create table if not exists cosmesi_component_stock(component_id text primary key,qty integer not null check(qty>=0))");
  await client.query(`insert into cosmesi_component_stock(component_id,qty)
@@ -148,6 +148,11 @@ async function ensureTable(){
     const expanded=await client.query("insert into shop_stock_migrations(marker) values($1) on conflict do nothing returning marker",['gift-cosmesi-shared-component-pool-20261023-v2']);
     if(expanded.rowCount){
       await client.query("update shop_stock set stock_qty=1,enabled=true,updated_at=now() where product_id='regalo-c01-mani-e-labbra' and stock_qty=0");
+    }
+    // C02: sostituzione confermata con sapone Pappa Reale Pronto Natura.
+    const c02Fix=await client.query("insert into shop_stock_migrations(marker) values($1) on conflict do nothing returning marker",['gift-c02-pappa-reale-inventory-20261023-v1']);
+    if(c02Fix.rowCount){
+      await client.query("update shop_stock set stock_qty=1,enabled=true,updated_at=now() where product_id='regalo-c02-dolcezza-quotidiana' and stock_qty=0");
     }
     await client.query('COMMIT');
   }catch(e){await client.query('ROLLBACK');throw e;}finally{client.release();}
