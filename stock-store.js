@@ -44,7 +44,7 @@ async function ensureTable(){
   )`);
   const initial=CATALOG.map(item=>({
     id:item.id,name:item.name,
-    qty:item.id==='regalo-be03-respiro-dambra'?1:qty:item.id==='regalo-be02-calore-alveare'?2:item.id==='regalo-be01-magia-tre-luci'?1:item.id.startsWith('regalo-i0')?0:['regalo-sapori-del-bosco','regalo-b01-dolce-incontro','regalo-b02-pausa-doro',
+    qty:item.id==='regalo-be03-respiro-dambra'?1:item.id==='regalo-be02-calore-alveare'?2:item.id==='regalo-be01-magia-tre-luci'?1:item.id.startsWith('regalo-i0')?0:['regalo-sapori-del-bosco','regalo-b01-dolce-incontro','regalo-b02-pausa-doro',
       'regalo-b03-abbraccio-dautunno','regalo-b04-agrumi-in-fiore','regalo-b05-due-terre-un-miele',
       'regalo-b06-essenza-di-natura','regalo-t01-tre-sapori-una-storia','regalo-t02-arcobaleno-di-dolcezza',
       'regalo-t03-la-dolce-meraviglia','regalo-t04-tesori-dell-alveare','regalo-t05-radici-di-miele',
