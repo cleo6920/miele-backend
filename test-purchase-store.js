@@ -188,6 +188,10 @@ function pointsForItem(item) {
     perUnit = integratoriGiftPoints[productId];
     bonusPerUnit = 0;
     calculation = 'Confezione Integratori: punteggio concordato';
+  } else if (productId === 'regalo-be04-oro-da-accarezzare') {
+    perUnit = 12;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Benessere BE04 = 12 Punti Ape';
   } else if (productId === 'regalo-be03-respiro-dambra') {
     perUnit = 9;
     bonusPerUnit = 0;
