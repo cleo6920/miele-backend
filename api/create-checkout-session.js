@@ -69,6 +69,7 @@ module.exports = async (req, res) => {
       'regalo-c07-rituale-delicato':2070,
       'regalo-be01-magia-tre-luci':1770,
       'regalo-be02-calore-alveare':1570,
+      'regalo-be03-respiro-dambra':3270,
       // Dolci su ordinazione, prezzi server autorevoli.
       'regalo-d01-dolci-sorrisi':850,
       'regalo-d02-agrumi-e-sorrisi':850,
