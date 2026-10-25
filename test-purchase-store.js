@@ -188,6 +188,10 @@ function pointsForItem(item) {
     perUnit = integratoriGiftPoints[productId];
     bonusPerUnit = 0;
     calculation = 'Confezione Integratori: punteggio concordato';
+  } else if (productId === 'regalo-be02-calore-alveare') {
+    perUnit = 4;
+    bonusPerUnit = 0;
+    calculation = 'Confezione Benessere BE02 = 4 Punti Ape';
   } else if (productId === 'regalo-be01-magia-tre-luci') {
     perUnit = 5;
     bonusPerUnit = 0;
