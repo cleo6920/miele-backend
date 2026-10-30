@@ -40,6 +40,84 @@ function setAdminCookie(res,secret){
 function clearAdminCookie(res){
   res.setHeader('Set-Cookie',ADMIN_COOKIE+'=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0');
 }
+
+/* Recupero proprietario: ingresso monouso via email, senza esporre o cambiare la password. */
+const ADMIN_RECOVERY_OWNER_EMAIL='althea12830@gmail.com';
+const ADMIN_RECOVERY_OWNER_ID='althea12830-owner';
+const ADMIN_RECOVERY_TTL_MS=15*60*1000;
+const ADMIN_RECOVERY_COOLDOWN_MS=2*60*1000;
+const ADMIN_RECOVERY_WINDOW_MS=60*60*1000;
+async function ensureAdminRecoveryTable(){
+  const p=getTestPool();
+  await p.query("create table if not exists bee_admin_access_recovery (id text primary key, token_hash text, expires_at timestamptz, last_requested_at timestamptz, window_started_at timestamptz, request_count integer not null default 0)");
+}
+function recoveryTokenHash(token){
+  return crypto.createHmac('sha256',adminSecret()).update('recovery:'+token).digest('hex');
+}
+async function requestAdminRecovery(){
+  const key=String(process.env.RESEND_API_KEY||'').trim();
+  if(!adminSecret()||!TEST_DB_URL||!key) throw new Error('Recupero email non configurato.');
+  await ensureAdminRecoveryTable();
+  const pool=getTestPool();
+  const client=await pool.connect();
+  let token='',hash='',canSend=false;
+  try{
+    await client.query('BEGIN');
+    await client.query("insert into bee_admin_access_recovery(id) values($1) on conflict(id) do nothing",[ADMIN_RECOVERY_OWNER_ID]);
+    const data=await client.query("select last_requested_at,window_started_at,request_count,token_hash,expires_at from bee_admin_access_recovery where id=$1 for update",[ADMIN_RECOVERY_OWNER_ID]);
+    const row=data.rows[0];
+    const now=Date.now();
+    const recent=row.last_requested_at&&now-new Date(row.last_requested_at).getTime()<ADMIN_RECOVERY_COOLDOWN_MS;
+    const inWindow=row.window_started_at&&now-new Date(row.window_started_at).getTime()<ADMIN_RECOVERY_WINDOW_MS;
+    const sentInWindow=inWindow?Number(row.request_count)||0:0;
+    const active=row.token_hash&&row.expires_at&&new Date(row.expires_at).getTime()>now;
+    if(!recent&&!active&&sentInWindow<3){
+      token=crypto.randomBytes(32).toString('base64url');
+      hash=recoveryTokenHash(token);
+      const windowStart=inWindow?row.window_started_at:new Date(now);
+      await client.query("update bee_admin_access_recovery set token_hash=$2,expires_at=$3,last_requested_at=$4,window_started_at=$5,request_count=$6 where id=$1",[
+        ADMIN_RECOVERY_OWNER_ID,hash,new Date(now+ADMIN_RECOVERY_TTL_MS),new Date(now),windowStart,sentInWindow+1
+      ]);
+      canSend=true;
+    }
+    await client.query('COMMIT');
+  }catch(error){
+    try{await client.query('ROLLBACK')}catch(_){}
+    throw error;
+  }finally{client.release()}
+  if(!canSend)return {ok:true};
+  const link='https://www.lafabbricadelleapi.it/area-riservata#accesso='+encodeURIComponent(token);
+  try{
+    const response=await fetch('https://api.resend.com/emails',{
+      method:'POST',
+      headers:{Authorization:'Bearer '+key,'Content-Type':'application/json','Idempotency-Key':'admin-recovery-'+hash.slice(0,32)},
+      body:JSON.stringify({
+        from:'La Fabbrica delle Api <onboarding@resend.dev>',
+        to:[ADMIN_RECOVERY_OWNER_EMAIL],
+        subject:'Accesso temporaneo all’Area riservata – La Fabbrica delle Api',
+        text:['È stato richiesto un accesso temporaneo all’Area riservata.','','Apri questo collegamento (valido 15 minuti, una sola volta):',link,'','La tua password abituale NON viene cambiata.','Se non hai richiesto tu questo accesso, ignora il messaggio.'].join('\n')
+      })
+    });
+    if(!response.ok)throw new Error('Invio email non riuscito.');
+  }catch(error){
+    // Impedisce di utilizzare un token che non risulta consegnato.
+    await pool.query("update bee_admin_access_recovery set token_hash=null,expires_at=null,last_requested_at=null where id=$1 and token_hash=$2",[ADMIN_RECOVERY_OWNER_ID,hash]).catch(()=>{});
+    throw new Error('Invio del link di recupero non riuscito.');
+  }
+  return {ok:true};
+}
+async function consumeAdminRecovery(token){
+  const supplied=String(token||'');
+  if(!adminSecret()||!TEST_DB_URL||!/^[-_a-zA-Z0-9]{40,64}$/.test(supplied))return false;
+  await ensureAdminRecoveryTable();
+  const hash=recoveryTokenHash(supplied);
+  const result=await getTestPool().query(
+    "update bee_admin_access_recovery set token_hash=null,expires_at=null where id=$1 and token_hash=$2 and expires_at>now() returning id",
+    [ADMIN_RECOVERY_OWNER_ID,hash]
+  );
+  return result.rowCount===1;
+}
+
 async function ensureAdminOrderEventsTable(){
   const p=getTestPool();
   await p.query(`
@@ -261,6 +339,26 @@ async function handleAdminAction(req,res,action){
   if(action==='logout'){
     clearAdminCookie(res);
     return res.json({ok:true});
+  }
+  if(action==='request-recovery'){
+    try{
+      await requestAdminRecovery();
+      return res.json({ok:true,message:'Se è possibile inviare un accesso temporaneo, riceverai un messaggio nell’email amministrativa.'});
+    }catch(error){
+      console.error('[Area riservata] recupero email non disponibile:',error?.message||error);
+      return res.status(503).json({ok:false,error:'Il recupero via email non è disponibile. Riprova più tardi.'});
+    }
+  }
+  if(action==='recovery-login'){
+    try{
+      const ok=await consumeAdminRecovery(req.body?.token);
+      if(!ok)return res.status(401).json({ok:false,error:'Collegamento scaduto o già utilizzato. Richiedine uno nuovo.'});
+      setAdminCookie(res,secret);
+      return res.json({ok:true,authenticated:true});
+    }catch(error){
+      console.error('[Area riservata] verifica accesso temporaneo:',error?.message||error);
+      return res.status(503).json({ok:false,error:'Verifica temporaneamente non disponibile.'});
+    }
   }
   if(!isAdmin(req))return res.status(401).json({ok:false,error:'Accesso riservato.'});
   if(action==='orders'){
