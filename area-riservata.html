@@ -43,6 +43,9 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
   <label for="password">Password</label>
   <input id="password" type="password" autocomplete="current-password">
   <button id="loginBtn" type="button">Accedi</button>
+  <button class="alt" id="recoveryRequestBtn" type="button">Hai dimenticato la password?</button>
+  <p class="muted">Ricevi un link di accesso temporaneo all’email del titolare. La password rimane invariata.</p>
+  <div id="recoveryMsg" class="msg" role="status" aria-live="polite"></div>
   <div id="loginMsg" class="msg"></div>
 </section>
 
@@ -160,7 +163,34 @@ const loginCard=document.getElementById('loginCard'),dashboard=document.getEleme
 async function api(action,body={}){const r=await fetch('/api/bee-balance?adminAction='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'});const d=await r.json().catch(()=>({}));return {r,d};}
 function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders();loadTestTools();loadPromoCodes();loadStock()}
 function showLogin(){dashboard.style.display='none';loginCard.style.display='block'}
-(async()=>{try{const {d}=await api('status');if(d.authenticated)showDash();else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';}catch(_){}})();
+(async()=>{
+  const recoveryMsg=document.getElementById('recoveryMsg');
+  const fragment=new URLSearchParams(location.hash.slice(1));
+  const token=fragment.get('accesso');
+  if(token){
+    history.replaceState(null,'',location.pathname+location.search);
+    recoveryMsg.textContent='Verifica del collegamento di accesso…';
+    try{
+      const {r,d}=await api('recovery-login',{token});
+      if(r.ok&&d.authenticated){recoveryMsg.textContent='';showDash();return}
+      recoveryMsg.textContent=d.error||'Collegamento non valido o scaduto.';
+    }catch(_){recoveryMsg.textContent='Impossibile verificare il collegamento.'}
+  }
+  try{
+    const {d}=await api('status');
+    if(d.authenticated)showDash();
+    else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';
+  }catch(_){}
+})();
+document.getElementById('recoveryRequestBtn').addEventListener('click',async()=>{
+  const b=document.getElementById('recoveryRequestBtn'),out=document.getElementById('recoveryMsg');
+  b.disabled=true;out.textContent='Richiesta in corso…';
+  try{
+    const {r,d}=await api('request-recovery');
+    out.textContent=r.ok?'Controlla l’email del titolare. Il link, se inviato, è valido per 15 minuti. Non cambia la password.':(d.error||'Invio non disponibile.');
+  }catch(_){out.textContent='Impossibile richiedere il collegamento.'}
+  finally{b.disabled=false}
+});
 document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash();}else msg.textContent=d.error||'Accesso non riuscito.';});
 document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginBtn').click();});
 function euro(v){return Number(v||0).toFixed(2).replace('.',',')+' €'}
