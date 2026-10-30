@@ -22,19 +22,41 @@ function parseCookies(req){
 function adminToken(secret,ts){
   return ts+'.'+crypto.createHmac('sha256',secret).update('admin:'+ts).digest('hex');
 }
-function isAdmin(req){
-  const secret=adminSecret(); if(!secret)return false;
-  const token=parseCookies(req)[ADMIN_COOKIE]||'';
-  const [ts,sig]=String(token).split('.');
-  if(!/^\d+$/.test(ts)||!sig)return false;
-  const age=Date.now()-Number(ts);
-  if(age<0||age>12*60*60*1000)return false;
-  const expected=adminToken(secret,ts).split('.')[1];
-  return safeEqual(sig,expected);
+function madaSecret(){return String(process.env.MADA_ACCESS_KEY||'').trim();}
+function madaToken(secret,ts){
+  const collaboratorKey=madaSecret();
+  return 'm.'+ts+'.'+crypto.createHmac('sha256',secret).update('collaborator:mada:'+ts+':'+collaboratorKey).digest('hex');
 }
+function getAdminRole(req){
+  const secret=adminSecret();
+  if(!secret)return null;
+  const parts=String(parseCookies(req)[ADMIN_COOKIE]||'').split('.');
+  let ts,sig,expected;
+  if(parts.length===2){
+    [ts,sig]=parts;
+    expected=adminToken(secret,ts).split('.')[1];
+    if(!/^\d+$/.test(ts)||!sig)return null;
+    const age=Date.now()-Number(ts);
+    return age>=0&&age<=12*60*60*1000&&safeEqual(sig,expected)?'titolare':null;
+  }
+  if(parts.length===3&&parts[0]==='m'&&madaSecret()){
+    [,ts,sig]=parts;
+    if(!/^\d+$/.test(ts)||!sig)return null;
+    const age=Date.now()-Number(ts);
+    if(age<0||age>12*60*60*1000)return null;
+    expected=madaToken(secret,ts).split('.')[2];
+    return safeEqual(sig,expected)?'mada':null;
+  }
+  return null;
+}
+function isAdmin(req){return Boolean(getAdminRole(req));}
 function setAdminCookie(res,secret){
   const ts=String(Date.now());
   const token=adminToken(secret,ts);
+  res.setHeader('Set-Cookie',ADMIN_COOKIE+'='+encodeURIComponent(token)+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=43200');
+}
+function setMadaCookie(res,secret){
+  const token=madaToken(secret,String(Date.now()));
   res.setHeader('Set-Cookie',ADMIN_COOKIE+'='+encodeURIComponent(token)+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=43200');
 }
 function clearAdminCookie(res){
@@ -328,13 +350,22 @@ async function adminOrdersSnapshot(){
 
 async function handleAdminAction(req,res,action){
   const secret=adminSecret();
-  if(action==='status') return res.json({ok:true,configured:Boolean(secret),authenticated:Boolean(secret&&isAdmin(req))});
+  if(action==='status'){
+    const role=getAdminRole(req);
+    return res.json({ok:true,configured:Boolean(secret),authenticated:Boolean(role),role:role||null});
+  }
   if(action==='login'){
     if(!secret)return res.status(503).json({ok:false,error:'Area riservata non ancora configurata.'});
     const supplied=String(req.body?.password||'');
-    if(!safeEqual(supplied,secret))return res.status(401).json({ok:false,error:'Credenziali non valide.'});
-    setAdminCookie(res,secret);
-    return res.json({ok:true,authenticated:true});
+    if(safeEqual(supplied,secret)){
+      setAdminCookie(res,secret);
+      return res.json({ok:true,authenticated:true,role:'titolare'});
+    }
+    if(madaSecret()&&safeEqual(supplied,madaSecret())){
+      setMadaCookie(res,secret);
+      return res.json({ok:true,authenticated:true,role:'mada'});
+    }
+    return res.status(401).json({ok:false,error:'Credenziali non valide.'});
   }
   if(action==='logout'){
     clearAdminCookie(res);
@@ -354,7 +385,7 @@ async function handleAdminAction(req,res,action){
       const ok=await consumeAdminRecovery(req.body?.token);
       if(!ok)return res.status(401).json({ok:false,error:'Collegamento scaduto o già utilizzato. Richiedine uno nuovo.'});
       setAdminCookie(res,secret);
-      return res.json({ok:true,authenticated:true});
+      return res.json({ok:true,authenticated:true,role:'titolare'});
     }catch(error){
       console.error('[Area riservata] verifica accesso temporaneo:',error?.message||error);
       return res.status(503).json({ok:false,error:'Verifica temporaneamente non disponibile.'});
