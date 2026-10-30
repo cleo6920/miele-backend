@@ -30,6 +30,13 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 .code-tools code{font-family:monospace;font-size:14px;font-weight:900}
 
 .archive-toggle{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px}.archive-toggle button{width:auto;margin:0}.archive-panel{display:none;margin-top:12px}.archive-panel.open{display:block}.archive-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;align-items:end}.archive-filters label{margin:0}.archive-filters input,.archive-filters select{width:100%;padding:10px;border:1px solid #cfc7b8;border-radius:12px;background:#fff;font:inherit}.batch-result{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.batch-result .code-tools{margin-top:8px}.batch-list{display:grid;gap:6px;margin-top:10px;max-height:260px;overflow:auto}.batch-code{font-family:monospace;border:1px dashed #d4c6aa;border-radius:10px;padding:8px;background:#fffaf0}.small-note{font-size:12px;color:#708078;margin-top:6px}
+
+.dashboard-header{position:sticky;top:8px;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px 12px;box-shadow:0 4px 16px rgba(30,55,45,.11)}
+.dashboard-header h2{margin:0;font-size:22px;color:var(--g)}
+.dashboard-header #logoutBtn{flex:0 0 auto;width:auto;margin:0;padding:11px 20px;border-radius:12px;background:#8a2535;color:#fff;font-size:15px;font-weight:900}
+.dashboard-header #logoutBtn:hover,.dashboard-header #logoutBtn:focus-visible{background:#6e1c2a;outline:2px solid #e3ad31;outline-offset:2px}
+.dashboard-header #logoutBtn:disabled{opacity:.65;cursor:wait}
+@media(max-width:480px){.dashboard-header h2{font-size:19px}.dashboard-header #logoutBtn{padding:11px 15px}}
 </style>
 </head>
 <body>
@@ -50,7 +57,11 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 </section>
 
 <section class="card dashboard" id="dashboard">
-  <h2 style="margin-top:0">Gestione</h2>
+  <div class="dashboard-header">
+    <h2>Gestione</h2>
+    <button id="logoutBtn" type="button" aria-label="Esci dall’area riservata e torna alla schermata di accesso">🚪 Esci</button>
+  </div>
+  <div id="logoutMsg" class="msg" role="alert" aria-live="assertive"></div>
   <p>Accesso effettuato. Le funzioni operative verranno aggiunte qui senza modificare il sito pubblico.</p>
   <div class="grid">
     <div class="tile"><h3>🐝 Codici Punti Ape</h3><p>Generazione codici per vendite fisiche alla Galena e ai mercatini.</p><span class="badge">attivo</span></div>
@@ -155,7 +166,7 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
     <div id="ordersMsg" class="msg"></div>
     <div id="orderList" class="order-list"></div>
   </section>
-  <button id="logoutBtn" class="alt" type="button">Esci dall'area riservata</button>
+
 </section>
 </div>
 <script>
@@ -376,7 +387,22 @@ document.addEventListener('click',async e=>{
 });
 document.getElementById('copyPointsTestCode')?.addEventListener('click',e=>copyCode(document.getElementById('pointsTestCode')?.textContent,e.currentTarget));
 document.getElementById('refreshOrders').addEventListener('click',loadOrders);
-document.getElementById('logoutBtn').addEventListener('click',async()=>{await api('logout');showLogin();});
+document.getElementById('logoutBtn').addEventListener('click',async()=>{
+  const button=document.getElementById('logoutBtn');
+  const feedback=document.getElementById('logoutMsg');
+  button.disabled=true;
+  feedback.textContent='';
+  try{
+    const {r,d}=await api('logout');
+    if(!r.ok)throw new Error(d.error||'Impossibile chiudere la sessione.');
+    document.getElementById('password').value='';
+    showLogin();
+    msg.className='msg ok';
+    msg.textContent='Sei uscito dall’Area riservata. Per rientrare inserisci la password.';
+    window.scrollTo(0,0);
+  }catch(error){feedback.textContent=error.message||'Uscita non riuscita. Riprova.'}
+  finally{button.disabled=false}
+});
 </script>
 </body>
 </html>
