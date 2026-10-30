@@ -62,6 +62,7 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
     <button id="logoutBtn" type="button" aria-label="Esci dall’area riservata e torna alla schermata di accesso">🚪 Esci</button>
   </div>
   <div id="logoutMsg" class="msg" role="alert" aria-live="assertive"></div>
+  <p id="activeAdminRole" class="muted" style="margin:8px 0 12px" aria-live="polite">Accesso amministrativo attivo.</p>
   <p>Accesso effettuato. Le funzioni operative verranno aggiunte qui senza modificare il sito pubblico.</p>
   <div class="grid">
     <div class="tile"><h3>🐝 Codici Punti Ape</h3><p>Generazione codici per vendite fisiche alla Galena e ai mercatini.</p><span class="badge">attivo</span></div>
@@ -172,7 +173,12 @@ button.alt{background:#eee8dc;color:var(--g)}.msg{margin-top:12px;font-weight:70
 <script>
 const loginCard=document.getElementById('loginCard'),dashboard=document.getElementById('dashboard'),msg=document.getElementById('loginMsg');
 async function api(action,body={}){const r=await fetch('/api/bee-balance?adminAction='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'same-origin'});const d=await r.json().catch(()=>({}));return {r,d};}
-function showDash(){loginCard.style.display='none';dashboard.style.display='block';loadOrders();loadTestTools();loadPromoCodes();loadStock()}
+function showDash(role){
+  loginCard.style.display='none';dashboard.style.display='block';
+  const label=document.getElementById('activeAdminRole');
+  if(label)label.textContent=role==='mada'?'Accesso: Mada · Collaboratrice amministrativa':role==='titolare'?'Accesso: ALTHEA 12830 · Titolare':'Accesso amministrativo attivo.';
+  loadOrders();loadTestTools();loadPromoCodes();loadStock();
+}
 function showLogin(){dashboard.style.display='none';loginCard.style.display='block'}
 (async()=>{
   const recoveryMsg=document.getElementById('recoveryMsg');
@@ -183,13 +189,13 @@ function showLogin(){dashboard.style.display='none';loginCard.style.display='blo
     recoveryMsg.textContent='Verifica del collegamento di accesso…';
     try{
       const {r,d}=await api('recovery-login',{token});
-      if(r.ok&&d.authenticated){recoveryMsg.textContent='';showDash();return}
+      if(r.ok&&d.authenticated){recoveryMsg.textContent='';showDash(d.role);return}
       recoveryMsg.textContent=d.error||'Collegamento non valido o scaduto.';
     }catch(_){recoveryMsg.textContent='Impossibile verificare il collegamento.'}
   }
   try{
     const {d}=await api('status');
-    if(d.authenticated)showDash();
+    if(d.authenticated)showDash(d.role);
     else if(!d.configured)msg.textContent='Area riservata predisposta: manca solo l’attivazione della password amministratore.';
   }catch(_){}
 })();
@@ -202,7 +208,7 @@ document.getElementById('recoveryRequestBtn').addEventListener('click',async()=>
   }catch(_){out.textContent='Impossibile richiedere il collegamento.'}
   finally{b.disabled=false}
 });
-document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash();}else msg.textContent=d.error||'Accesso non riuscito.';});
+document.getElementById('loginBtn').addEventListener('click',async()=>{msg.textContent='';const password=document.getElementById('password').value;const {r,d}=await api('login',{password});if(r.ok&&d.authenticated){document.getElementById('password').value='';showDash(d.role);}else msg.textContent=d.error||'Accesso non riuscito.';});
 document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginBtn').click();});
 function euro(v){return Number(v||0).toFixed(2).replace('.',',')+' €'}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
