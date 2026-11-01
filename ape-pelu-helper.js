@@ -13,11 +13,11 @@ function language(value){
 function loadCatalog(){
   if(catalogCache)return catalogCache;
   const busatello=[
-    {id:'millefiori',name:'Miele Millefiori',size:'250 g',price:4.9,desc:'Miele dell’Oasi del Busatello dal profilo armonico e dalla dolcezza equilibrata.',anchor:'miele-millefiori'},
-    {id:'melone',name:'Miele al Melone',size:'250 g',price:4.9,desc:'Specialità al miele dal gusto dolce e fruttato.',anchor:'miele-melone'},
-    {id:'fragola',name:'Miele alla Fragola',size:'250 g',price:4.9,desc:'Specialità al miele dal gusto morbido e fruttato.',anchor:'miele-fragola'},
-    {id:'pesca',name:'Miele alla Pesca',size:'250 g',price:4.9,desc:'Specialità al miele dal profilo delicato e fruttato.',anchor:'miele-pesca'},
-    {id:'arancia',name:"Miele all'Arancia",size:'250 g',price:4.9,desc:'Specialità al miele dal carattere fresco e agrumato.',anchor:'miele-arancia'}
+    {id:'millefiori',name:'Miele Millefiori',size:'250 g',price:6.0,desc:'Miele dell’Oasi del Busatello dal profilo armonico e dalla dolcezza equilibrata.',anchor:'miele-millefiori'},
+    {id:'melone',name:'Miele al Melone',size:'250 g',price:6.0,desc:'Specialità al miele dal gusto dolce e fruttato.',anchor:'miele-melone'},
+    {id:'fragola',name:'Miele alla Fragola',size:'250 g',price:6.0,desc:'Specialità al miele dal gusto morbido e fruttato.',anchor:'miele-fragola'},
+    {id:'pesca',name:'Miele alla Pesca',size:'250 g',price:6.0,desc:'Specialità al miele dal profilo delicato e fruttato.',anchor:'miele-pesca'},
+    {id:'arancia',name:"Miele all'Arancia",size:'250 g',price:6.0,desc:'Specialità al miele dal carattere fresco e agrumato.',anchor:'miele-arancia'}
   ];
   try{
     const html=fs.readFileSync(path.join(__dirname,'shop-v2.html'),'utf8');
